@@ -44,9 +44,41 @@ and the aggregate tally (7 critic wins, 9 review rounds) — is in
 [progress/progress.json](progress/progress.json) and rendered on the
 [live progress page](https://xenoaitham.github.io/anvil/).
 
+## Emulator milestone
+
+Anvil's userland stack now **runs** on a real Android system, not just
+compiles: a booted SDK emulator (Android 16, userdebug) executes the
+pinned-commit hardened_malloc build under `LD_PRELOAD` with verified
+malloc-family traffic, refuses `dlopen` with upstream's own initial-exec TLS
+signature, and runs a zygote-launched app under the allocator via the
+sanctioned `wrap.<package>` property. The campaign also pinned two
+reproducible toolchain defects with committed probes: NDK emutls recursing
+through interposed malloc below API 29 (build floor raised to 29), and NDK
+clang 19 in C23 mode silently dropping bare `alignas` on struct members —
+which had collapsed hardened_malloc's page-aligned regions table and aborted
+its first allocation. Full narrative with raw captures:
+[results/emulator/EVIDENCE.md](results/emulator/EVIDENCE.md); harness and
+honest limits: [emulator/README.md](emulator/README.md); platform evidence:
+[matrix/evidence/sdk-emulator.md](matrix/evidence/sdk-emulator.md).
+
+Not claimed from this milestone: kernel fragments were not executed (stock
+goldfish kernel — Cuttlefish + custom kernel is the follow-up), aarch64
+artifacts are compile-checked only, and nothing transfers to hardware
+claims. This milestone has not been through blind review yet.
+
 ## Quickstarts
 
 ### ROM maintainer
+
+- **Emulator smoke** — validate the hardened_malloc stack on a live Android
+  system before touching a device tree:
+  ```sh
+  emulator/setup-host.sh      # SDK + NDK + AVD (honours ANDROID_HOME)
+  emulator/boot.sh --keep     # headless boot, KVM
+  emulator/smoke.sh           # LD_PRELOAD interposition + wrap demo
+  emulator/posture.sh         # platform security posture dump
+  ```
+  ([details](emulator/README.md))
 
 - **Kernel hardening** — merge the fragments in order base → arch → soc → your
   device config, then validate before building
