@@ -1,0 +1,16 @@
+#!/bin/sh
+# Anvil toolchain adapter for aarch64 NDK builds of hardened_malloc.
+#
+# Upstream's Makefile keeps -fcf-protection via a preprocess-time probe
+# (safe_flag). On aarch64 the NDK driver accepts the flag at preprocess but
+# rejects it at codegen ("option 'cf-protection=return' cannot be specified
+# on this target"), so the probe's intent — drop the flag on targets without
+# it — silently inverts for a cross build. Appending -fcf-protection=none
+# (last flag wins in the clang driver) restores that intent without touching
+# upstream's Makefile. AOSP/Soong builds never hit this; they don't use the
+# Makefile.
+#
+# The real driver is set by the caller via NDK_AARCH64_CLANG.
+# -fcf-protection=none is appended AFTER "$@" so it overrides upstream's
+# bare -fcf-protection (last flag wins in the clang driver).
+exec "${NDK_AARCH64_CLANG:?NDK_AARCH64_CLANG not set}" "$@" -fcf-protection=none
