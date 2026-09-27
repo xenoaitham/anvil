@@ -1,0 +1,105 @@
+{
+  "schema": "anvil.hmalloc.crosscheck/1",
+  "date_utc": "2026-09-27T19:12:06Z",
+  "upstream": {
+    "url": "https://github.com/GrapheneOS/hardened_malloc",
+    "sha": "01df350c62441e163a8b9324fb7e156acdad2c1e"
+  },
+  "host": {
+    "arch": "x86_64",
+    "kernel": "7.1.5-76070105-generic",
+    "clang": "Ubuntu clang version 18.1.3 (1ubuntu1)"
+  },
+  "aarch64_backend_emission_ok": true,
+  "backend_evidence": "ELF EM_AARCH64 relocatable emitted and verified (readelf)",
+  "sysroots_present": {
+    "aarch64_gcc_toolchain": false,
+    "android_ndk": false,
+    "qemu_user": false
+  },
+  "per_source": [
+    {
+      "source": "chacha.c",
+      "compiled": false,
+      "first_blocker": "/usr/include/stdint.h:26:10: fatal error: 'bits/libc-header-start.h' file not found",
+      "blocker_class": "host-libc-header",
+      "stage2_with_host_headers": {
+        "compiled": false,
+        "first_blocker": "/usr/include/x86_64-linux-gnu/gnu/stubs.h:7:11: fatal error: 'gnu/stubs-32.h' file not found"
+      }
+    },
+    {
+      "source": "memory.c",
+      "compiled": false,
+      "first_blocker": "/usr/include/features-time64.h:20:10: fatal error: 'bits/wordsize.h' file not found",
+      "blocker_class": "host-libc-header",
+      "stage2_with_host_headers": {
+        "compiled": false,
+        "first_blocker": "/usr/include/x86_64-linux-gnu/gnu/stubs.h:7:11: fatal error: 'gnu/stubs-32.h' file not found"
+      }
+    },
+    {
+      "source": "pages.c",
+      "compiled": false,
+      "first_blocker": "/usr/include/features-time64.h:20:10: fatal error: 'bits/wordsize.h' file not found",
+      "blocker_class": "host-libc-header",
+      "stage2_with_host_headers": {
+        "compiled": false,
+        "first_blocker": "/usr/include/x86_64-linux-gnu/gnu/stubs.h:7:11: fatal error: 'gnu/stubs-32.h' file not found"
+      }
+    },
+    {
+      "source": "random.c",
+      "compiled": false,
+      "first_blocker": "/usr/include/features-time64.h:20:10: fatal error: 'bits/wordsize.h' file not found",
+      "blocker_class": "host-libc-header",
+      "stage2_with_host_headers": {
+        "compiled": false,
+        "first_blocker": "/usr/include/x86_64-linux-gnu/gnu/stubs.h:7:11: fatal error: 'gnu/stubs-32.h' file not found"
+      }
+    },
+    {
+      "source": "util.c",
+      "compiled": false,
+      "first_blocker": "/usr/include/features-time64.h:20:10: fatal error: 'bits/wordsize.h' file not found",
+      "blocker_class": "host-libc-header",
+      "stage2_with_host_headers": {
+        "compiled": false,
+        "first_blocker": "/usr/include/x86_64-linux-gnu/gnu/stubs.h:7:11: fatal error: 'gnu/stubs-32.h' file not found"
+      }
+    },
+    {
+      "source": "h_malloc.c",
+      "compiled": false,
+      "first_blocker": "/usr/include/features-time64.h:20:10: fatal error: 'bits/wordsize.h' file not found",
+      "blocker_class": "host-libc-header",
+      "stage2_with_host_headers": {
+        "compiled": false,
+        "first_blocker": "/usr/include/x86_64-linux-gnu/gnu/stubs.h:7:11: fatal error: 'gnu/stubs-32.h' file not found"
+      }
+    },
+    {
+      "source": "new.cc",
+      "compiled": false,
+      "first_blocker": "new.cc:8:10: fatal error: 'new' file not found",
+      "blocker_class": "cxx-stdlib-header"
+    }
+  ],
+  "verdict": {
+    "locally_verified": [
+      "clang aarch64 backend emits EM_AARCH64 objects on this host",
+      "each upstream source's exact first blocker under --target=aarch64-linux-gnu"
+    ],
+    "blocker_summary": [
+      "no aarch64 glibc headers/sysroot: C sources stop inside /usr/include (bits/wordsize.h, bits/libc-header-start.h not on the aarch64 include path; host-header -I hack dies at gnu/stubs-32.h because __x86_64__ is undefined for the target)",
+      "no aarch64 C++ standard library: new.cc stops at \"'new' file not found\"",
+      "no aarch64 cross-gcc, no NDK, no qemu-user on this machine"
+    ],
+    "not_run_here": [
+      "full aarch64 library build (needs gcc-aarch64-linux-gnu / NDK sysroot)",
+      "aarch64 test-suite execution (needs qemu-user-static or arm64 runner)",
+      "Android bionic variant build (needs AOSP/NDK bionic sysroot)"
+    ],
+    "ci_plan": "ubuntu runner: apt gcc-aarch64-linux-gnu g++-aarch64-linux-gnu + upstream `make CONFIG_NATIVE=false`; separate ubuntu-24.04-arm runner for native build+`make test`; qemu-user-static optionally to execute the test binaries on x86_64 CI. Mirrors upstream .github/workflows/build-and-test.yml."
+  }
+}
