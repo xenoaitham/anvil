@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="20">
+<title>Anvil — live build progress</title>
+<style>
+  body { font-family: ui-sans-serif, system-ui, sans-serif; background: #0f1115; color: #e5e7eb;
+         margin: 0; padding: 2rem; }
+  h1 { font-weight: 700; margin: 0 0 .25rem; }
+  .tagline { color: #9ca3af; margin-bottom: 1.5rem; }
+  .metrics { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .metric { background: #161a22; border: 1px solid #2a2f3a; border-radius: 8px;
+             padding: .75rem 1rem; min-width: 9rem; }
+  .metric b { display: block; font-size: 1.6rem; }
+  table { border-collapse: collapse; width: 100%; background: #161a22;
+           border: 1px solid #2a2f3a; border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: .6rem .8rem; border-bottom: 1px solid #232833;
+            vertical-align: top; font-size: .92rem; }
+  th { background: #1b202b; }
+  .pill { color: #fff; border-radius: 999px; padding: .15rem .6rem; font-size: .78rem; }
+  code { background: #0f1115; padding: .1rem .35rem; border-radius: 4px; font-size: .8rem; }
+  .dim { color: #6b7280; }
+  footer { margin-top: 1.5rem; color: #9ca3af; max-width: 60rem; }
+</style>
+</head>
+<body>
+<h1>Anvil — live build progress</h1>
+<p class="tagline">Portable GrapheneOS-derived hardening for every Android device that can physically take it</p>
+<div class="metrics">
+  <div class="metric"><b>0/7</b>pieces passed</div>
+  <div class="metric"><b>0</b>blind critic wins (ours)</div>
+  <div class="metric"><b>0</b>review rounds</div>
+</div>
+<table>
+<thead><tr><th>piece</th><th>status</th><th>critic rounds</th><th>commits</th><th>evidence</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>Repository skeleton, license, live progress page</strong><br><span class="dim">orchestrator</span></td>
+  <td><span class="pill" style="background:#b45309">in progress</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+  <td><code>progress/index.html</code></td>
+</tr><tr>
+  <td><strong>GrapheneOS reference baseline (real repos, real numbers)</strong><br><span class="dim">builder-baseline</span></td>
+  <td><span class="pill" style="background:#6b7280">pending</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+</tr><tr>
+  <td><strong>Layered kernel hardening config fragments + dependency-checked validator</strong><br><span class="dim">builder-kernel</span></td>
+  <td><span class="pill" style="background:#6b7280">pending</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+</tr><tr>
+  <td><strong>Per-device security matrix, evidence-cited, schema-linted</strong><br><span class="dim">builder-matrix</span></td>
+  <td><span class="pill" style="background:#6b7280">pending</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+</tr><tr>
+  <td><strong>hardened_malloc integration: build glue, test runs, real benchmarks</strong><br><span class="dim">builder-hmalloc</span></td>
+  <td><span class="pill" style="background:#6b7280">pending</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+</tr><tr>
+  <td><strong>Upstream-quality AOSP platform hardening patches (apply-checked)</strong><br><span class="dim">builder-patches</span></td>
+  <td><span class="pill" style="background:#6b7280">pending</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+</tr><tr>
+  <td><strong>CI: real builds, tests, lint, Pages progress deployment</strong><br><span class="dim">builder-ci</span></td>
+  <td><span class="pill" style="background:#6b7280">pending</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+</tr><tr>
+  <td><strong>README, methodology, limitations — the honest front door</strong><br><span class="dim">builder-docs</span></td>
+  <td><span class="pill" style="background:#6b7280">pending</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+  <td><span class="dim">—</span></td>
+</tr>
+</tbody>
+</table>
+<footer><strong>Honesty policy:</strong> No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to &#x27;boot&#x27; without a boot.</footer>
+</body>
+</html>

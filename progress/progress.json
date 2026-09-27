@@ -1,0 +1,86 @@
+{
+  "project": "Anvil",
+  "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
+  "updated": "2026-09-27T18:40:00Z",
+  "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
+  "metrics": {
+    "pieces_total": 7,
+    "pieces_passed": 0,
+    "critic_wins_ours": 0,
+    "total_review_rounds": 0
+  },
+  "pieces": [
+    {
+      "id": "skeleton",
+      "title": "Repository skeleton, license, live progress page",
+      "status": "in_progress",
+      "owner": "orchestrator",
+      "rounds": [],
+      "commits": [],
+      "evidence": ["progress/index.html"]
+    },
+    {
+      "id": "baseline",
+      "title": "GrapheneOS reference baseline (real repos, real numbers)",
+      "status": "pending",
+      "owner": "builder-baseline",
+      "rounds": [],
+      "commits": [],
+      "evidence": []
+    },
+    {
+      "id": "kernel-config",
+      "title": "Layered kernel hardening config fragments + dependency-checked validator",
+      "status": "pending",
+      "owner": "builder-kernel",
+      "rounds": [],
+      "commits": [],
+      "evidence": []
+    },
+    {
+      "id": "matrix",
+      "title": "Per-device security matrix, evidence-cited, schema-linted",
+      "status": "pending",
+      "owner": "builder-matrix",
+      "rounds": [],
+      "commits": [],
+      "evidence": []
+    },
+    {
+      "id": "hmalloc",
+      "title": "hardened_malloc integration: build glue, test runs, real benchmarks",
+      "status": "pending",
+      "owner": "builder-hmalloc",
+      "rounds": [],
+      "commits": [],
+      "evidence": []
+    },
+    {
+      "id": "platform-patches",
+      "title": "Upstream-quality AOSP platform hardening patches (apply-checked)",
+      "status": "pending",
+      "owner": "builder-patches",
+      "rounds": [],
+      "commits": [],
+      "evidence": []
+    },
+    {
+      "id": "ci",
+      "title": "CI: real builds, tests, lint, Pages progress deployment",
+      "status": "pending",
+      "owner": "builder-ci",
+      "rounds": [],
+      "commits": [],
+      "evidence": []
+    },
+    {
+      "id": "readme",
+      "title": "README, methodology, limitations — the honest front door",
+      "status": "pending",
+      "owner": "builder-docs",
+      "rounds": [],
+      "commits": [],
+      "evidence": []
+    }
+  ]
+}
