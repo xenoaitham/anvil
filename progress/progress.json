@@ -1,13 +1,13 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-27T23:40:00Z",
+  "updated": "2026-09-28T00:05:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 7,
     "pieces_passed": 5,
     "critic_wins_ours": 4,
-    "total_review_rounds": 7
+    "total_review_rounds": 8
   },
   "pieces": [
     {
@@ -86,9 +86,20 @@
       "title": "Upstream-quality AOSP platform hardening patches (apply-checked)",
       "status": "pending",
       "owner": "builder-patches",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "critic running",
+          "gap": "blind critic dispatched; apply-ability + mechanism-equivalence spot-checks"
+        }
+      ],
       "commits": [],
-      "evidence": []
+      "evidence": [
+        "patches/platform/ (3 patches)",
+        "patches/platform/verify/ (3/3 PASS logs)",
+        "patches/platform/manifest.yaml (8 pinned blobs)",
+        "docs/patches.md"
+      ]
     },
     {
       "id": "ci",
