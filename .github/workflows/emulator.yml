@@ -1,0 +1,79 @@
+name: emulator
+
+# Dispatch-only by design: until this workflow's first green run exists, the
+# repo's honesty policy forbids citing it as coverage. GitHub-hosted runners
+# expose no KVM, so the emulator boots under software acceleration — slow
+# (15-30 min) but real.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hmalloc-android:
+    # Rebuilds the Android/bionic hardened_malloc artifacts from scratch on a
+    # clean machine: the local build result is reproducible or this goes red.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned NDK
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "ndk;28.2.13676358" >/dev/null
+      - name: Build hardened_malloc (Android, both ABIs + proof variant)
+        run: |
+          bash integration/hardened_malloc/build-android.sh --abi all --proof
+      - name: Upload build logs and provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: hmalloc-android
+          path: |
+            build/hmalloc-android/*/meta.json
+            build/hmalloc-android/*/build.log
+
+  emulator-smoke:
+    # Boots the AVD without KVM, runs the on-device smoke, dumps posture.
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned image and NDK
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "system-images;android-36.1;google_apis;x86_64" \
+            "emulator" "platform-tools" \
+            "ndk;28.2.13676358" >/dev/null
+      - name: Boot AVD (software acceleration)
+        run: |
+          bash emulator/setup-host.sh
+          bash emulator/boot.sh --keep --software
+        env:
+          ANVIL_SDK_ROOT: ${{ env.ANDROID_HOME }}
+          ANVIL_BOOT_TIMEOUT: 1800
+      - name: On-device hardened_malloc smoke
+        run: bash emulator/smoke.sh
+        env:
+          ANVIL_SDK_ROOT: ${{ env.ANDROID_HOME }}
+      - name: Posture dump
+        if: always()
+        run: bash emulator/posture.sh
+        env:
+          ANVIL_SDK_ROOT: ${{ env.ANDROID_HOME }}
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-smoke-results
+          path: results/emulator/
