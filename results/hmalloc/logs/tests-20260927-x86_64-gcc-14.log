@@ -1,0 +1,270 @@
+[build.sh] upstream pinned at 01df350c62441e163a8b9324fb7e156acdad2c1e
+[build.sh] SKIP gcc-14-default (stamp matches; --force to rebuild)
+
+=== hardened_malloc build summary (x86_64 native, glibc) ===
+VARIANT            STATUS   COMPILER
+gcc-14-default     cached   gcc-14 (Ubuntu 14.2.0-4ubuntu2~24.04.1) 14.2.0
+pin: 01df350c62441e163a8b9324fb7e156acdad2c1e
+artifacts: /home/potato/grafene/anvil/build/hmalloc
+mkdir -p out
+gcc-14  -std=c23 -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt -fstack-clash-protection -fcf-protection -fstack-protector-strong -Wall -Wextra -Wcast-align=strict -Wcast-qual -Wwrite-strings -Wundef -Werror -march=native -Wmissing-prototypes -Wstrict-prototypes  -D_GNU_SOURCE -I include -DCONFIG_SEAL_METADATA=false -DZERO_ON_FREE=true -DWRITE_AFTER_FREE_CHECK=true -DSLOT_RANDOMIZE=true -DSLAB_CANARY=true -DSLAB_QUARANTINE_RANDOM_LENGTH=1 -DSLAB_QUARANTINE_QUEUE_LENGTH=1 -DCONFIG_EXTENDED_SIZE_CLASSES=true -DCONFIG_LARGE_SIZE_CLASSES=true -DGUARD_SLABS_INTERVAL=1 -DGUARD_SIZE_DIVISOR=2 -DREGION_QUARANTINE_RANDOM_LENGTH=256 -DREGION_QUARANTINE_QUEUE_LENGTH=1024 -DREGION_QUARANTINE_SKIP_THRESHOLD=33554432  -DFREE_SLABS_QUARANTINE_RANDOM_LENGTH=32 -DCONFIG_CLASS_REGION_SIZE=34359738368  -DN_ARENA=4 -DCONFIG_STATS=false -DCONFIG_SELF_INIT=true -DCONFIG_LABEL_MEMORY=false  -c -o out/chacha.o chacha.c
+gcc-14  -std=c23 -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt -fstack-clash-protection -fcf-protection -fstack-protector-strong -Wall -Wextra -Wcast-align=strict -Wcast-qual -Wwrite-strings -Wundef -Werror -march=native -Wmissing-prototypes -Wstrict-prototypes  -D_GNU_SOURCE -I include -DCONFIG_SEAL_METADATA=false -DZERO_ON_FREE=true -DWRITE_AFTER_FREE_CHECK=true -DSLOT_RANDOMIZE=true -DSLAB_CANARY=true -DSLAB_QUARANTINE_RANDOM_LENGTH=1 -DSLAB_QUARANTINE_QUEUE_LENGTH=1 -DCONFIG_EXTENDED_SIZE_CLASSES=true -DCONFIG_LARGE_SIZE_CLASSES=true -DGUARD_SLABS_INTERVAL=1 -DGUARD_SIZE_DIVISOR=2 -DREGION_QUARANTINE_RANDOM_LENGTH=256 -DREGION_QUARANTINE_QUEUE_LENGTH=1024 -DREGION_QUARANTINE_SKIP_THRESHOLD=33554432  -DFREE_SLABS_QUARANTINE_RANDOM_LENGTH=32 -DCONFIG_CLASS_REGION_SIZE=34359738368  -DN_ARENA=4 -DCONFIG_STATS=false -DCONFIG_SELF_INIT=true -DCONFIG_LABEL_MEMORY=false  -c -o out/h_malloc.o h_malloc.c
+gcc-14  -std=c23 -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt -fstack-clash-protection -fcf-protection -fstack-protector-strong -Wall -Wextra -Wcast-align=strict -Wcast-qual -Wwrite-strings -Wundef -Werror -march=native -Wmissing-prototypes -Wstrict-prototypes  -D_GNU_SOURCE -I include -DCONFIG_SEAL_METADATA=false -DZERO_ON_FREE=true -DWRITE_AFTER_FREE_CHECK=true -DSLOT_RANDOMIZE=true -DSLAB_CANARY=true -DSLAB_QUARANTINE_RANDOM_LENGTH=1 -DSLAB_QUARANTINE_QUEUE_LENGTH=1 -DCONFIG_EXTENDED_SIZE_CLASSES=true -DCONFIG_LARGE_SIZE_CLASSES=true -DGUARD_SLABS_INTERVAL=1 -DGUARD_SIZE_DIVISOR=2 -DREGION_QUARANTINE_RANDOM_LENGTH=256 -DREGION_QUARANTINE_QUEUE_LENGTH=1024 -DREGION_QUARANTINE_SKIP_THRESHOLD=33554432  -DFREE_SLABS_QUARANTINE_RANDOM_LENGTH=32 -DCONFIG_CLASS_REGION_SIZE=34359738368  -DN_ARENA=4 -DCONFIG_STATS=false -DCONFIG_SELF_INIT=true -DCONFIG_LABEL_MEMORY=false  -c -o out/memory.o memory.c
+gcc-14  -std=c23 -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt -fstack-clash-protection -fcf-protection -fstack-protector-strong -Wall -Wextra -Wcast-align=strict -Wcast-qual -Wwrite-strings -Wundef -Werror -march=native -Wmissing-prototypes -Wstrict-prototypes  -D_GNU_SOURCE -I include -DCONFIG_SEAL_METADATA=false -DZERO_ON_FREE=true -DWRITE_AFTER_FREE_CHECK=true -DSLOT_RANDOMIZE=true -DSLAB_CANARY=true -DSLAB_QUARANTINE_RANDOM_LENGTH=1 -DSLAB_QUARANTINE_QUEUE_LENGTH=1 -DCONFIG_EXTENDED_SIZE_CLASSES=true -DCONFIG_LARGE_SIZE_CLASSES=true -DGUARD_SLABS_INTERVAL=1 -DGUARD_SIZE_DIVISOR=2 -DREGION_QUARANTINE_RANDOM_LENGTH=256 -DREGION_QUARANTINE_QUEUE_LENGTH=1024 -DREGION_QUARANTINE_SKIP_THRESHOLD=33554432  -DFREE_SLABS_QUARANTINE_RANDOM_LENGTH=32 -DCONFIG_CLASS_REGION_SIZE=34359738368  -DN_ARENA=4 -DCONFIG_STATS=false -DCONFIG_SELF_INIT=true -DCONFIG_LABEL_MEMORY=false  -c -o out/pages.o pages.c
+gcc-14  -std=c23 -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt -fstack-clash-protection -fcf-protection -fstack-protector-strong -Wall -Wextra -Wcast-align=strict -Wcast-qual -Wwrite-strings -Wundef -Werror -march=native -Wmissing-prototypes -Wstrict-prototypes  -D_GNU_SOURCE -I include -DCONFIG_SEAL_METADATA=false -DZERO_ON_FREE=true -DWRITE_AFTER_FREE_CHECK=true -DSLOT_RANDOMIZE=true -DSLAB_CANARY=true -DSLAB_QUARANTINE_RANDOM_LENGTH=1 -DSLAB_QUARANTINE_QUEUE_LENGTH=1 -DCONFIG_EXTENDED_SIZE_CLASSES=true -DCONFIG_LARGE_SIZE_CLASSES=true -DGUARD_SLABS_INTERVAL=1 -DGUARD_SIZE_DIVISOR=2 -DREGION_QUARANTINE_RANDOM_LENGTH=256 -DREGION_QUARANTINE_QUEUE_LENGTH=1024 -DREGION_QUARANTINE_SKIP_THRESHOLD=33554432  -DFREE_SLABS_QUARANTINE_RANDOM_LENGTH=32 -DCONFIG_CLASS_REGION_SIZE=34359738368  -DN_ARENA=4 -DCONFIG_STATS=false -DCONFIG_SELF_INIT=true -DCONFIG_LABEL_MEMORY=false  -c -o out/random.o random.c
+gcc-14  -std=c23 -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt -fstack-clash-protection -fcf-protection -fstack-protector-strong -Wall -Wextra -Wcast-align=strict -Wcast-qual -Wwrite-strings -Wundef -Werror -march=native -Wmissing-prototypes -Wstrict-prototypes  -D_GNU_SOURCE -I include -DCONFIG_SEAL_METADATA=false -DZERO_ON_FREE=true -DWRITE_AFTER_FREE_CHECK=true -DSLOT_RANDOMIZE=true -DSLAB_CANARY=true -DSLAB_QUARANTINE_RANDOM_LENGTH=1 -DSLAB_QUARANTINE_QUEUE_LENGTH=1 -DCONFIG_EXTENDED_SIZE_CLASSES=true -DCONFIG_LARGE_SIZE_CLASSES=true -DGUARD_SLABS_INTERVAL=1 -DGUARD_SIZE_DIVISOR=2 -DREGION_QUARANTINE_RANDOM_LENGTH=256 -DREGION_QUARANTINE_QUEUE_LENGTH=1024 -DREGION_QUARANTINE_SKIP_THRESHOLD=33554432  -DFREE_SLABS_QUARANTINE_RANDOM_LENGTH=32 -DCONFIG_CLASS_REGION_SIZE=34359738368  -DN_ARENA=4 -DCONFIG_STATS=false -DCONFIG_SELF_INIT=true -DCONFIG_LABEL_MEMORY=false  -c -o out/util.o util.c
+g++-14  -std=c++17 -fsized-deallocation -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt -fstack-clash-protection -fcf-protection -fstack-protector-strong -Wall -Wextra -Wcast-align=strict -Wcast-qual -Wwrite-strings -Wundef -Werror -march=native  -D_GNU_SOURCE -I include -DCONFIG_SEAL_METADATA=false -DZERO_ON_FREE=true -DWRITE_AFTER_FREE_CHECK=true -DSLOT_RANDOMIZE=true -DSLAB_CANARY=true -DSLAB_QUARANTINE_RANDOM_LENGTH=1 -DSLAB_QUARANTINE_QUEUE_LENGTH=1 -DCONFIG_EXTENDED_SIZE_CLASSES=true -DCONFIG_LARGE_SIZE_CLASSES=true -DGUARD_SLABS_INTERVAL=1 -DGUARD_SIZE_DIVISOR=2 -DREGION_QUARANTINE_RANDOM_LENGTH=256 -DREGION_QUARANTINE_QUEUE_LENGTH=1024 -DREGION_QUARANTINE_SKIP_THRESHOLD=33554432  -DFREE_SLABS_QUARANTINE_RANDOM_LENGTH=32 -DCONFIG_CLASS_REGION_SIZE=34359738368  -DN_ARENA=4 -DCONFIG_STATS=false -DCONFIG_SELF_INIT=true -DCONFIG_LABEL_MEMORY=false  -c -o out/new.o new.cc
+gcc-14  -std=c23 -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt -fstack-clash-protection -fcf-protection -fstack-protector-strong -Wall -Wextra -Wcast-align=strict -Wcast-qual -Wwrite-strings -Wundef -Werror -march=native -Wmissing-prototypes -Wstrict-prototypes  -Wl,-O1,--as-needed,-z,defs,-z,relro,-z,now,-z,nodlopen,-z,text -shared out/chacha.o out/h_malloc.o out/memory.o out/pages.o out/random.o out/util.o out/new.o -lstdc++ -o out/libhardened_malloc.so
+make: Entering directory '/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test'
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  offset.c  -lpthread -lhardened_malloc -o offset
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  mallinfo.c  -lpthread -lhardened_malloc -o mallinfo
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  mallinfo2.c  -lpthread -lhardened_malloc -o mallinfo2
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  malloc_info.c  -lpthread -lhardened_malloc -o malloc_info
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  large_array_growth.c  -lpthread -lhardened_malloc -o large_array_growth
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  double_free_large.c  -lpthread -lhardened_malloc -o double_free_large
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  double_free_large_delayed.c  -lpthread -lhardened_malloc -o double_free_large_delayed
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  double_free_small.c  -lpthread -lhardened_malloc -o double_free_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  double_free_small_delayed.c  -lpthread -lhardened_malloc -o double_free_small_delayed
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  unaligned_free_large.c  -lpthread -lhardened_malloc -o unaligned_free_large
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  unaligned_free_small.c  -lpthread -lhardened_malloc -o unaligned_free_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  read_after_free_large.c  -lpthread -lhardened_malloc -o read_after_free_large
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  read_after_free_small.c  -lpthread -lhardened_malloc -o read_after_free_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  write_after_free_large.c  -lpthread -lhardened_malloc -o write_after_free_large
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  write_after_free_large_reuse.c  -lpthread -lhardened_malloc -o write_after_free_large_reuse
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  write_after_free_small.c  -lpthread -lhardened_malloc -o write_after_free_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  write_after_free_small_reuse.c  -lpthread -lhardened_malloc -o write_after_free_small_reuse
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  read_zero_size.c  -lpthread -lhardened_malloc -o read_zero_size
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  write_zero_size.c  -lpthread -lhardened_malloc -o write_zero_size
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_free_protected.c  -lpthread -lhardened_malloc -o invalid_free_protected
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_free_unprotected.c  -lpthread -lhardened_malloc -o invalid_free_unprotected
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_free_small_region.c  -lpthread -lhardened_malloc -o invalid_free_small_region
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_free_small_region_far.c  -lpthread -lhardened_malloc -o invalid_free_small_region_far
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  uninitialized_read_small.c  -lpthread -lhardened_malloc -o uninitialized_read_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  uninitialized_read_large.c  -lpthread -lhardened_malloc -o uninitialized_read_large
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  uninitialized_free.c  -lpthread -lhardened_malloc -o uninitialized_free
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  uninitialized_realloc.c  -lpthread -lhardened_malloc -o uninitialized_realloc
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  uninitialized_malloc_usable_size.c  -lpthread -lhardened_malloc -o uninitialized_malloc_usable_size
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  overflow_large_1_byte.c  -lpthread -lhardened_malloc -o overflow_large_1_byte
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  overflow_large_8_byte.c  -lpthread -lhardened_malloc -o overflow_large_8_byte
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  overflow_small_1_byte.c  -lpthread -lhardened_malloc -o overflow_small_1_byte
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  overflow_small_8_byte.c  -lpthread -lhardened_malloc -o overflow_small_8_byte
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  string_overflow.c  -lpthread -lhardened_malloc -o string_overflow
+g++-14 -std=c++17 -fsized-deallocation -O3 -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  delete_type_size_mismatch.cc  -lpthread -lhardened_malloc -o delete_type_size_mismatch
+g++-14 -std=c++17 -fsized-deallocation -O3 -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  aligned_sized_delete_small.cc  -lpthread -lhardened_malloc -o aligned_sized_delete_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  aligned_sized_delete_small_min_align.c  -lpthread -lhardened_malloc -o aligned_sized_delete_small_min_align
+g++-14 -std=c++17 -fsized-deallocation -O3 -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_aligned_sized_delete_small.cc  -lpthread -lhardened_malloc -o invalid_aligned_sized_delete_small
+g++-14 -std=c++17 -fsized-deallocation -O3 -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  aligned_sized_delete_large.cc  -lpthread -lhardened_malloc -o aligned_sized_delete_large
+g++-14 -std=c++17 -fsized-deallocation -O3 -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_aligned_sized_delete_large.cc  -lpthread -lhardened_malloc -o invalid_aligned_sized_delete_large
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_free_aligned_sized_small.c  -lpthread -lhardened_malloc -o invalid_free_aligned_sized_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  free_sized_small.c  -lpthread -lhardened_malloc -o free_sized_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  free_sized_large.c  -lpthread -lhardened_malloc -o free_sized_large
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  unaligned_malloc_usable_size_small.c  -lpthread -lhardened_malloc -o unaligned_malloc_usable_size_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_malloc_usable_size_small.c  -lpthread -lhardened_malloc -o invalid_malloc_usable_size_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_malloc_usable_size_small_quarantine.c  -lpthread -lhardened_malloc -o invalid_malloc_usable_size_small_quarantine
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  malloc_object_size.c  -lpthread -lhardened_malloc -o malloc_object_size
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  malloc_object_size_offset.c  -lpthread -lhardened_malloc -o malloc_object_size_offset
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  malloc_object_size_zero.c  -lpthread -lhardened_malloc -o malloc_object_size_zero
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_malloc_object_size_small.c  -lpthread -lhardened_malloc -o invalid_malloc_object_size_small
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_malloc_object_size_small_quarantine.c  -lpthread -lhardened_malloc -o invalid_malloc_object_size_small_quarantine
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  invalid_malloc_object_size_small_canary.c  -lpthread -lhardened_malloc -o invalid_malloc_object_size_small_canary
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  impossibly_large_malloc.c  -lpthread -lhardened_malloc -o impossibly_large_malloc
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  realloc_init.c  -lpthread -lhardened_malloc -o realloc_init
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  reallocarray_overflow.c  -lpthread -lhardened_malloc -o reallocarray_overflow
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  calloc_overflow.c  -lpthread -lhardened_malloc -o calloc_overflow
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  calloc_zeroed.c  -lpthread -lhardened_malloc -o calloc_zeroed
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  pvalloc.c  -lpthread -lhardened_malloc -o pvalloc
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  posix_memalign_einval.c  -lpthread -lhardened_malloc -o posix_memalign_einval
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  aligned_alloc_einval.c  -lpthread -lhardened_malloc -o aligned_alloc_einval
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  aligned_alloc_zero_size.c  -lpthread -lhardened_malloc -o aligned_alloc_zero_size
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  malloc_zero_different.c  -lpthread -lhardened_malloc -o malloc_zero_different
+gcc-14 -std=c23 -O3 -Wmissing-prototypes -D_GNU_SOURCE -DSLAB_CANARY=true -DCONFIG_EXTENDED_SIZE_CLASSES=true -Wl,-L/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out,-R,/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test/../out  malloc_noreuse.c  -lpthread -lhardened_malloc -o malloc_noreuse
+make: Leaving directory '/home/potato/grafene/anvil/.cache/upstream-hardened_malloc/test'
+test_aligned_alloc_einval (test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_einval) ... ok
+test_aligned_alloc_zero_size (test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_zero_size) ... ok
+test_aligned_sized_delete_large (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_large) ... ok
+test_aligned_sized_delete_small (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small) ... ok
+test_aligned_sized_delete_small_min_align (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small_min_align) ... ok
+test_calloc_overflow (test_smc.TestSimpleMemoryCorruption.test_calloc_overflow) ... ok
+test_calloc_zeroed (test_smc.TestSimpleMemoryCorruption.test_calloc_zeroed) ... ok
+test_delete_type_size_mismatch (test_smc.TestSimpleMemoryCorruption.test_delete_type_size_mismatch) ... ok
+test_double_free_large (test_smc.TestSimpleMemoryCorruption.test_double_free_large) ... ok
+test_double_free_large_delayed (test_smc.TestSimpleMemoryCorruption.test_double_free_large_delayed) ... ok
+test_double_free_small (test_smc.TestSimpleMemoryCorruption.test_double_free_small) ... ok
+test_double_free_small_delayed (test_smc.TestSimpleMemoryCorruption.test_double_free_small_delayed) ... ok
+test_free_sized_large (test_smc.TestSimpleMemoryCorruption.test_free_sized_large) ... ok
+test_free_sized_small (test_smc.TestSimpleMemoryCorruption.test_free_sized_small) ... ok
+test_impossibly_large_malloc (test_smc.TestSimpleMemoryCorruption.test_impossibly_large_malloc) ... ok
+test_invalid_aligned_sized_delete_large (test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_large) ... ok
+test_invalid_aligned_sized_delete_small (test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_small) ... ok
+test_invalid_free_aligned_sized_small (test_smc.TestSimpleMemoryCorruption.test_invalid_free_aligned_sized_small) ... ok
+test_invalid_free_protected (test_smc.TestSimpleMemoryCorruption.test_invalid_free_protected) ... ok
+test_invalid_free_small_region (test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region) ... ok
+test_invalid_free_small_region_far (test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region_far) ... ok
+test_invalid_free_unprotected (test_smc.TestSimpleMemoryCorruption.test_invalid_free_unprotected) ... ok
+test_invalid_malloc_object_size_small (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small) ... ok
+test_invalid_malloc_object_size_small_canary (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_canary) ... ok
+test_invalid_malloc_object_size_small_quarantine (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_quarantine) ... ok
+test_invalid_malloc_usable_size_small (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small) ... ok
+test_invalid_malloc_usable_size_small_quarantine (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small_quarantine) ... ok
+test_large_array_growth (test_smc.TestSimpleMemoryCorruption.test_large_array_growth) ... ok
+test_malloc_noreuse (test_smc.TestSimpleMemoryCorruption.test_malloc_noreuse) ... ok
+test_malloc_object_size (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size) ... ok
+test_malloc_object_size_offset (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_offset) ... ok
+test_malloc_object_size_zero (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_zero) ... ok
+test_malloc_zero_different (test_smc.TestSimpleMemoryCorruption.test_malloc_zero_different) ... ok
+test_overflow_large_1_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_large_1_byte) ... ok
+test_overflow_large_8_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_large_8_byte) ... ok
+test_overflow_small_1_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_small_1_byte) ... ok
+test_overflow_small_8_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_small_8_byte) ... ok
+test_posix_memalign_einval (test_smc.TestSimpleMemoryCorruption.test_posix_memalign_einval) ... ok
+test_pvalloc (test_smc.TestSimpleMemoryCorruption.test_pvalloc) ... ok
+test_read_after_free_large (test_smc.TestSimpleMemoryCorruption.test_read_after_free_large) ... ok
+test_read_after_free_small (test_smc.TestSimpleMemoryCorruption.test_read_after_free_small) ... ok
+test_read_zero_size (test_smc.TestSimpleMemoryCorruption.test_read_zero_size) ... ok
+test_realloc_init (test_smc.TestSimpleMemoryCorruption.test_realloc_init) ... ok
+test_reallocarray_overflow (test_smc.TestSimpleMemoryCorruption.test_reallocarray_overflow) ... ok
+test_string_overflow (test_smc.TestSimpleMemoryCorruption.test_string_overflow) ... ok
+test_unaligned_free_large (test_smc.TestSimpleMemoryCorruption.test_unaligned_free_large) ... ok
+test_unaligned_free_small (test_smc.TestSimpleMemoryCorruption.test_unaligned_free_small) ... ok
+test_unaligned_malloc_usable_size_small (test_smc.TestSimpleMemoryCorruption.test_unaligned_malloc_usable_size_small) ... ok
+test_uninitialized_free (test_smc.TestSimpleMemoryCorruption.test_uninitialized_free) ... ok
+test_uninitialized_malloc_usable_size (test_smc.TestSimpleMemoryCorruption.test_uninitialized_malloc_usable_size) ... ok
+test_uninitialized_read_large (test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_large) ... ok
+test_uninitialized_read_small (test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_small) ... ok
+test_uninitialized_realloc (test_smc.TestSimpleMemoryCorruption.test_uninitialized_realloc) ... ok
+test_write_after_free_large (test_smc.TestSimpleMemoryCorruption.test_write_after_free_large) ... ok
+test_write_after_free_large_reuse (test_smc.TestSimpleMemoryCorruption.test_write_after_free_large_reuse) ... ok
+test_write_after_free_small (test_smc.TestSimpleMemoryCorruption.test_write_after_free_small) ... ok
+test_write_after_free_small_reuse (test_smc.TestSimpleMemoryCorruption.test_write_after_free_small_reuse) ... ok
+test_write_zero_size (test_smc.TestSimpleMemoryCorruption.test_write_zero_size) ... ok
+
+----------------------------------------------------------------------
+Ran 58 tests in 40.345s
+
+OK
+test_aligned_alloc_einval (test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_einval) ... ok
+test_aligned_alloc_zero_size (test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_zero_size) ... ok
+test_aligned_sized_delete_large (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_large) ... ok
+test_aligned_sized_delete_small (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small) ... ok
+test_aligned_sized_delete_small_min_align (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small_min_align) ... ok
+test_calloc_overflow (test_smc.TestSimpleMemoryCorruption.test_calloc_overflow) ... ok
+test_calloc_zeroed (test_smc.TestSimpleMemoryCorruption.test_calloc_zeroed) ... ok
+test_delete_type_size_mismatch (test_smc.TestSimpleMemoryCorruption.test_delete_type_size_mismatch) ... ok
+test_double_free_large (test_smc.TestSimpleMemoryCorruption.test_double_free_large) ... ok
+test_double_free_large_delayed (test_smc.TestSimpleMemoryCorruption.test_double_free_large_delayed) ... ok
+test_double_free_small (test_smc.TestSimpleMemoryCorruption.test_double_free_small) ... ok
+test_double_free_small_delayed (test_smc.TestSimpleMemoryCorruption.test_double_free_small_delayed) ... ok
+test_free_sized_large (test_smc.TestSimpleMemoryCorruption.test_free_sized_large) ... ok
+test_free_sized_small (test_smc.TestSimpleMemoryCorruption.test_free_sized_small) ... ok
+test_impossibly_large_malloc (test_smc.TestSimpleMemoryCorruption.test_impossibly_large_malloc) ... ok
+test_invalid_aligned_sized_delete_large (test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_large) ... ok
+test_invalid_aligned_sized_delete_small (test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_small) ... ok
+test_invalid_free_aligned_sized_small (test_smc.TestSimpleMemoryCorruption.test_invalid_free_aligned_sized_small) ... ok
+test_invalid_free_protected (test_smc.TestSimpleMemoryCorruption.test_invalid_free_protected) ... ok
+test_invalid_free_small_region (test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region) ... ok
+test_invalid_free_small_region_far (test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region_far) ... ok
+test_invalid_free_unprotected (test_smc.TestSimpleMemoryCorruption.test_invalid_free_unprotected) ... ok
+test_invalid_malloc_object_size_small (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small) ... ok
+test_invalid_malloc_object_size_small_canary (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_canary) ... ok
+test_invalid_malloc_object_size_small_quarantine (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_quarantine) ... ok
+test_invalid_malloc_usable_size_small (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small) ... ok
+test_invalid_malloc_usable_size_small_quarantine (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small_quarantine) ... ok
+test_large_array_growth (test_smc.TestSimpleMemoryCorruption.test_large_array_growth) ... ok
+test_malloc_noreuse (test_smc.TestSimpleMemoryCorruption.test_malloc_noreuse) ... ok
+test_malloc_object_size (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size) ... ok
+test_malloc_object_size_offset (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_offset) ... ok
+test_malloc_object_size_zero (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_zero) ... ok
+test_malloc_zero_different (test_smc.TestSimpleMemoryCorruption.test_malloc_zero_different) ... ok
+test_overflow_large_1_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_large_1_byte) ... ok
+test_overflow_large_8_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_large_8_byte) ... ok
+test_overflow_small_1_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_small_1_byte) ... ok
+test_overflow_small_8_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_small_8_byte) ... ok
+test_posix_memalign_einval (test_smc.TestSimpleMemoryCorruption.test_posix_memalign_einval) ... ok
+test_pvalloc (test_smc.TestSimpleMemoryCorruption.test_pvalloc) ... ok
+test_read_after_free_large (test_smc.TestSimpleMemoryCorruption.test_read_after_free_large) ... ok
+test_read_after_free_small (test_smc.TestSimpleMemoryCorruption.test_read_after_free_small) ... ok
+test_read_zero_size (test_smc.TestSimpleMemoryCorruption.test_read_zero_size) ... ok
+test_realloc_init (test_smc.TestSimpleMemoryCorruption.test_realloc_init) ... ok
+test_reallocarray_overflow (test_smc.TestSimpleMemoryCorruption.test_reallocarray_overflow) ... ok
+test_string_overflow (test_smc.TestSimpleMemoryCorruption.test_string_overflow) ... ok
+test_unaligned_free_large (test_smc.TestSimpleMemoryCorruption.test_unaligned_free_large) ... ok
+test_unaligned_free_small (test_smc.TestSimpleMemoryCorruption.test_unaligned_free_small) ... ok
+test_unaligned_malloc_usable_size_small (test_smc.TestSimpleMemoryCorruption.test_unaligned_malloc_usable_size_small) ... ok
+test_uninitialized_free (test_smc.TestSimpleMemoryCorruption.test_uninitialized_free) ... ok
+test_uninitialized_malloc_usable_size (test_smc.TestSimpleMemoryCorruption.test_uninitialized_malloc_usable_size) ... ok
+test_uninitialized_read_large (test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_large) ... ok
+test_uninitialized_read_small (test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_small) ... ok
+test_uninitialized_realloc (test_smc.TestSimpleMemoryCorruption.test_uninitialized_realloc) ... ok
+test_write_after_free_large (test_smc.TestSimpleMemoryCorruption.test_write_after_free_large) ... ok
+test_write_after_free_large_reuse (test_smc.TestSimpleMemoryCorruption.test_write_after_free_large_reuse) ... ok
+test_write_after_free_small (test_smc.TestSimpleMemoryCorruption.test_write_after_free_small) ... ok
+test_write_after_free_small_reuse (test_smc.TestSimpleMemoryCorruption.test_write_after_free_small_reuse) ... ok
+test_write_zero_size (test_smc.TestSimpleMemoryCorruption.test_write_zero_size) ... ok
+
+----------------------------------------------------------------------
+Ran 58 tests in 38.114s
+
+OK
+test_aligned_alloc_einval (test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_einval) ... ok
+test_aligned_alloc_zero_size (test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_zero_size) ... ok
+test_aligned_sized_delete_large (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_large) ... ok
+test_aligned_sized_delete_small (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small) ... ok
+test_aligned_sized_delete_small_min_align (test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small_min_align) ... ok
+test_calloc_overflow (test_smc.TestSimpleMemoryCorruption.test_calloc_overflow) ... ok
+test_calloc_zeroed (test_smc.TestSimpleMemoryCorruption.test_calloc_zeroed) ... ok
+test_delete_type_size_mismatch (test_smc.TestSimpleMemoryCorruption.test_delete_type_size_mismatch) ... ok
+test_double_free_large (test_smc.TestSimpleMemoryCorruption.test_double_free_large) ... ok
+test_double_free_large_delayed (test_smc.TestSimpleMemoryCorruption.test_double_free_large_delayed) ... ok
+test_double_free_small (test_smc.TestSimpleMemoryCorruption.test_double_free_small) ... ok
+test_double_free_small_delayed (test_smc.TestSimpleMemoryCorruption.test_double_free_small_delayed) ... ok
+test_free_sized_large (test_smc.TestSimpleMemoryCorruption.test_free_sized_large) ... ok
+test_free_sized_small (test_smc.TestSimpleMemoryCorruption.test_free_sized_small) ... ok
+test_impossibly_large_malloc (test_smc.TestSimpleMemoryCorruption.test_impossibly_large_malloc) ... ok
+test_invalid_aligned_sized_delete_large (test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_large) ... ok
+test_invalid_aligned_sized_delete_small (test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_small) ... ok
+test_invalid_free_aligned_sized_small (test_smc.TestSimpleMemoryCorruption.test_invalid_free_aligned_sized_small) ... ok
+test_invalid_free_protected (test_smc.TestSimpleMemoryCorruption.test_invalid_free_protected) ... ok
+test_invalid_free_small_region (test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region) ... ok
+test_invalid_free_small_region_far (test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region_far) ... ok
+test_invalid_free_unprotected (test_smc.TestSimpleMemoryCorruption.test_invalid_free_unprotected) ... ok
+test_invalid_malloc_object_size_small (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small) ... ok
+test_invalid_malloc_object_size_small_canary (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_canary) ... ok
+test_invalid_malloc_object_size_small_quarantine (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_quarantine) ... ok
+test_invalid_malloc_usable_size_small (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small) ... ok
+test_invalid_malloc_usable_size_small_quarantine (test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small_quarantine) ... ok
+test_large_array_growth (test_smc.TestSimpleMemoryCorruption.test_large_array_growth) ... ok
+test_malloc_noreuse (test_smc.TestSimpleMemoryCorruption.test_malloc_noreuse) ... ok
+test_malloc_object_size (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size) ... ok
+test_malloc_object_size_offset (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_offset) ... ok
+test_malloc_object_size_zero (test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_zero) ... ok
+test_malloc_zero_different (test_smc.TestSimpleMemoryCorruption.test_malloc_zero_different) ... ok
+test_overflow_large_1_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_large_1_byte) ... ok
+test_overflow_large_8_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_large_8_byte) ... ok
+test_overflow_small_1_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_small_1_byte) ... ok
+test_overflow_small_8_byte (test_smc.TestSimpleMemoryCorruption.test_overflow_small_8_byte) ... ok
+test_posix_memalign_einval (test_smc.TestSimpleMemoryCorruption.test_posix_memalign_einval) ... ok
+test_pvalloc (test_smc.TestSimpleMemoryCorruption.test_pvalloc) ... ok
+test_read_after_free_large (test_smc.TestSimpleMemoryCorruption.test_read_after_free_large) ... ok
+test_read_after_free_small (test_smc.TestSimpleMemoryCorruption.test_read_after_free_small) ... ok
+test_read_zero_size (test_smc.TestSimpleMemoryCorruption.test_read_zero_size) ... ok
+test_realloc_init (test_smc.TestSimpleMemoryCorruption.test_realloc_init) ... ok
+test_reallocarray_overflow (test_smc.TestSimpleMemoryCorruption.test_reallocarray_overflow) ... ok
+test_string_overflow (test_smc.TestSimpleMemoryCorruption.test_string_overflow) ... ok
+test_unaligned_free_large (test_smc.TestSimpleMemoryCorruption.test_unaligned_free_large) ... ok
+test_unaligned_free_small (test_smc.TestSimpleMemoryCorruption.test_unaligned_free_small) ... ok
+test_unaligned_malloc_usable_size_small (test_smc.TestSimpleMemoryCorruption.test_unaligned_malloc_usable_size_small) ... ok
+test_uninitialized_free (test_smc.TestSimpleMemoryCorruption.test_uninitialized_free) ... ok
+test_uninitialized_malloc_usable_size (test_smc.TestSimpleMemoryCorruption.test_uninitialized_malloc_usable_size) ... ok
+test_uninitialized_read_large (test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_large) ... ok
+test_uninitialized_read_small (test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_small) ... ok
+test_uninitialized_realloc (test_smc.TestSimpleMemoryCorruption.test_uninitialized_realloc) ... ok
+test_write_after_free_large (test_smc.TestSimpleMemoryCorruption.test_write_after_free_large) ... ok
+test_write_after_free_large_reuse (test_smc.TestSimpleMemoryCorruption.test_write_after_free_large_reuse) ... ok
+test_write_after_free_small (test_smc.TestSimpleMemoryCorruption.test_write_after_free_small) ... ok
+test_write_after_free_small_reuse (test_smc.TestSimpleMemoryCorruption.test_write_after_free_small_reuse) ... ok
+test_write_zero_size (test_smc.TestSimpleMemoryCorruption.test_write_zero_size) ... ok
+
+----------------------------------------------------------------------
+Ran 58 tests in 37.908s
+
+OK

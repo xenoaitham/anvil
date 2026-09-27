@@ -1,0 +1,935 @@
+{
+  "runs": [
+    {
+      "run": 1,
+      "started_utc": "2026-09-27T19:15:49Z",
+      "ended_utc": "2026-09-27T19:16:29Z",
+      "total": 58,
+      "passed": 58,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite_ok": true,
+      "per_test": [
+        {
+          "test": "test_aligned_alloc_einval",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_einval",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_alloc_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_zero_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_small_min_align",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small_min_align",
+          "status": "ok"
+        },
+        {
+          "test": "test_calloc_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_calloc_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_calloc_zeroed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_calloc_zeroed",
+          "status": "ok"
+        },
+        {
+          "test": "test_delete_type_size_mismatch",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_delete_type_size_mismatch",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_large_delayed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_large_delayed",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_small_delayed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_small_delayed",
+          "status": "ok"
+        },
+        {
+          "test": "test_free_sized_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_free_sized_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_free_sized_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_free_sized_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_impossibly_large_malloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_impossibly_large_malloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_aligned_sized_delete_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_aligned_sized_delete_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_aligned_sized_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_aligned_sized_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_protected",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_protected",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_small_region",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_small_region_far",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region_far",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_unprotected",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_unprotected",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small_canary",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_canary",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small_quarantine",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_quarantine",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_usable_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_usable_size_small_quarantine",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small_quarantine",
+          "status": "ok"
+        },
+        {
+          "test": "test_large_array_growth",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_large_array_growth",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_noreuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_noreuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size_offset",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_offset",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size_zero",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_zero",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_zero_different",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_zero_different",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_large_1_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_large_1_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_large_8_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_large_8_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_small_1_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_small_1_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_small_8_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_small_8_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_posix_memalign_einval",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_posix_memalign_einval",
+          "status": "ok"
+        },
+        {
+          "test": "test_pvalloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_pvalloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_after_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_after_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_after_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_after_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_zero_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_realloc_init",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_realloc_init",
+          "status": "ok"
+        },
+        {
+          "test": "test_reallocarray_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_reallocarray_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_string_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_string_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_malloc_usable_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_malloc_usable_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_free",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_free",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_malloc_usable_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_malloc_usable_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_read_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_read_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_realloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_realloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_large_reuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_large_reuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_small_reuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_small_reuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_zero_size",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "started_utc": "2026-09-27T19:16:29Z",
+      "ended_utc": "2026-09-27T19:17:07Z",
+      "total": 58,
+      "passed": 58,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite_ok": true,
+      "per_test": [
+        {
+          "test": "test_aligned_alloc_einval",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_einval",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_alloc_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_zero_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_small_min_align",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small_min_align",
+          "status": "ok"
+        },
+        {
+          "test": "test_calloc_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_calloc_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_calloc_zeroed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_calloc_zeroed",
+          "status": "ok"
+        },
+        {
+          "test": "test_delete_type_size_mismatch",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_delete_type_size_mismatch",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_large_delayed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_large_delayed",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_small_delayed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_small_delayed",
+          "status": "ok"
+        },
+        {
+          "test": "test_free_sized_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_free_sized_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_free_sized_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_free_sized_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_impossibly_large_malloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_impossibly_large_malloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_aligned_sized_delete_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_aligned_sized_delete_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_aligned_sized_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_aligned_sized_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_protected",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_protected",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_small_region",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_small_region_far",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region_far",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_unprotected",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_unprotected",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small_canary",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_canary",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small_quarantine",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_quarantine",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_usable_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_usable_size_small_quarantine",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small_quarantine",
+          "status": "ok"
+        },
+        {
+          "test": "test_large_array_growth",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_large_array_growth",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_noreuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_noreuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size_offset",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_offset",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size_zero",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_zero",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_zero_different",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_zero_different",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_large_1_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_large_1_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_large_8_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_large_8_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_small_1_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_small_1_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_small_8_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_small_8_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_posix_memalign_einval",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_posix_memalign_einval",
+          "status": "ok"
+        },
+        {
+          "test": "test_pvalloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_pvalloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_after_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_after_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_after_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_after_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_zero_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_realloc_init",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_realloc_init",
+          "status": "ok"
+        },
+        {
+          "test": "test_reallocarray_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_reallocarray_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_string_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_string_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_malloc_usable_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_malloc_usable_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_free",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_free",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_malloc_usable_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_malloc_usable_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_read_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_read_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_realloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_realloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_large_reuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_large_reuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_small_reuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_small_reuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_zero_size",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "started_utc": "2026-09-27T19:17:07Z",
+      "ended_utc": "2026-09-27T19:17:45Z",
+      "total": 58,
+      "passed": 58,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite_ok": true,
+      "per_test": [
+        {
+          "test": "test_aligned_alloc_einval",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_einval",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_alloc_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_alloc_zero_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_aligned_sized_delete_small_min_align",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_aligned_sized_delete_small_min_align",
+          "status": "ok"
+        },
+        {
+          "test": "test_calloc_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_calloc_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_calloc_zeroed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_calloc_zeroed",
+          "status": "ok"
+        },
+        {
+          "test": "test_delete_type_size_mismatch",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_delete_type_size_mismatch",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_large_delayed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_large_delayed",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_double_free_small_delayed",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_double_free_small_delayed",
+          "status": "ok"
+        },
+        {
+          "test": "test_free_sized_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_free_sized_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_free_sized_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_free_sized_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_impossibly_large_malloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_impossibly_large_malloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_aligned_sized_delete_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_aligned_sized_delete_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_aligned_sized_delete_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_aligned_sized_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_aligned_sized_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_protected",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_protected",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_small_region",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_small_region_far",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_small_region_far",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_free_unprotected",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_free_unprotected",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small_canary",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_canary",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_object_size_small_quarantine",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_object_size_small_quarantine",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_usable_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_invalid_malloc_usable_size_small_quarantine",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_invalid_malloc_usable_size_small_quarantine",
+          "status": "ok"
+        },
+        {
+          "test": "test_large_array_growth",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_large_array_growth",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_noreuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_noreuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size_offset",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_offset",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_object_size_zero",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_object_size_zero",
+          "status": "ok"
+        },
+        {
+          "test": "test_malloc_zero_different",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_malloc_zero_different",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_large_1_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_large_1_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_large_8_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_large_8_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_small_1_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_small_1_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_overflow_small_8_byte",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_overflow_small_8_byte",
+          "status": "ok"
+        },
+        {
+          "test": "test_posix_memalign_einval",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_posix_memalign_einval",
+          "status": "ok"
+        },
+        {
+          "test": "test_pvalloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_pvalloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_after_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_after_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_after_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_after_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_read_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_read_zero_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_realloc_init",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_realloc_init",
+          "status": "ok"
+        },
+        {
+          "test": "test_reallocarray_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_reallocarray_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_string_overflow",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_string_overflow",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_unaligned_malloc_usable_size_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_unaligned_malloc_usable_size_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_free",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_free",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_malloc_usable_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_malloc_usable_size",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_read_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_read_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_read_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_uninitialized_realloc",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_uninitialized_realloc",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_large",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_large",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_large_reuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_large_reuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_small",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_small",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_after_free_small_reuse",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_after_free_small_reuse",
+          "status": "ok"
+        },
+        {
+          "test": "test_write_zero_size",
+          "case": "test_smc.TestSimpleMemoryCorruption.test_write_zero_size",
+          "status": "ok"
+        }
+      ]
+    }
+  ],
+  "schema": "anvil.hmalloc.tests/1",
+  "date_utc": "2026-09-27T19:17:46Z",
+  "upstream": {
+    "url": "https://github.com/GrapheneOS/hardened_malloc",
+    "sha": "01df350c62441e163a8b9324fb7e156acdad2c1e",
+    "suite": "test/test_smc.py via python3 -m unittest discover (upstream `make test` backend)"
+  },
+  "compiler": {
+    "cc": "gcc-14",
+    "version": "gcc-14 (Ubuntu 14.2.0-4ubuntu2~24.04.1) 14.2.0",
+    "cxx_mode": "matching g++/clang++ (upstream forces CXX:=CC)"
+  },
+  "config": "default (upstream test/Makefile rejects non-default variants)",
+  "machine": {
+    "arch": "x86_64",
+    "kernel": "7.1.5-76070105-generic",
+    "cpu": "Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz",
+    "cpus": "12",
+    "mem_gib": "15",
+    "os": "Pop!_OS 24.04 LTS"
+  },
+  "all_runs_passed": true
+}
