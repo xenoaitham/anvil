@@ -518,11 +518,16 @@ class KconfigDB:
             self._log(f"[warn] tree listing truncated by GitHub; index holds "
                       f"{len(self.index)} Kconfig paths (walk still works via sources)")
         # pin head sha for provenance reporting
-        try:
-            branch = json.loads(self.gh_api(f"repos/{self.repo}/branches/{self.branch}"))
-            self.head_sha = branch["commit"]["sha"]
-        except Exception as exc:  # head sha is advisory only
-            self._log(f"[warn] could not pin head sha: {exc}")
+        if re.fullmatch(r"[0-9a-f]{40}", self.branch):
+            # --branch given as a pinned commit SHA: fetches already target
+            # that exact tree, so the pin IS the head; no branch lookup.
+            self.head_sha = self.branch
+        else:
+            try:
+                branch = json.loads(self.gh_api(f"repos/{self.repo}/branches/{self.branch}"))
+                self.head_sha = branch["commit"]["sha"]
+            except Exception as exc:  # head sha is advisory only
+                self._log(f"[warn] could not pin head sha: {exc}")
         self.save_meta()
         self._write_cache_file(
             os.path.join(self.cache, "tree_index.json"), json.dumps(self.index))

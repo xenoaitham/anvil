@@ -1,12 +1,12 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-28T00:05:00Z",
+  "updated": "2026-09-28T00:45:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 7,
-    "pieces_passed": 5,
-    "critic_wins_ours": 4,
+    "pieces_passed": 7,
+    "critic_wins_ours": 6,
     "total_review_rounds": 8
   },
   "pieces": [
@@ -84,13 +84,14 @@
     {
       "id": "platform-patches",
       "title": "Upstream-quality AOSP platform hardening patches (apply-checked)",
-      "status": "pending",
+      "status": "passed",
       "owner": "builder-patches",
       "rounds": [
         {
           "round": 1,
-          "verdict": "critic running",
-          "gap": "blind critic dispatched; apply-ability + mechanism-equivalence spot-checks"
+          "verdict": "ours",
+          "gap": "follow-up: document the opt-out nuance (skips scudo stack-depot wiring + GWP-ASan init) in docs/patches.md",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic rebuilt pinned AOSP trees, re-verified 8/8 blob SHAs + 3/3 applies. Loser(B=upstream commit content): 2018-era commit not appliable to modern trees, no compose, no integration guidance."
         }
       ],
       "commits": [],
@@ -111,6 +112,12 @@
           "round": 1,
           "verdict": "critic running",
           "gap": "blind critic dispatched; traces one gate end-to-end + checks live GitHub run"
+        },
+        {
+          "round": 1,
+          "verdict": "ours",
+          "gap": "live-fire finding: kernel gate red on GitHub from branch-head drift \u2014 fixed by pinning fetch to tree SHA (KERNEL_TREE_PIN); verified 0 errors offline+online",
+          "detail": "Blind pick: winner=B(ours), confidence=high. Critic traced matrix gate end-to-end + verified live run; Loser(A=build docs+release configs): no executable gate."
         }
       ],
       "commits": [],

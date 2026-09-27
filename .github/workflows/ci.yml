@@ -117,6 +117,11 @@ jobs:
     timeout-minutes: 25
     permissions:
       contents: read
+    env:
+      # Fragments + MANIFEST.yaml are provenance-pinned to this exact tree;
+      # fetching the branch head instead would let upstream drift flip the
+      # gate. Bump this (and hardening/kernel/README.md) deliberately.
+      KERNEL_TREE_PIN: f97a55ff191d85b08094c619e681999490b1088b
     steps:
       - uses: actions/checkout@v4
 
@@ -128,7 +133,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .cache/kconfig
-          key: kconfig-${{ runner.os }}-${{ hashFiles('tools/kernelconfig/check.py') }}
+          key: kconfig-${{ runner.os }}-${{ env.KERNEL_TREE_PIN }}-${{ hashFiles('tools/kernelconfig/check.py') }}
           restore-keys: kconfig-${{ runner.os }}-
 
       # check.py shells out to `gh api` (preinstalled on runners). The token
@@ -147,6 +152,7 @@ jobs:
           hardening/kernel/soc/exynos.cfg
           hardening/kernel/soc/tensor.cfg
           --manifest hardening/kernel/MANIFEST.yaml
+          --branch "$KERNEL_TREE_PIN"
 
       - name: Offline assertion — same invocation, cache only
         run: >
@@ -159,18 +165,14 @@ jobs:
           hardening/kernel/soc/exynos.cfg
           hardening/kernel/soc/tensor.cfg
           --manifest hardening/kernel/MANIFEST.yaml
+          --branch "$KERNEL_TREE_PIN"
           --offline
 
       - name: Offline assertion — base.cfg alone
         run: python3 tools/kernelconfig/check.py hardening/kernel/base.cfg --offline
 
       - name: Offline unit suite (test_check.py)
-        run: |
-          if [ -d tools/kernelconfig/testdata/kconfig ]; then
-            python3 tools/kernelconfig/test_check.py
-          else
-            echo "::warning::tools/kernelconfig/testdata/ is not committed yet — test_check.py skipped. Commit the fixture cache to light this gate up."
-          fi
+        run: python3 tools/kernelconfig/test_check.py
 
   # ---------------------------------------------------------------------------
   # Device matrix: honesty lint over every device YAML + evidence file, and a
