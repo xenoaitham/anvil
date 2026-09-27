@@ -1,13 +1,13 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-28T00:45:00Z",
+  "updated": "2026-09-28T22:20:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 7,
     "pieces_passed": 7,
-    "critic_wins_ours": 6,
-    "total_review_rounds": 8
+    "critic_wins_ours": 7,
+    "total_review_rounds": 9
   },
   "pieces": [
     {
@@ -35,8 +35,8 @@
         {
           "round": 1,
           "verdict": "ours",
-          "gap": "n/a \u2014 critic spot-checks passed: config values line-exact, defconfig symbols line-exact, SHAs resolve",
-          "detail": "Blind pick: winner=B(ours), confidence=high. Loser(A=upstream docs) gaps: no kernel/allocator inventory, no SHA/symbol traceability."
+          "gap": "n/a \u2014 spot-checks passed (config values line-exact, defconfig symbols line-exact, SHAs resolve)",
+          "detail": "Blind pick: winner=B(ours), confidence=high. Loser(A=upstream docs): no kernel/allocator inventory, no SHA/symbol traceability."
         }
       ],
       "commits": [],
@@ -51,8 +51,8 @@
         {
           "round": 1,
           "verdict": "ours",
-          "gap": "n/a \u2014 critic's mechanical audit: 49/58 arm64 =y lines literal defconfig; 9 exceptions = verified default-pins; 7 removals commit-attributed; validator parses 16,647 symbols, 0 hardcoded",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Loser(B=raw defconfig+diffs): no porting methodology, no tooling/provenance mapping."
+          "gap": "n/a \u2014 mechanical audit: 49/58 arm64 =y lines literal defconfig; 9 exceptions verified default-pins; validator resolves 16,647 symbols, 0 hardcoded",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Loser(B=raw defconfig+diffs): no porting methodology/tooling."
         }
       ],
       "commits": [],
@@ -66,18 +66,32 @@
     {
       "id": "matrix",
       "title": "Per-device security matrix, evidence-cited, schema-linted",
-      "status": "in_progress",
+      "status": "passed",
       "owner": "builder-matrix",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "ours",
+          "gap": "known-weakness: some rule-based-inference citations; follow-up pass queued",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic verified LOS-FP5 official (true) + Fairphone null (conservative). Loser(B=upstream docs): no per-device assessment beyond its 21-Pixel list, no machine-readable surface."
+        }
+      ],
       "commits": [],
       "evidence": []
     },
     {
       "id": "hmalloc",
       "title": "hardened_malloc integration: build glue, test runs, real benchmarks",
-      "status": "in_progress",
+      "status": "passed",
       "owner": "builder-hmalloc",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "ours",
+          "gap": "critic caught 63-vs-62 test-binary error \u2014 fixed; bench ratios/CVs re-derived and confirmed",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic re-derived bench numbers from committed raw JSON. Loser(B=upstream docs+Makefile): no verification/perf data, no pipeline."
+        }
+      ],
       "commits": [],
       "evidence": []
     },
@@ -90,8 +104,8 @@
         {
           "round": 1,
           "verdict": "ours",
-          "gap": "follow-up: document the opt-out nuance (skips scudo stack-depot wiring + GWP-ASan init) in docs/patches.md",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic rebuilt pinned AOSP trees, re-verified 8/8 blob SHAs + 3/3 applies. Loser(B=upstream commit content): 2018-era commit not appliable to modern trees, no compose, no integration guidance."
+          "gap": "follow-up done: opt-out scope nuance documented in docs/patches.md",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic rebuilt pinned AOSP trees: 8/8 blob SHAs + 3/3 applies re-verified. Loser(B=upstream commit content): 2018-era commit inapplicable to modern trees, no compose/guidance."
         }
       ],
       "commits": [],
@@ -105,19 +119,19 @@
     {
       "id": "ci",
       "title": "CI: real builds, tests, lint, Pages progress deployment",
-      "status": "pending",
+      "status": "passed",
       "owner": "builder-ci",
       "rounds": [
         {
           "round": 1,
           "verdict": "critic running",
-          "gap": "blind critic dispatched; traces one gate end-to-end + checks live GitHub run"
+          "gap": "blind critic dispatched"
         },
         {
           "round": 1,
           "verdict": "ours",
-          "gap": "live-fire finding: kernel gate red on GitHub from branch-head drift \u2014 fixed by pinning fetch to tree SHA (KERNEL_TREE_PIN); verified 0 errors offline+online",
-          "detail": "Blind pick: winner=B(ours), confidence=high. Critic traced matrix gate end-to-end + verified live run; Loser(A=build docs+release configs): no executable gate."
+          "gap": "live-fire finding: kernel gate red from branch-head drift \u2014 fixed via KERNEL_TREE_PIN SHA pin; verified 0 errors online+offline",
+          "detail": "Blind pick: winner=B(ours), confidence=high. Critic traced matrix gate end-to-end and checked the live GitHub run. Loser(A=build docs+release configs): no executable merge gate."
         }
       ],
       "commits": [],
@@ -130,11 +144,21 @@
     {
       "id": "readme",
       "title": "README, methodology, limitations \u2014 the honest front door",
-      "status": "pending",
+      "status": "passed",
       "owner": "builder-docs",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "ours",
+          "gap": "stale ledger-note sentence (written before the ledger repair) \u2014 fixed",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic re-ran matrix_lint to verify 13/156/35% claims and cross-checked the ledger tally. Loser(B=upstream landing page): no audience entry points, no verifiable claims."
+        }
+      ],
       "commits": [],
-      "evidence": []
+      "evidence": [
+        "README.md",
+        "docs/methodology.md"
+      ]
     }
   ]
 }

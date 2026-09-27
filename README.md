@@ -39,10 +39,10 @@ Two defects critics caught and got fixed:
   pinning the fetch to a tree SHA (`KERNEL_TREE_PIN`,
   [.github/workflows/ci.yml](.github/workflows/ci.yml)).
 
-Ledger note: the aggregate tally (6 critic wins, 8 review rounds) is in
-[progress/progress.json](progress/progress.json); the per-piece round records
-for matrix and hmalloc were lost to an overwrite of that file, while the other
-four pieces' records are intact.
+Ledger: the full per-piece record — every round verdict, every named gap,
+and the aggregate tally (7 critic wins, 9 review rounds) — is in
+[progress/progress.json](progress/progress.json) and rendered on the
+[live progress page](https://xenoaitham.github.io/anvil/).
 
 ## Quickstarts
 

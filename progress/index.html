@@ -29,8 +29,8 @@
 <p class="tagline">Portable GrapheneOS-derived hardening for every Android device that can physically take it</p>
 <div class="metrics">
   <div class="metric"><b>7/7</b>pieces passed</div>
-  <div class="metric"><b>6</b>blind critic wins (ours)</div>
-  <div class="metric"><b>8</b>review rounds</div>
+  <div class="metric"><b>7</b>blind critic wins (ours)</div>
+  <div class="metric"><b>9</b>review rounds</div>
 </div>
 <table>
 <thead><tr><th>piece</th><th>status</th><th>critic rounds</th><th>commits</th><th>evidence</th></tr></thead>
@@ -44,45 +44,45 @@
 </tr><tr>
   <td><strong>GrapheneOS reference baseline (real repos, real numbers)</strong><br><span class="dim">builder-baseline</span></td>
   <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
-  <td>R1: <strong>ours</strong> — n/a — critic spot-checks passed: config values line-exact, defconfig symbols line-exact, SHAs resolve</td>
+  <td>R1: <strong>ours</strong> — n/a — spot-checks passed (config values line-exact, defconfig symbols line-exact, SHAs resolve)</td>
   <td><span class="dim">—</span></td>
   <td><span class="dim">—</span></td>
 </tr><tr>
   <td><strong>Layered kernel hardening config fragments + dependency-checked validator</strong><br><span class="dim">builder-kernel</span></td>
   <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
-  <td>R1: <strong>ours</strong> — n/a — critic&#x27;s mechanical audit: 49/58 arm64 =y lines literal defconfig; 9 exceptions = verified default-pins; 7 removals commit-attributed; validator parses 16,647 symbols, 0 hardcoded</td>
+  <td>R1: <strong>ours</strong> — n/a — mechanical audit: 49/58 arm64 =y lines literal defconfig; 9 exceptions verified default-pins; validator resolves 16,647 symbols, 0 hardcoded</td>
   <td><span class="dim">—</span></td>
   <td><code>hardening/kernel/ (99 symbols across 4 layers)</code><br><code>hardening/kernel/MANIFEST.yaml (97 rows)</code><br><code>tools/kernelconfig/check.py (19/19 tests)</code><br><code>25 hardening commit SHAs cited</code></td>
 </tr><tr>
   <td><strong>Per-device security matrix, evidence-cited, schema-linted</strong><br><span class="dim">builder-matrix</span></td>
-  <td><span class="pill" style="background:#b45309">in progress</span></td>
-  <td><span class="dim">—</span></td>
+  <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
+  <td>R1: <strong>ours</strong> — known-weakness: some rule-based-inference citations; follow-up pass queued</td>
   <td><span class="dim">—</span></td>
   <td><span class="dim">—</span></td>
 </tr><tr>
   <td><strong>hardened_malloc integration: build glue, test runs, real benchmarks</strong><br><span class="dim">builder-hmalloc</span></td>
-  <td><span class="pill" style="background:#b45309">in progress</span></td>
-  <td><span class="dim">—</span></td>
+  <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
+  <td>R1: <strong>ours</strong> — critic caught 63-vs-62 test-binary error — fixed; bench ratios/CVs re-derived and confirmed</td>
   <td><span class="dim">—</span></td>
   <td><span class="dim">—</span></td>
 </tr><tr>
   <td><strong>Upstream-quality AOSP platform hardening patches (apply-checked)</strong><br><span class="dim">builder-patches</span></td>
   <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
-  <td>R1: <strong>ours</strong> — follow-up: document the opt-out nuance (skips scudo stack-depot wiring + GWP-ASan init) in docs/patches.md</td>
+  <td>R1: <strong>ours</strong> — follow-up done: opt-out scope nuance documented in docs/patches.md</td>
   <td><span class="dim">—</span></td>
   <td><code>patches/platform/ (3 patches)</code><br><code>patches/platform/verify/ (3/3 PASS logs)</code><br><code>patches/platform/manifest.yaml (8 pinned blobs)</code><br><code>docs/patches.md</code></td>
 </tr><tr>
   <td><strong>CI: real builds, tests, lint, Pages progress deployment</strong><br><span class="dim">builder-ci</span></td>
-  <td><span class="pill" style="background:#6b7280">pending</span></td>
-  <td>R1: <strong>critic running</strong> — blind critic dispatched; traces one gate end-to-end + checks live GitHub run<br>R1: <strong>ours</strong> — live-fire finding: kernel gate red on GitHub from branch-head drift — fixed by pinning fetch to tree SHA (KERNEL_TREE_PIN); verified 0 errors offline+online</td>
+  <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
+  <td>R1: <strong>critic running</strong> — blind critic dispatched<br>R1: <strong>ours</strong> — live-fire finding: kernel gate red from branch-head drift — fixed via KERNEL_TREE_PIN SHA pin; verified 0 errors online+offline</td>
   <td><span class="dim">—</span></td>
   <td><code>.github/workflows/ci.yml (5 jobs)</code><br><code>.github/workflows/README.md</code><br><code>live run 36346119912</code></td>
 </tr><tr>
   <td><strong>README, methodology, limitations — the honest front door</strong><br><span class="dim">builder-docs</span></td>
-  <td><span class="pill" style="background:#6b7280">pending</span></td>
+  <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
+  <td>R1: <strong>ours</strong> — stale ledger-note sentence (written before the ledger repair) — fixed</td>
   <td><span class="dim">—</span></td>
-  <td><span class="dim">—</span></td>
-  <td><span class="dim">—</span></td>
+  <td><code>README.md</code><br><code>docs/methodology.md</code></td>
 </tr>
 </tbody>
 </table>
