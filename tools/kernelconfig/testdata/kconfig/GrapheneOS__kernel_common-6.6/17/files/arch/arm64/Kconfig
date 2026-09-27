@@ -1,0 +1,8 @@
+# Fixture arch Kconfig.
+
+config ARM64
+	bool "ARM64 support"
+
+config ARM64_ONLY_SYM
+	bool "arm64-only symbol"
+	depends on ARM64

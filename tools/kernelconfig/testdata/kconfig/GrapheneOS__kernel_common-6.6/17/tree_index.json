@@ -1,0 +1,6 @@
+{
+ "Kconfig": "fixture",
+ "arch/arm64/Kconfig": "fixture",
+ "mm/Kconfig": "fixture",
+ "drivers/test/Kconfig": "fixture"
+}

@@ -1,0 +1,15 @@
+# Fixture driver Kconfig.
+
+config TEST_DRV
+	bool "test driver"
+	depends on TEST_MM && TEST_MISSING
+
+config TEST_DRV_SEL
+	bool "test driver with select"
+	select TEST_FORCED
+
+config TEST_FORCED
+	bool "forced by select"
+
+config TEST_MISSING
+	bool "symbol exists in tree but never set by fragments"

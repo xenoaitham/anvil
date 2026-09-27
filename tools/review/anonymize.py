@@ -57,8 +57,6 @@ def main() -> int:
             print(f"missing path: {p}", file=sys.stderr)
             return 1
 
-    if args.seed is not None:
-        raise SystemExit("--seed removed: pair assignment must not be reproducible")
     ours_is_a = secrets.randbelow(2) == 0
 
     first, second = (a_dir, b_dir) if ours_is_a else (b_dir, a_dir)

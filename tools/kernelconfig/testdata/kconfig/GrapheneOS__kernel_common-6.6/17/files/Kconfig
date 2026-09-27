@@ -1,0 +1,7 @@
+# Fixture root Kconfig: mirrors the shape of the real tree's root file.
+
+source "arch/$(SRCARCH)/Kconfig"
+
+source "mm/Kconfig"
+
+source "drivers/test/Kconfig"

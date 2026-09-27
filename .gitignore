@@ -17,3 +17,4 @@ __pycache__/
 .review/
 .cache/
 .review-src/
+.mimosa/

@@ -1,0 +1,11 @@
+# Fixture mm Kconfig.
+
+config TEST_MM
+	bool "test mm option"
+
+config TEST_PROMPTLESS
+	def_bool y
+
+config TEST_STR
+	string
+	default "zzz"
