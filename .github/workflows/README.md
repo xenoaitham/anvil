@@ -13,7 +13,7 @@ real artifact in the repo.
 | `hmalloc` (matrix: `clang`, `gcc`) | `integration/hardened_malloc/build.sh --variant <cc> --config both`, `run_tests.sh --compiler <cc>`, `cross-check.sh` and `run_bench.sh --repeats 3 --ops 500000` (clang leg) | pinned-commit upstream builds, upstream test suite, cross-arch probe, bench harness |
 | `kernel-fragments` | `tools/kernelconfig/check.py` (warm, then `--offline`), `tools/kernelconfig/test_check.py` | every fragment symbol exists in the pinned upstream tree's real Kconfig; manifest coverage; offline reproducibility |
 | `matrix` | `tools/matrix/matrix_lint.py --render`, then `git diff --exit-code matrix/README.md` | device YAML schema + honesty lint; rendered README is never stale |
-| `patches` | `tools/patches/apply_check.sh` (guarded) | patch portability — placeholder until the script lands |
+| `patches` | `tools/patches/apply_check.sh` | patch portability — each patch must apply against its pinned upstream blob; fails on drift |
 | `pages` | `tools/progress/generate.py`, then Pages upload/deploy on main pushes only | progress page is regenerable from `progress.json` |
 
 ## What each job proves — and what it deliberately does not
