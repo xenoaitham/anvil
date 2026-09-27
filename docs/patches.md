@@ -210,6 +210,13 @@ service parser in init, one line in `rootdir/init.rc`.
 
 - Opt-out audit trail: opted-out services log `using scudo instead of
   hardened_malloc` (info, tag `libc`).
+- Opt-out scope nuance: the `DISABLE_HARDENED_MALLOC` path re-points both
+  dispatch tables to the fallback scudo table before the standard init
+  sequence, so an opted-out service also skips the scudo stack-depot
+  wiring and the GWP-ASan init that a normally-dispatched scudo process
+  would receive (blind-review finding, round 1). Opting out therefore
+  trades away hardened_malloc *and* those post-dispatch hardening hooks;
+  prefer per-service opt-outs over global ones.
 - GWP-ASan, heapprofd, MTE heap tagging and `libc.debug.malloc` hooks keep
   working: they layer on the dispatch table, which now initially wraps the
   hardened dispatch.
