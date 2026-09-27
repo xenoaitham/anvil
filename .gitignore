@@ -1,0 +1,14 @@
+# build artifacts
+*.o
+*.so
+*.a
+out/
+build/
+.cache/
+# bench scratch
+results/raw/*.tmp
+# python
+__pycache__/
+*.pyc
+# editor
+*.swp
