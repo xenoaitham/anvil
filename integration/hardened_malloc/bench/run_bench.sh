@@ -61,13 +61,14 @@ done
 log()  { printf '[run_bench.sh] %s\n' "$*"; }
 fail() { printf '[run_bench.sh] ERROR: %s\n' "$*" >&2; exit 1; }
 
-mkdir -p "$LOGS" "$BENCH/bin"
+mkdir -p "$LOGS" "${OUT_BASE}/bench-bin"
 
 # --- build the workload binary once (allocator-agnostic) --------------------
 CC_BIN=gcc
 command -v "$CC_BIN" >/dev/null || fail "gcc not found for bench binary"
+BENCH_BIN="${OUT_BASE}/bench-bin/malloc_bench"   # build/ is gitignored
 log "compiling bench binary with $CC_BIN -O2 (allocator-agnostic, built once)"
-"$CC_BIN" -O2 -std=c11 -Wall -Wextra -o "$BENCH/bin/malloc_bench" \
+"$CC_BIN" -O2 -std=c11 -Wall -Wextra -o "$BENCH_BIN" \
     "$BENCH/malloc_bench.c" -lpthread 2>"$LOGS/bench-build.log" \
     || { cat "$LOGS/bench-build.log" >&2; fail "bench binary build failed"; }
 
@@ -100,10 +101,10 @@ for i in "${!LABELS[@]}"; do
         run_env=()
     fi
     # warmup (untimed, discarded)
-    env "${run_env[@]+"${run_env[@]}"}" "$BENCH/bin/malloc_bench" "$OPS" \
+    env "${run_env[@]+"${run_env[@]}"}" "$BENCH_BIN" "$OPS" \
         >/dev/null 2>&1 || true
     for r in $(seq 1 "$REPEATS"); do
-        env "${run_env[@]+"${run_env[@]}"}" "$BENCH/bin/malloc_bench" "$OPS" \
+        env "${run_env[@]+"${run_env[@]}"}" "$BENCH_BIN" "$OPS" \
             > "${rawbase}-${label}.run${r}.txt" 2>&1 \
             || fail "$label run $r failed; see ${rawbase}-${label}.run${r}.txt"
     done
