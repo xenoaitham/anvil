@@ -176,7 +176,9 @@ jobs:
           --offline
 
       - name: Offline assertion — base.cfg alone
-        run: python3 tools/kernelconfig/check.py hardening/kernel/base.cfg --offline
+        run: >
+          python3 tools/kernelconfig/check.py hardening/kernel/base.cfg
+          --branch "$KERNEL_TREE_PIN" --offline
 
       - name: Offline unit suite (test_check.py)
         run: python3 tools/kernelconfig/test_check.py
