@@ -1,0 +1,612 @@
+# Portable hardening taxonomy — the measuring stick for Anvil pieces.
+#
+# One entry per GrapheneOS hardening feature that Anvil tracks. Every
+# grapheneos_ref was verified against the real repos on 2026-09-27:
+#   - "GOS/kernel_common-6.6" refs are the GitHub repo at branch refs/heads/17
+#   - "GOS/hardened_malloc" refs are the clone at tag 2026092500 (commit 01df350)
+#   - "GOS/grapheneos.org" refs are pages in the website-source clone
+#   - bare 12-hex SHAs are GitHub API-verified commits on the named repo
+# portability:
+#   portable   — device-independent, carries to any GKI-class arm64 device
+#   partial    — carries but needs conditions (hw capability, kernel flag, vendor code)
+#   pixel-only — cannot transfer without vendor/OEM cooperation (recorded for honesty)
+meta:
+  version: 1
+  date: 2026-09-27
+  sources:
+    - "clone: /home/potato/grafene/ref/hardened_malloc @ tag 2026092500"
+    - "clone: /home/potato/grafene/ref/platform_manifest @ 0493b9e3a3ae"
+    - "clone: /home/potato/grafene/ref/kernel_manifest-6.6 @ 4f9f5acd7498"
+    - "clone: /home/potato/grafene/ref/grapheneos.org (static/ pages)"
+    - "api: gh api repos/GrapheneOS/kernel_common-6.6 + platform_{bionic,art,system_core}, 2026-09-27"
+
+features:
+
+  # ---------------------------------------------------------------- allocator
+  - id: hmalloc_out_of_line_metadata
+    name: Fully out-of-line allocator metadata in isolated guarded region
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: README.md section 'Security properties'; h_malloc.c"
+    anvil_surface: integration/hardened_malloc
+    notes: Core design, not configurable. Metadata region has high-entropy random guard regions; global state read-only after init.
+
+  - id: hmalloc_invalid_free_detection
+    name: Deterministic detection of any invalid free (double free, unaligned, unallocated)
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: README.md 'Security properties'; test/double_free_small.c, test/invalid_free_protected.c"
+    anvil_surface: integration/hardened_malloc
+    notes: Follows from address-range-to-metadata design; covered by 6+ test programs.
+
+  - id: hmalloc_sized_dealloc_check
+    name: C++ sized deallocation size validation (type-confusion detection)
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: new.cc; CONFIG_CXX_ALLOCATOR in config/default.mk:3"
+    anvil_surface: integration/hardened_malloc
+    notes: Detects mismatched sized delete even for code compiled pre-C++14.
+
+  - id: hmalloc_zero_on_free
+    name: Zero-on-free for slab allocations
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_ZERO_ON_FREE=true config/default.mk:6"
+    anvil_surface: integration/hardened_malloc
+    notes: Also the substrate for write-after-free detection; light preset keeps it.
+
+  - id: hmalloc_write_after_free_check
+    name: Write-after-free detection via zero-fill verification at allocation
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: config/default.mk:7 (true), config/light.mk:7 (false)"
+    anvil_surface: integration/hardened_malloc
+    notes: One of the exact deltas between default and light presets.
+
+  - id: hmalloc_slot_randomize
+    name: Random slot selection within slabs
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: config/default.mk:8 (true), config/light.mk:8 (false)"
+    anvil_surface: integration/hardened_malloc
+    notes: Second default-vs-light delta.
+
+  - id: hmalloc_slab_canary
+    name: 8-byte slab canaries absorbing small/C-string overflows
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_SLAB_CANARY=true config/default.mk:9; test/string_overflow.c"
+    anvil_surface: integration/hardened_malloc
+    notes: Leading zero byte contains missing-NUL overflows; checked on free.
+
+  - id: hmalloc_slab_quarantine
+    name: Delayed slab reuse via randomized array + FIFO queue, scaled per size class
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_SLAB_QUARANTINE_RANDOM_LENGTH/QUEUE_LENGTH config/default.mk:10-11"
+    anvil_surface: integration/hardened_malloc
+    notes: light preset sets both to 0; powers use-after-free window extension.
+
+  - id: hmalloc_region_quarantine
+    name: Large-allocation quarantine (protect+purge, FIFO ring + random swap)
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: config/default.mk:16-18 (256/1024/32MiB skip threshold)"
+    anvil_surface: integration/hardened_malloc
+    notes: Freed large mappings stay PROT_NONE until pushed out of quarantine.
+
+  - id: hmalloc_free_slabs_quarantine
+    name: Free-slab quarantine with randomized reuse order
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_FREE_SLABS_QUARANTINE_RANDOM_LENGTH=32 config/default.mk:19"
+    anvil_surface: integration/hardened_malloc
+    notes: Slabs beyond cache are purged and memory-protected.
+
+  - id: hmalloc_guard_slabs
+    name: Guard slab between every slab (interval 1)
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_GUARD_SLABS_INTERVAL=1 config/default.mk:14; light=8"
+    anvil_surface: integration/hardened_malloc
+    notes: Requires raised vm.max_map_count (README 'OS integration', 1048576).
+
+  - id: hmalloc_guard_regions_large
+    name: Randomly sized guard regions around large allocations
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_GUARD_SIZE_DIVISOR=2 config/default.mk:15"
+    anvil_surface: integration/hardened_malloc
+    notes: Random size defeats offset prediction between large objects.
+
+  - id: hmalloc_size_class_isolation
+    name: Per-size-class isolated regions with high-entropy random bases
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: README.md 'Core design' + 'Size classes' tables"
+    anvil_surface: integration/hardened_malloc
+    notes: No deterministic offsets between allocations of different size classes.
+
+  - id: hmalloc_arenas
+    name: Independent arenas (default 4) with per-class locks and CSPRNGs
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_N_ARENA=4 config/default.mk:21"
+    anvil_surface: integration/hardened_malloc
+    notes: Thread-isolated regions; no thread caches by design.
+
+  - id: hmalloc_extended_size_classes
+    name: Size classes to 128kiB + large size classes for realloc performance
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: config/default.mk:12-13; README 'Size classes' tables"
+    anvil_surface: integration/hardened_malloc
+    notes: Needs 48-bit VA on arm64 for default 32GiB class regions (CONFIG_CLASS_REGION_SIZE=34359738368).
+
+  - id: hmalloc_chacha8_csprng
+    name: ChaCha8 keystream randomness, per-class/arena, reseeded via getrandom()
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: chacha.c, random.c; README 'Randomness'"
+    anvil_surface: integration/hardened_malloc
+    notes: Seccomp whitelists must include getrandom (README 'System calls').
+
+  - id: hmalloc_mte_slab_tagging
+    name: MTE slab tagging (random tags, reserved 0 tag on free, distinct adjacent tags)
+    category: allocator
+    portability: partial
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: memtag.h, arm_mte.h, Android.bp:76 (-DHAS_ARM_MTE); README 'Memory tagging'"
+    anvil_surface: integration/hardened_malloc
+    notes: Needs ARMv8.5+ MTE hardware and kernel support; deterministic UAF/overflow detection where present. Taxonomy row for non-MTE devices must say so.
+
+  - id: hmalloc_metadata_seal_mpk
+    name: Metadata sealing via memory protection keys
+    category: allocator
+    portability: partial
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_SEAL_METADATA=false config/default.mk:5; README 'System calls' (pkey_alloc/pkey_mprotect)"
+    anvil_surface: integration/hardened_malloc
+    notes: Off by default (benefit-cost); x86_64 MPK path; baseline isolated-region protection applies regardless.
+
+  - id: hmalloc_stats_mallinfo
+    name: Allocator stats with mallinfo/malloc_info for Android GC triggering
+    category: allocator
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: config/default.mk:22 (CONFIG_STATS=false; true in Android builds); README 'Stats'"
+    anvil_surface: integration/hardened_malloc
+    notes: Android malloc_info keeps jemalloc-1 format for tooling compatibility.
+
+  - id: hmalloc_label_memory
+    name: PR_SET_VMA anonymous-memory labeling (Android)
+    category: allocator
+    portability: partial
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: CONFIG_LABEL_MEMORY config/default.mk:24; Android.bp:73"
+    anvil_surface: integration/hardened_malloc
+    notes: Android-only prctl; label maps allocator regions in /proc maps.
+
+  # ----------------------------------------------------------- kernel-config
+  - id: kernel_hardened_usercopy
+    name: CONFIG_HARDENED_USERCOPY bounds checks on copy_to/from_user
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:727"
+    anvil_surface: hardening/kernel
+    notes: Verified in fetched defconfig, 2026-09-27.
+
+  - id: kernel_fortify_source
+    name: CONFIG_FORTIFY_SOURCE compile-time/overflow-checked string+mem ops
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:728"
+    anvil_surface: hardening/kernel
+    notes: Also force-enabled for microdroid by GOS commit 08522701d2f5.
+
+  - id: kernel_slab_freelist_random
+    name: CONFIG_SLAB_FREELIST_RANDOM randomized SLUB freelist order
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:119"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_slab_freelist_hardened
+    name: CONFIG_SLAB_FREELIST_HARDENED pointer encoding + metadata checks
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:120"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_random_kmalloc_caches
+    name: CONFIG_RANDOM_KMALLOC_CACHES per-callsite kmalloc cache randomization
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 2dfdb1062888 'enable CONFIG_RANDOM_KMALLOC_CACHES' (kernel_common-6.6, 2024-08-29); defconfig:121"
+    anvil_surface: hardening/kernel
+    notes: Cross-cache attack mitigation; upstream symbol, GOS-enabled.
+
+  - id: kernel_slab_merge_disabled
+    name: CONFIG_SLAB_MERGE_DEFAULT disabled (no cache merging)
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:118"
+    anvil_surface: hardening/kernel
+    notes: Keeps type isolation between kmalloc caches; memory cost.
+
+  - id: kernel_init_on_alloc
+    name: CONFIG_INIT_ON_ALLOC_DEFAULT_ON heap zeroing at allocation
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:736"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_init_on_free
+    name: CONFIG_INIT_ON_FREE_DEFAULT_ON heap zeroing at free
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 7749342e2592 'enable CONFIG_INIT_ON_FREE_DEFAULT_ON' (2021-12-13); defconfig:737"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_bug_on_data_corruption
+    name: CONFIG_BUG_ON_DATA_CORRUPTION fatal on list/rbtree corruption
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:738"
+    anvil_surface: hardening/kernel
+    notes: Turns silent exploitation primitives into kernel crashes.
+
+  - id: kernel_randstruct_full
+    name: CONFIG_RANDSTRUCT_FULL structure layout randomization
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 816d1996b2c8 'enable CONFIG_RANDSTRUCT_FULL' (2024-08-29); defconfig:739"
+    anvil_surface: hardening/kernel
+    notes: GCC/Clang plugin feature; needs matching toolchain in kernel build.
+
+  - id: kernel_kfence
+    name: CONFIG_KFENCE low-overhead heap out-of-bounds detector
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:789-791 (sample 500ms, 63 objects)"
+    anvil_surface: hardening/kernel
+    notes: GOS also matched microdroid's KFENCE config (commit e349da113c86).
+
+  - id: kernel_kaslr
+    name: CONFIG_RANDOMIZE_BASE kernel address randomization
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:68-69"
+    anvil_surface: hardening/kernel
+    notes: GOS sets max mmap entropy via commit 202da0eeca54; module region full-randomization left off for compat (line 69).
+
+  - id: kernel_kstack_offset
+    name: CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT per-syscall stack offset
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 9c7603114913 (2023-04-21); defconfig:100"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_cfi_clang
+    name: CONFIG_CFI_CLANG forward-edge control-flow integrity
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:97"
+    anvil_surface: hardening/kernel
+    notes: Requires clang-built kernel (GKI satisfies this).
+
+  - id: kernel_shadow_call_stack
+    name: CONFIG_SHADOW_CALL_STACK return-address protection (arm64 SCS)
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:96; GOS commit d1bdd7adcd3c disables UNWIND_PATCH_PAC_INTO_SCS (2024-02-04)"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_bti_kernel
+    name: CONFIG_ARM64_BTI_KERNEL branch-target identification for kernel
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 77d2b002c384 'enable ARM64_BTI_KERNEL' (2024-02-04)"
+    anvil_surface: hardening/kernel
+    notes: Coarse-grained hw CFI; needs BTI-capable cores to enforce, safe to set anyway.
+
+  - id: kernel_sw_ttbr0_pan
+    name: CONFIG_ARM64_SW_TTBR0_PAN software privileged-access-never
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:61"
+    anvil_surface: hardening/kernel
+    notes: Covers cores without hw PAN; Pixels use hw PAN, this covers the rest.
+
+  - id: kernel_va_48bit
+    name: arm64 48-bit VA with maxed mmap randomization bits
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commits e985b6d73030 + efaafdbd8fa7 + 202da0eeca54 (2021-12-13, kernel_common-6.6)"
+    anvil_surface: hardening/kernel
+    notes: Hard requirement for default hardened_malloc class-region layout; pairs with bionic '39-bit VA uses scudo' fallback (bionic commit 3783533d6a6a).
+
+  - id: kernel_module_sig_force
+    name: Forced SHA-256 module signing (no unsigned modules)
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commits ec69683a7042 (forced signing) + 91aa73a28405 (sha256); defconfig:104-105"
+    anvil_surface: hardening/kernel
+    notes: Device must sign its own modules with a key available at build time.
+
+  - id: kernel_lockdown_confidentiality
+    name: Lockdown LSM in confidentiality mode (early)
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit b19b430760c4 (2022-10-26); defconfig:733-734"
+    anvil_surface: hardening/kernel
+    notes: Blocks even-root paths to kernel memory (kexec, raw /dev/mem...).
+
+  - id: kernel_panic_on_oops
+    name: PANIC_ON_OOPS with immediate reboot
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:792-793"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_debug_sg
+    name: CONFIG_DEBUG_SG scatter-gather table sanity checks
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit f37a3bac746b (2022-10-28); defconfig:797"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_no_hibernation
+    name: Hibernation removed (prevents cold-boot swap of kernel memory images)
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 07dd867518bf 'disable CONFIG_HIBERNATION' (2024-10-26; diff verified: deletes CONFIG_HIBERNATION=y from arm64+x86 gki_defconfig)"
+    anvil_surface: hardening/kernel
+    notes: Example of their disable-side patching.
+
+  - id: kernel_no_devmem
+    name: /dev/mem removed
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:440"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_no_legacy_tiocsti
+    name: TIOCSTI ioctl removed (terminal input injection)
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 51d1fa9fb9ea (2024-10-26); defconfig:415"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_no_ldisc_autoload
+    name: Automatic line-discipline loading disabled
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 21096668d993 (2022-10-25); defconfig:416"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_no_binfmt_misc
+    name: binfmt_misc removed
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 4a84a30c7b20 (2022-10-31)"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_sysrq_neutralized
+    name: SysRq magic keys disabled (default mask 0x0, serial off)
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 30ba0f40cdfc (2024-02-01); defconfig:776-778"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_reset_attack_mitigation
+    name: UEFI reset attack mitigation (memory zeroing before fastboot-ish modes)
+    category: kernel-config
+    portability: partial
+    grapheneos_ref: "GOS commit a2aec6633cd7 (2024-01-19); defconfig:329"
+    anvil_surface: hardening/kernel
+    notes: Meaningful only where firmware honors the ResetAttackMitigation UEFI variable.
+
+  - id: kernel_efi_disable_pci_dma
+    name: CONFIG_EFI_DISABLE_PCI_DMA (firmware-owned PCI DMA blocked pre-handoff)
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit be937dd7da8b (2024-08-29); defconfig:330"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_syn_cookies
+    name: CONFIG_SYN_COOKIES enabled
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit 615bd95d91f0 (2021-12-19); defconfig:153"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_safesetid_lsm
+    name: CONFIG_SECURITY_SAFESETID uid/gid transition bounding
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS/kernel_common-6.6 @ refs/heads/17: arch/arm64/configs/gki_defconfig:732"
+    anvil_surface: hardening/kernel
+    notes: ""
+
+  - id: kernel_selinux_task_flags
+    name: "SELinux task_security_struct flags: execve/dynamic-code + ptrace scoping per process"
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commits ddad061e8f45 (restrict dynamic code execution) + aba3211149c5 (block ptrace) + f398c882c7a3 (zygote context caching), kernel_common-6.6 security/"
+    anvil_surface: patches/platform
+    notes: Code patch, not just config; rides on stock SELinux hooks; pairs with system_sepolicy fork.
+
+  - id: kernel_page_sanitization_verify
+    name: Optional kernel page-sanitization verification
+    category: kernel-config
+    portability: portable
+    grapheneos_ref: "GOS commit e5a87cada711 'mm: add support for verifying page sanitization' (2017-05-04, still carried in kernel_common-6.6 security/)"
+    anvil_surface: patches/platform
+    notes: Debug/verification feature; evidence of long-lived carried mm patches.
+
+  # ---------------------------------------------------------------- platform
+  - id: platform_hmalloc_bionic_integration
+    name: hardened_malloc as the bionic default allocator
+    category: platform
+    portability: portable
+    grapheneos_ref: "GOS/platform_bionic commit 20160b81611d (2018-12-05, linked from hardened_malloc README 'Android-based operating systems')"
+    anvil_surface: patches/platform
+    notes: The canonical integration commit; any non-Pixel ROM can re-apply it.
+
+  - id: platform_hmalloc_per_process_optout
+    name: Per-process hardened_malloc opt-out plumbing (bionic flag + init service option)
+    category: platform
+    portability: portable
+    grapheneos_ref: "GOS/platform_bionic commits 72978e7937d0, 3840af75da6f (2026-07-19); GOS/platform_system_core commit 923c7d86ceb8 'init: add disable_hardened_malloc service option' (2026-06-11)"
+    anvil_surface: patches/platform
+    notes: Escape hatch for broken vendor processes; kernel counterpart 0ed87e270e9a (DISABLE_HARDENED_MALLOC attribute).
+
+  - id: platform_mte_per_process_policy
+    name: Per-process MTE allow/deny policy for vendor/Widevine/modem processes
+    category: platform
+    portability: partial
+    grapheneos_ref: "GOS/platform_bionic commits ce151b8c8977 (Widevine Rikers), 14d79ed3e1e3 (Pixel 10a modem), 60f1df32c873 (10th gen Pixels)"
+    anvil_surface: patches/platform
+    notes: Even Pixels need this; on non-MTE devices the policy is vacuous but harmless.
+
+  - id: platform_tls_guard_pages
+    name: Guard pages between static TLS and thread stack
+    category: platform
+    portability: portable
+    grapheneos_ref: "GOS/platform_bionic commit b777629641e8 (2026-09-22, 'add guard page(s) between static_tls and stack')"
+    anvil_surface: patches/platform
+    notes: Silent-thread-overflow containment inside bionic.
+
+  - id: platform_init_vm_limits
+    name: init.rc vm.max_map_count raised for guard-slab mappings
+    category: platform
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: README.md 'OS integration' (write /proc/sys/vm/max_map_count 1048576 in system/core/rootdir/init.rc)"
+    anvil_surface: patches/platform
+    notes: Mandatory companion to guard slabs; otherwise allocation failures at runtime.
+
+  - id: platform_vanadium
+    name: Vanadium hardened WebView/browser (chromium with site isolation etc.)
+    category: platform
+    portability: portable
+    grapheneos_ref: "GOS/platform_manifest @ 0493b9e: default.xml project platform_external_vanadium (remote grapheneos); grapheneos.org static/features.html section 'Vanadium'"
+    anvil_surface: patches/platform
+    notes: Large build; carried as fork, not patch series.
+
+  - id: platform_sepolicy_fork
+    name: Forked system/sepolicy carrying GOS policy additions
+    category: platform
+    portability: portable
+    grapheneos_ref: "GOS/platform_manifest @ 0493b9e: default.xml project platform_system_sepolicy (remote grapheneos)"
+    anvil_surface: patches/platform
+    notes: Companion to kernel selinux task-flag commits.
+
+  - id: platform_update_engine_fork
+    name: Forked update_engine + Updater app (OTA control)
+    category: platform
+    portability: partial
+    grapheneos_ref: "GOS/platform_manifest @ 0493b9e: default.xml projects platform_system_update_engine, platform_packages_apps_Updater"
+    anvil_surface: patches/platform
+    notes: Code is portable; signed full OTA delivery still needs device-specific signing keys and verified boot.
+
+  - id: platform_usb_port_protection
+    name: Extra USB port protection layer enabled at boot (hardware-dependent)
+    category: platform
+    portability: partial
+    grapheneos_ref: "GOS/platform_system_core commit c11700447a53 (2026-01-05, 'enable an extra layer of USB port protection on 10th gen Pixels at boot')"
+    anvil_surface: patches/platform
+    notes: Pixel-specific init wiring; mechanism (init service toggling USB controller state) is portable where the controller exposes it.
+
+  - id: platform_network_sensors_toggles
+    name: Network/Sensors permission toggles, Storage/Contact Scopes
+    category: platform
+    portability: portable
+    grapheneos_ref: "GOS/grapheneos.org static/features.html sections 'Network permission toggle', 'Sensors permission toggle', 'Storage Scopes', 'Contact Scopes'; forks platform_frameworks_base + platform_packages_providers_MediaProvider in platform_manifest @ 0493b9e"
+    anvil_surface: patches/platform
+    notes: Framework-level features implemented across the forks; treat as patch-sets to enumerate, not single diffs.
+
+  # ------------------------------------------------------------------- build
+  - id: build_variant_presets
+    name: hardened_malloc default/light build presets
+    category: build
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: config/default.mk, config/light.mk, README 'Configuration' (make VARIANT=light)"
+    anvil_surface: integration/hardened_malloc
+    notes: Packagers are asked to ship both presets; exact deltas measured in baseline doc section a.
+
+  - id: build_werror
+    name: Warnings-as-errors builds (CONFIG_WERROR)
+    category: build
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: config/default.mk:1"
+    anvil_surface: integration/hardened_malloc
+    notes: Portability gate for new toolchains.
+
+  - id: build_soong_integration
+    name: Soong/Android.bp module + Android instrumentation test target
+    category: build
+    portability: portable
+    grapheneos_ref: "GOS/hardened_malloc @ 01df350: Android.bp, androidtest/ (AndroidTest.xml, MemtagTest.java, memtag_test.cc)"
+    anvil_surface: integration/hardened_malloc
+    notes: Drops into any AOSP tree as a source-built module.
+
+  - id: build_release_tooling
+    name: release-build tooling fork (platform_build_release)
+    category: build
+    portability: partial
+    grapheneos_ref: "GOS/platform_manifest @ 0493b9e: default.xml project platform_build_release (remote grapheneos)"
+    anvil_surface: none
+    notes: Signer configuration and device image recipes are Pixel-specific; the tooling pattern is portable.
+
+  # ------------------------------------------------- vendor-bound (recorded)
+  - id: fw_verified_boot_rollback
+    name: Verified boot with rollback protection they can ship (fw + AVB)
+    category: platform
+    portability: pixel-only
+    grapheneos_ref: "GOS/grapheneos.org static/faq.html 'Which devices will be supported in the future?' (requirement list: 'Verified boot with rollback protection for firmware / for the OS (Android Verified Boot)')"
+    anvil_surface: none
+    notes: Requires OEM signing chain and firmware rollback indexes; recorded so the matrix can say 'impossible', not 'missing'.
+
+  - id: fw_security_update_stream
+    name: Monthly firmware/driver/HAL security patch delivery
+    category: platform
+    portability: pixel-only
+    grapheneos_ref: "GOS/grapheneos.org static/faq.html 'How long can GrapheneOS support my device?': 'GrapheneOS can only fully provide security updates to a device provided that the OEM is releasing them.'"
+    anvil_surface: none
+    notes: Anvil can only re-ship what vendors publish; matrix rows must cite vendor patch end dates.
+
+  - id: fw_hardware_attestation
+    name: Factory-provisioned hardware key attestation + StrongBox + attest-key pinning
+    category: platform
+    portability: pixel-only
+    grapheneos_ref: "GOS/grapheneos.org static/faq.html future-device requirements: 'StrongBox keystore provided by secure element', 'Attest key support for hardware key attestation to provide pinning support'"
+    anvil_surface: none
+    notes: Provisioning happens in the OEM factory; software cannot create it.
+
+  - id: fw_mte_default_on
+    name: Hardware memory tagging on by default for OS + compatible apps
+    category: platform
+    portability: pixel-only
+    grapheneos_ref: "GOS/grapheneos.org static/faq.html 'Which devices are recommended?': '8th generation and later Pixels... have support for the incredibly powerful hardware memory tagging security feature as part of moving to new ARMv9 CPU cores.'"
+    anvil_surface: none
+    notes: Needs ARMv9 cores + cooperating vendor kernel; hmalloc MTE support itself is partial/portable (see hmalloc_mte_slab_tagging).
+
+  - id: fw_ab_seamless_updates
+    name: A/B updates for firmware and OS with automatic rollback
+    category: platform
+    portability: partial
+    grapheneos_ref: "GOS/grapheneos.org static/faq.html future-device requirements: 'Support for A/B updates of both the firmware and OS images with automatic rollback...'"
+    anvil_surface: none
+    notes: Virtual A/B is common on modern devices; firmware-side A/B is vendor-dependent — split case, recorded as partial for honesty.
