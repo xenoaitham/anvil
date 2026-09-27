@@ -1,0 +1,47 @@
+From 41e4da189ddba3ebf94b5a89e4c56d63d112ac1e Mon Sep 17 00:00:00 2001
+From: Anvil Authors <anvil@users.noreply.github.com>
+Date: Sun, 27 Sep 2026 22:49:11 +0300
+Subject: [PATCH] rootdir: raise vm.max_map_count for hardened_malloc guard
+ slabs
+
+hardened_malloc places a guard slab between every slab and keeps
+allocator metadata in separate mappings, so a populated process needs
+an order of magnitude more mappings than the kernel default of 65530
+allows. Without this write the allocator fails to map slabs at
+runtime; 1048576 is the value the hardened_malloc OS-integration
+documentation tells integrators to set from init.
+
+Applied to the `on boot` trigger, next to the other sysfs writes init
+already performs. Pure rootdir/init.rc change with no build-system
+entanglement.
+
+Derived from GrapheneOS platform_system_core commit e015be54b45c
+("increase max_map_count for hardened malloc", 2018-12-13), ported
+as-is; only the surrounding `on boot` context moved upstream. The
+identical setting is still carried on GrapheneOS platform_system_core
+branch 17 (rootdir/init.rc).
+
+Verification: applies cleanly against aosp-mirror/platform_system_core
+android-16.0.0_r3, rootdir/init.rc blob
+2b1e68ae838be3552f3563d52c1957ea94bb89d3
+(patches/platform/verify/0003-*.log).
+---
+ rootdir/init.rc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index 2b1e68a..9f1c712 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -1138,6 +1138,8 @@ on boot
+     symlink /sys/class/block/${dev.mnt.dev.data} /dev/sys/block/by-name/userdata
+     symlink /sys/class/block/${dev.mnt.rootdisk.data} /dev/sys/block/by-name/rootdisk
+ 
++    write /proc/sys/vm/max_map_count 1048576
++
+     # F2FS tuning. Set cp_interval larger than dirty_expire_centisecs, 30 secs,
+     # to avoid power consumption when system becomes mostly idle. Be careful
+     # to make it too large, since it may bring userdata loss, if they
+-- 
+2.43.0
+

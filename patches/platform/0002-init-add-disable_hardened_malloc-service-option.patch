@@ -1,0 +1,126 @@
+From d69deda17ce2ec405a4122ed067de3682c316f1a Mon Sep 17 00:00:00 2001
+From: Anvil Authors <anvil@users.noreply.github.com>
+Date: Sun, 27 Sep 2026 22:50:03 +0300
+Subject: [PATCH] init: add disable_hardened_malloc service option
+
+Adds a boolean service option that sets DISABLE_HARDENED_MALLOC=1 in
+the child environment before execv. The bionic-side counterpart reads
+exactly this variable to fall back from hardened_malloc to the
+retained scudo allocator, so a ROM can keep the hardened allocator as
+the system-wide default while excusing individual vendor services
+known to misbehave under it:
+
+    service vendorfoo /vendor/bin/hw/vendorfoo
+        class hal
+        disable_hardened_malloc
+
+Derived from GrapheneOS platform_system_core commit 923c7d86ceb8
+("init: add disable_hardened_malloc service option", 2026-06-11),
+ported to android-16.0.0_r3. Delta vs. upstream: the GrapheneOS
+version additionally re-execs through execveat(FLAG_COMPAT_VA_39_BIT)
+on arm64 so that opted-out services run under a 39-bit VA space; that
+path depends on GrapheneOS kernel process-attribute support and is
+intentionally not carried in this portable port.
+
+Verification: applies cleanly against aosp-mirror/platform_system_core
+android-16.0.0_r3 (blob SHAs recorded in
+patches/platform/verify/0002-*.log).
+---
+ init/service.cpp        | 15 +++++++++++++--
+ init/service.h          |  2 ++
+ init/service_parser.cpp |  6 ++++++
+ init/service_parser.h   |  1 +
+ 4 files changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/init/service.cpp b/init/service.cpp
+index f22e53f..167be60 100644
+--- a/init/service.cpp
++++ b/init/service.cpp
+@@ -114,7 +114,8 @@ static Result<std::string> ComputeContextFromExecutable(const std::string& servi
+     return computed_context;
+ }
+ 
+-static bool ExpandArgsAndExecv(const std::vector<std::string>& args, bool sigstop) {
++static bool ExpandArgsAndExecv(const std::vector<std::string>& args, bool sigstop,
++                               bool disable_hardened_malloc) {
+     std::vector<std::string> expanded_args;
+     std::vector<char*> c_strings;
+ 
+@@ -134,6 +135,16 @@ static bool ExpandArgsAndExecv(const std::vector<std::string>& args, bool sigsto
+         kill(getpid(), SIGSTOP);
+     }
+ 
++    if (disable_hardened_malloc) {
++#if defined(__BIONIC__)
++        if (setenv("DISABLE_HARDENED_MALLOC", "1", 1) != 0) {
++            LOG(ERROR) << "setenv(DISABLE_HARDENED_MALLOC) failed: " << strerror(errno);
++        }
++#else
++        LOG(ERROR) << "ignored disable_hardened_malloc option in non-bionic environment";
++#endif // defined(__BIONIC__)
++    }
++
+     return execv(c_strings[0], c_strings.data()) == 0;
+ }
+ 
+@@ -578,7 +589,7 @@ void Service::RunService(const std::vector<Descriptor>& descriptors,
+     // priority. Aborts on failure.
+     SetProcessAttributesAndCaps(std::move(setsid_finished));
+ 
+-    if (!ExpandArgsAndExecv(args_, sigstop_)) {
++    if (!ExpandArgsAndExecv(args_, sigstop_, disable_hardened_malloc_)) {
+         PLOG(ERROR) << "cannot execv('" << args_[0]
+                     << "'). See the 'Debugging init' section of init's README.md for tips";
+     }
+diff --git a/init/service.h b/init/service.h
+index 0095c82..b710289 100644
+--- a/init/service.h
++++ b/init/service.h
+@@ -233,6 +233,8 @@ class Service {
+ 
+     bool sigstop_ = false;
+ 
++    bool disable_hardened_malloc_ = false;
++
+     const std::chrono::seconds default_restart_period_ = 5s;
+     std::chrono::seconds restart_period_ = default_restart_period_;
+     std::optional<std::chrono::seconds> timeout_period_;
+diff --git a/init/service_parser.cpp b/init/service_parser.cpp
+index 8049762..54bed4a 100644
+--- a/init/service_parser.cpp
++++ b/init/service_parser.cpp
+@@ -387,6 +387,11 @@ Result<void> ServiceParser::ParseSigstop(std::vector<std::string>&& args) {
+     return {};
+ }
+ 
++Result<void> ServiceParser::ParseDisableHardenedMalloc(std::vector<std::string>&& args) {
++    service_->disable_hardened_malloc_ = true;
++    return {};
++}
++
+ Result<void> ServiceParser::ParseSetenv(std::vector<std::string>&& args) {
+     service_->environment_vars_.emplace_back(std::move(args[1]), std::move(args[2]));
+     return {};
+@@ -612,6 +617,7 @@ const KeywordMap<ServiceParser::OptionParser>& ServiceParser::GetParserMap() con
+         {"shared_kallsyms",         {0,     0,    &ServiceParser::ParseSharedKallsyms}},
+         {"shutdown",                {1,     1,    &ServiceParser::ParseShutdown}},
+         {"sigstop",                 {0,     0,    &ServiceParser::ParseSigstop}},
++        {"disable_hardened_malloc", {0,     0,    &ServiceParser::ParseDisableHardenedMalloc}},
+         {"socket",                  {3,     6,    &ServiceParser::ParseSocket}},
+         {"stdio_to_kmsg",           {0,     0,    &ServiceParser::ParseStdioToKmsg}},
+         {"task_profiles",           {1,     kMax, &ServiceParser::ParseTaskProfiles}},
+diff --git a/init/service_parser.h b/init/service_parser.h
+index e42b62b..2a30f2c 100644
+--- a/init/service_parser.h
++++ b/init/service_parser.h
+@@ -70,6 +70,7 @@ class ServiceParser : public SectionParser {
+     Result<void> ParseSharedKallsyms(std::vector<std::string>&& args);
+     Result<void> ParseShutdown(std::vector<std::string>&& args);
+     Result<void> ParseSigstop(std::vector<std::string>&& args);
++    Result<void> ParseDisableHardenedMalloc(std::vector<std::string>&& args);
+     Result<void> ParseSocket(std::vector<std::string>&& args);
+     Result<void> ParseStdioToKmsg(std::vector<std::string>&& args);
+     Result<void> ParseTaskProfiles(std::vector<std::string>&& args);
+-- 
+2.43.0
+

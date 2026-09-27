@@ -1,0 +1,46 @@
+# Apply-check manifest for patches/platform/.
+#
+# Consumed by tools/patches/apply_check.sh. The format is deliberately
+# rigid so a stdlib bash parser can read it; the script rejects anything
+# it does not recognize. blob_sha values pin the exact upstream file
+# content a patch was generated against (git blob SHA at repo@ref):
+# the script re-fetches the files, re-computes their blob SHAs, and
+# refuses to run `git apply --check` on drifted content.
+#
+# Verification recipe for any value here:
+#   gh api "repos/<repo>/contents/<path>?ref=<ref>" --jq .sha
+
+patches:
+- id: platform_hmalloc_bionic_integration
+  patch: 0001-libc-use-hardened_malloc-as-the-native-64-bit-alloca.patch
+  repo: aosp-mirror/platform_bionic
+  ref: android-16.0.0_r3
+  files:
+  - path: libc/Android.bp
+    blob_sha: 07a4c6a0f4eeccabadcbe4cac88b952aa301ffd0
+  - path: libc/bionic/malloc_common.h
+    blob_sha: 4afcc4a8d5f3ceb1df0e0126de0a976c6cbb8f53
+  - path: libc/bionic/malloc_common_dynamic.cpp
+    blob_sha: e2c6eb125a90d4d4cb91683eef17e22f5a604b9b
+
+- id: platform_hmalloc_per_process_optout
+  patch: 0002-init-add-disable_hardened_malloc-service-option.patch
+  repo: aosp-mirror/platform_system_core
+  ref: android-16.0.0_r3
+  files:
+  - path: init/service.cpp
+    blob_sha: f22e53f379472abecd922c286c7d4b083cc016dc
+  - path: init/service.h
+    blob_sha: 0095c827062a32260cf7c285973594c9a9b6f33f
+  - path: init/service_parser.cpp
+    blob_sha: 8049762b0b9464bbe2463c2fe60e93939fded0b1
+  - path: init/service_parser.h
+    blob_sha: e42b62b5cc6e07888e6a5e7b464128395e8bd351
+
+- id: platform_init_vm_limits
+  patch: 0003-rootdir-raise-vm.max_map_count-for-hardened_malloc-g.patch
+  repo: aosp-mirror/platform_system_core
+  ref: android-16.0.0_r3
+  files:
+  - path: rootdir/init.rc
+    blob_sha: 2b1e68ae838be3552f3563d52c1957ea94bb89d3

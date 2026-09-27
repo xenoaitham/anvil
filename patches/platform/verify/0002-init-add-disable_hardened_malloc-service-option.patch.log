@@ -1,0 +1,32 @@
+Anvil apply-check log
+date (utc): 2026-09-27T20:00:21Z
+patch     : patches/platform/0002-init-add-disable_hardened_malloc-service-option.patch
+taxonomy  : platform_hmalloc_per_process_optout
+upstream  : aosp-mirror/platform_system_core @ android-16.0.0_r3
+harness   : tools/patches/apply_check.sh
+
+== pinned content ==
+file: init/service.cpp
+  manifest blob_sha    : f22e53f379472abecd922c286c7d4b083cc016dc
+  api blob_sha         : f22e53f379472abecd922c286c7d4b083cc016dc
+  git hash-object      : f22e53f379472abecd922c286c7d4b083cc016dc
+  match                : yes
+file: init/service.h
+  manifest blob_sha    : 0095c827062a32260cf7c285973594c9a9b6f33f
+  api blob_sha         : 0095c827062a32260cf7c285973594c9a9b6f33f
+  git hash-object      : 0095c827062a32260cf7c285973594c9a9b6f33f
+  match                : yes
+file: init/service_parser.cpp
+  manifest blob_sha    : 8049762b0b9464bbe2463c2fe60e93939fded0b1
+  api blob_sha         : 8049762b0b9464bbe2463c2fe60e93939fded0b1
+  git hash-object      : 8049762b0b9464bbe2463c2fe60e93939fded0b1
+  match                : yes
+file: init/service_parser.h
+  manifest blob_sha    : e42b62b5cc6e07888e6a5e7b464128395e8bd351
+  api blob_sha         : e42b62b5cc6e07888e6a5e7b464128395e8bd351
+  git hash-object      : e42b62b5cc6e07888e6a5e7b464128395e8bd351
+  match                : yes
+
+== git apply --check ==
+PASS
+result: PASS

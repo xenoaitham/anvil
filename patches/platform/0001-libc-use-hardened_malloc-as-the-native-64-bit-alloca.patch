@@ -1,0 +1,152 @@
+From 0f485b0697742a7247ec0cb1a6465259784feb17 Mon Sep 17 00:00:00 2001
+From: Anvil Authors <anvil@users.noreply.github.com>
+Date: Sun, 27 Sep 2026 22:51:33 +0300
+Subject: [PATCH] libc: use hardened_malloc as the native 64-bit allocator
+
+hardened_malloc is a hardening-focused native allocator: fully
+out-of-line allocator metadata in a separate protected region,
+per-size-class isolation with randomized region bases, guard
+slabs/regions, slab canaries and quarantines, zero-on-free with
+write-after-free detection, and deterministic invalid-free detection
+[1].
+
+Wire it into the existing libc_native_allocator_defaults seam: the
+64-bit libc links libhardened_malloc and selects it as the default
+malloc dispatch, while 32-bit keeps scudo unchanged. scudo stays
+linked on 64-bit as the fallback dispatch, so a process can opt out
+at exec time through the DISABLE_HARDENED_MALLOC environment variable
+(set per-service by the companion init disable_hardened_malloc
+option). H_MALLOC_PREFIX keeps the h_* symbol namespace collision-free
+with the retained scudo; USE_H_MALLOC switches the malloc_common
+dispatch to the h_* entry points.
+
+Derived from GrapheneOS platform_bionic commit 20160b81611d ("add
+hardened_malloc library", 2018-12-05) and the current
+libc_native_allocator_defaults wiring on GrapheneOS/platform_bionic
+branch 17; rewritten as a portable equivalent for android-16.0.0_r3,
+whose libc still defaults to scudo on 64-bit. Intentionally not
+carried from GrapheneOS: their per-program opt-out lists and the
+kernel-backed grapheneos_flags process attribute (both need their
+kernel), and their static-binary opt-out extension.
+
+Prerequisite: external/hardened_malloc in the tree, providing the
+libhardened_malloc module shipped in its Android.bp (which builds
+with H_MALLOC_PREFIX and CONFIG_STATS=true so mallinfo/malloc_info
+satisfy the dispatch table). The malloc_low_memory product variable
+keeps controlling 32-bit; on 64-bit the hardened default stays,
+matching GrapheneOS.
+
+[1] https://github.com/GrapheneOS/hardened_malloc
+
+Verification: applies cleanly against aosp-mirror/platform_bionic
+android-16.0.0_r3 (blob SHAs recorded in
+patches/platform/verify/0001-*.log).
+---
+ libc/Android.bp                       | 11 ++++++++
+ libc/bionic/malloc_common.h           | 11 ++++++--
+ libc/bionic/malloc_common_dynamic.cpp | 38 +++++++++++++++++++++++++++
+ 3 files changed, 58 insertions(+), 2 deletions(-)
+
+diff --git a/libc/Android.bp b/libc/Android.bp
+index 07a4c6a..a890490 100644
+--- a/libc/Android.bp
++++ b/libc/Android.bp
+@@ -178,6 +178,17 @@ cc_defaults {
+     cflags: [
+         "-DUSE_SCUDO",
+     ],
++    multilib: {
++        lib64: {
++            cflags: [
++                "-DH_MALLOC_PREFIX",
++                "-DUSE_H_MALLOC",
++            ],
++            whole_static_libs: [
++                "libhardened_malloc",
++            ],
++        },
++    },
+     header_libs: ["gwp_asan_headers"],
+     product_variables: {
+         malloc_low_memory: {
+diff --git a/libc/bionic/malloc_common.h b/libc/bionic/malloc_common.h
+index 4afcc4a..d41482f 100644
+--- a/libc/bionic/malloc_common.h
++++ b/libc/bionic/malloc_common.h
+@@ -55,10 +55,17 @@ __END_DECLS
+ 
+ #else // __has_feature(hwaddress_sanitizer)
+ 
+-#if defined(USE_SCUDO)
++#if defined(USE_H_MALLOC)
++
++#include "h_malloc.h"
++#define Malloc(function)  h_ ## function
++__BEGIN_DECLS
++int h_malloc_info(int options, FILE* fp);
++__END_DECLS
+ 
++#if defined(USE_SCUDO)
+ #include "scudo.h"
+-#define Malloc(function)  scudo_ ## function
++#endif
+ 
+ #elif defined(USE_SCUDO_SVELTE)
+ 
+diff --git a/libc/bionic/malloc_common_dynamic.cpp b/libc/bionic/malloc_common_dynamic.cpp
+index e2c6eb1..59127fd 100644
+--- a/libc/bionic/malloc_common_dynamic.cpp
++++ b/libc/bionic/malloc_common_dynamic.cpp
+@@ -374,11 +374,49 @@ extern "C" const char* __scudo_get_ring_buffer_addr();
+ extern "C" size_t __scudo_get_ring_buffer_size();
+ extern "C" size_t __scudo_get_stack_depot_size();
+ 
++#if defined(USE_H_MALLOC)
++// hardened_malloc is the default native allocator on 64-bit; scudo stays
++// linked as the opt-out target for processes that cannot use it, selected
++// here via DISABLE_HARDENED_MALLOC (set by init's disable_hardened_malloc
++// service option).
++static constexpr MallocDispatch __scudo_malloc_dispatch = {
++  scudo_calloc,
++  scudo_free,
++  scudo_mallinfo,
++  scudo_malloc,
++  scudo_malloc_usable_size,
++  scudo_memalign,
++  scudo_posix_memalign,
++#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
++  scudo_pvalloc,
++#endif
++  scudo_realloc,
++#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
++  scudo_valloc,
++#endif
++  scudo_malloc_iterate,
++  scudo_malloc_disable,
++  scudo_malloc_enable,
++  scudo_mallopt,
++  scudo_aligned_alloc,
++  scudo_malloc_info,
++};
++#endif
++
+ // Initializes memory allocation framework once per process.
+ void MallocInitImpl(libc_globals* globals) {
+   char prop[PROP_VALUE_MAX];
+   char* options = prop;
+ 
++#if defined(USE_H_MALLOC)
++  if (getenv("DISABLE_HARDENED_MALLOC") != nullptr) {
++    info_log("using scudo instead of hardened_malloc");
++    atomic_store(&globals->default_dispatch_table, &__scudo_malloc_dispatch);
++    atomic_store(&globals->current_dispatch_table, &__scudo_malloc_dispatch);
++    return;
++  }
++#endif
++
+   MaybeInitGwpAsanFromLibc(globals);
+ 
+ #if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
+-- 
+2.43.0
+

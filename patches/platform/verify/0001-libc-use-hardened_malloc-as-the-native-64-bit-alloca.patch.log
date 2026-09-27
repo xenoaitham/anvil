@@ -1,0 +1,27 @@
+Anvil apply-check log
+date (utc): 2026-09-27T20:00:21Z
+patch     : patches/platform/0001-libc-use-hardened_malloc-as-the-native-64-bit-alloca.patch
+taxonomy  : platform_hmalloc_bionic_integration
+upstream  : aosp-mirror/platform_bionic @ android-16.0.0_r3
+harness   : tools/patches/apply_check.sh
+
+== pinned content ==
+file: libc/Android.bp
+  manifest blob_sha    : 07a4c6a0f4eeccabadcbe4cac88b952aa301ffd0
+  api blob_sha         : 07a4c6a0f4eeccabadcbe4cac88b952aa301ffd0
+  git hash-object      : 07a4c6a0f4eeccabadcbe4cac88b952aa301ffd0
+  match                : yes
+file: libc/bionic/malloc_common.h
+  manifest blob_sha    : 4afcc4a8d5f3ceb1df0e0126de0a976c6cbb8f53
+  api blob_sha         : 4afcc4a8d5f3ceb1df0e0126de0a976c6cbb8f53
+  git hash-object      : 4afcc4a8d5f3ceb1df0e0126de0a976c6cbb8f53
+  match                : yes
+file: libc/bionic/malloc_common_dynamic.cpp
+  manifest blob_sha    : e2c6eb125a90d4d4cb91683eef17e22f5a604b9b
+  api blob_sha         : e2c6eb125a90d4d4cb91683eef17e22f5a604b9b
+  git hash-object      : e2c6eb125a90d4d4cb91683eef17e22f5a604b9b
+  match                : yes
+
+== git apply --check ==
+PASS
+result: PASS

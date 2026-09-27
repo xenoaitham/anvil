@@ -1,0 +1,17 @@
+Anvil apply-check log
+date (utc): 2026-09-27T20:00:21Z
+patch     : patches/platform/0003-rootdir-raise-vm.max_map_count-for-hardened_malloc-g.patch
+taxonomy  : platform_init_vm_limits
+upstream  : aosp-mirror/platform_system_core @ android-16.0.0_r3
+harness   : tools/patches/apply_check.sh
+
+== pinned content ==
+file: rootdir/init.rc
+  manifest blob_sha    : 2b1e68ae838be3552f3563d52c1957ea94bb89d3
+  api blob_sha         : 2b1e68ae838be3552f3563d52c1957ea94bb89d3
+  git hash-object      : 2b1e68ae838be3552f3563d52c1957ea94bb89d3
+  match                : yes
+
+== git apply --check ==
+PASS
+result: PASS
