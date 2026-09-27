@@ -1,0 +1,7 @@
+phase small_churn ops 2000000 seconds 0.502069 ops_per_sec 3983520.1
+phase medium_churn ops 500000 seconds 4.749102 ops_per_sec 105283.1
+phase large_churn ops 50000 seconds 9.609461 ops_per_sec 5203.2
+phase realloc_pattern ops 250000 seconds 0.181338 ops_per_sec 1378639.6
+phase calloc_zero ops 1000000 seconds 0.237617 ops_per_sec 4208445.6
+phase thread_churn ops 2000000 seconds 0.368916 ops_per_sec 5421282.9
+done ops_base 2000000

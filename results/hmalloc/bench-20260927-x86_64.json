@@ -1,0 +1,248 @@
+{
+  "schema": "anvil.hmalloc.bench/1",
+  "date_utc": "2026-09-27T19:11:35Z",
+  "workload": {
+    "source": "integration/hardened_malloc/bench/malloc_bench.c",
+    "binary_built_with": "gcc -O2 -std=c11 (built once, allocator-agnostic)",
+    "allocator_selection": "LD_PRELOAD (upstream's documented preload.sh mode); glibc baseline = same binary unpreloaded",
+    "determinism": "fixed-seed xorshift64* PRNGs; identical allocation sequences across allocators",
+    "phases": [
+      "small_churn",
+      "medium_churn",
+      "large_churn",
+      "realloc_pattern",
+      "calloc_zero",
+      "thread_churn"
+    ],
+    "ops_base": 2000000,
+    "repeats_timed": 5,
+    "warmup_runs_discarded": 1
+  },
+  "upstream": {
+    "url": "https://github.com/GrapheneOS/hardened_malloc",
+    "sha": "01df350c62441e163a8b9324fb7e156acdad2c1e",
+    "note": "upstream ships no benchmark harness; see run_bench.sh header for inventory"
+  },
+  "machine": {
+    "arch": "x86_64",
+    "kernel": "7.1.5-76070105-generic",
+    "cpu": "Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz",
+    "cpus": "12",
+    "mem_gib": "15",
+    "os": "Pop!_OS 24.04 LTS",
+    "governor_note": "portable desktop, no run-to-run thermal isolation; expect single-digit-% variance"
+  },
+  "results": {
+    "glibc": {
+      "runs_recorded": 5,
+      "phases": {
+        "small_churn": {
+          "n": 5,
+          "ops": 2000000,
+          "ops_per_sec_mean": 10151693.4,
+          "ops_per_sec_stdev": 151688.1,
+          "ops_per_sec_min": 10029107.4,
+          "ops_per_sec_max": 10398620.2,
+          "cv_pct": 1.49,
+          "seconds_mean": 0.197046
+        },
+        "medium_churn": {
+          "n": 5,
+          "ops": 500000,
+          "ops_per_sec_mean": 204656.9,
+          "ops_per_sec_stdev": 16730.7,
+          "ops_per_sec_min": 178429.4,
+          "ops_per_sec_max": 219575.0,
+          "cv_pct": 8.17,
+          "seconds_mean": 2.457109
+        },
+        "large_churn": {
+          "n": 5,
+          "ops": 50000,
+          "ops_per_sec_mean": 11345.5,
+          "ops_per_sec_stdev": 569.1,
+          "ops_per_sec_min": 10445.3,
+          "ops_per_sec_max": 11779.2,
+          "cv_pct": 5.02,
+          "seconds_mean": 4.416283
+        },
+        "realloc_pattern": {
+          "n": 5,
+          "ops": 250000,
+          "ops_per_sec_mean": 5050226.8,
+          "ops_per_sec_stdev": 113311.1,
+          "ops_per_sec_min": 4947451.4,
+          "ops_per_sec_max": 5233908.8,
+          "cv_pct": 2.24,
+          "seconds_mean": 0.049522
+        },
+        "calloc_zero": {
+          "n": 5,
+          "ops": 1000000,
+          "ops_per_sec_mean": 6550340.3,
+          "ops_per_sec_stdev": 111685.4,
+          "ops_per_sec_min": 6416645.0,
+          "ops_per_sec_max": 6678455.5,
+          "cv_pct": 1.71,
+          "seconds_mean": 0.152699
+        },
+        "thread_churn": {
+          "n": 5,
+          "ops": 2000000,
+          "ops_per_sec_mean": 44476356.9,
+          "ops_per_sec_stdev": 7363222.2,
+          "ops_per_sec_min": 34584937.4,
+          "ops_per_sec_max": 52605352.4,
+          "cv_pct": 16.56,
+          "seconds_mean": 0.046041
+        }
+      }
+    },
+    "hmalloc-default": {
+      "runs_recorded": 5,
+      "phases": {
+        "small_churn": {
+          "n": 5,
+          "ops": 2000000,
+          "ops_per_sec_mean": 4066992.3,
+          "ops_per_sec_stdev": 327786.2,
+          "ops_per_sec_min": 3599561.4,
+          "ops_per_sec_max": 4463675.2,
+          "cv_pct": 8.06,
+          "seconds_mean": 0.494393
+        },
+        "medium_churn": {
+          "n": 5,
+          "ops": 500000,
+          "ops_per_sec_mean": 113477.2,
+          "ops_per_sec_stdev": 12288.5,
+          "ops_per_sec_min": 99864.8,
+          "ops_per_sec_max": 128245.9,
+          "cv_pct": 10.83,
+          "seconds_mean": 4.447199
+        },
+        "large_churn": {
+          "n": 5,
+          "ops": 50000,
+          "ops_per_sec_mean": 4990.5,
+          "ops_per_sec_stdev": 238.7,
+          "ops_per_sec_min": 4764.7,
+          "ops_per_sec_max": 5283.2,
+          "cv_pct": 4.78,
+          "seconds_mean": 10.037278
+        },
+        "realloc_pattern": {
+          "n": 5,
+          "ops": 250000,
+          "ops_per_sec_mean": 1170866.3,
+          "ops_per_sec_stdev": 166509.4,
+          "ops_per_sec_min": 964216.0,
+          "ops_per_sec_max": 1378639.6,
+          "cv_pct": 14.22,
+          "seconds_mean": 0.217021
+        },
+        "calloc_zero": {
+          "n": 5,
+          "ops": 1000000,
+          "ops_per_sec_mean": 3898340.2,
+          "ops_per_sec_stdev": 284177.4,
+          "ops_per_sec_min": 3589892.9,
+          "ops_per_sec_max": 4208445.6,
+          "cv_pct": 7.29,
+          "seconds_mean": 0.25762
+        },
+        "thread_churn": {
+          "n": 5,
+          "ops": 2000000,
+          "ops_per_sec_mean": 4216055.1,
+          "ops_per_sec_stdev": 688485.2,
+          "ops_per_sec_min": 3756891.6,
+          "ops_per_sec_max": 5421282.9,
+          "cv_pct": 16.33,
+          "seconds_mean": 0.483021
+        }
+      },
+      "ratio_vs_glibc": {
+        "small_churn": 0.401,
+        "medium_churn": 0.554,
+        "large_churn": 0.44,
+        "realloc_pattern": 0.232,
+        "calloc_zero": 0.595,
+        "thread_churn": 0.095
+      }
+    },
+    "hmalloc-light": {
+      "runs_recorded": 5,
+      "phases": {
+        "small_churn": {
+          "n": 5,
+          "ops": 2000000,
+          "ops_per_sec_mean": 10025421.0,
+          "ops_per_sec_stdev": 312379.2,
+          "ops_per_sec_min": 9521228.9,
+          "ops_per_sec_max": 10297466.0,
+          "cv_pct": 3.12,
+          "seconds_mean": 0.199652
+        },
+        "medium_churn": {
+          "n": 5,
+          "ops": 500000,
+          "ops_per_sec_mean": 133921.6,
+          "ops_per_sec_stdev": 4532.4,
+          "ops_per_sec_min": 128126.3,
+          "ops_per_sec_max": 140622.8,
+          "cv_pct": 3.38,
+          "seconds_mean": 3.736924
+        },
+        "large_churn": {
+          "n": 5,
+          "ops": 50000,
+          "ops_per_sec_mean": 5268.5,
+          "ops_per_sec_stdev": 215.0,
+          "ops_per_sec_min": 4892.7,
+          "ops_per_sec_max": 5403.8,
+          "cv_pct": 4.08,
+          "seconds_mean": 9.503683
+        },
+        "realloc_pattern": {
+          "n": 5,
+          "ops": 250000,
+          "ops_per_sec_mean": 2448698.4,
+          "ops_per_sec_stdev": 190405.4,
+          "ops_per_sec_min": 2113872.5,
+          "ops_per_sec_max": 2565541.0,
+          "cv_pct": 7.78,
+          "seconds_mean": 0.102645
+        },
+        "calloc_zero": {
+          "n": 5,
+          "ops": 1000000,
+          "ops_per_sec_mean": 11265230.9,
+          "ops_per_sec_stdev": 573052.4,
+          "ops_per_sec_min": 10340602.1,
+          "ops_per_sec_max": 11848723.8,
+          "cv_pct": 5.09,
+          "seconds_mean": 0.08896
+        },
+        "thread_churn": {
+          "n": 5,
+          "ops": 2000000,
+          "ops_per_sec_mean": 37173155.5,
+          "ops_per_sec_stdev": 2012108.9,
+          "ops_per_sec_min": 33624613.8,
+          "ops_per_sec_max": 38354759.5,
+          "cv_pct": 5.41,
+          "seconds_mean": 0.053938
+        }
+      },
+      "ratio_vs_glibc": {
+        "small_churn": 0.988,
+        "medium_churn": 0.654,
+        "large_churn": 0.464,
+        "realloc_pattern": 0.485,
+        "calloc_zero": 1.72,
+        "thread_churn": 0.836
+      }
+    }
+  }
+}
