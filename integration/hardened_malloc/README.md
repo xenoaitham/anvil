@@ -108,7 +108,7 @@ probes for the newest c23-capable gcc and prefers it.
 ## 3. Running the tests
 
 Upstream's own entry point is `make test`, which builds the library, then
-`make -C test/` (63 per-API test binaries, linked against the just-built
+`make -C test/` (62 per-API test binaries, linked against the just-built
 `out/libhardened_malloc.so`), then drives them with
 `python3 -m unittest discover --start-directory test/` (`test/test_smc.py`:
 58 checks asserting exit codes and fatal-error messages).

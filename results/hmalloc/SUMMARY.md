@@ -40,7 +40,7 @@ unrecognized command-line option '-std=c23'`.
 ## Tests (run_tests.sh → tests-20260927-x86_64-{clang,gcc-14}.json)
 
 Upstream's suite, driven exactly as upstream's `make test` drives it:
-`make -C test/` builds 63 binaries linked against the freshly built
+`make -C test/` builds 62 binaries linked against the freshly built
 `out/libhardened_malloc.so`, then `python3 -m unittest discover` runs
 `test/test_smc.py` (58 checks of exit codes and fatal-error messages).
 Default config only — upstream's `test/Makefile` rejects non-default
