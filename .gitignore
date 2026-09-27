@@ -12,3 +12,7 @@ __pycache__/
 *.pyc
 # editor
 *.swp
+
+# blind-review scratch
+.review/
+.cache/
