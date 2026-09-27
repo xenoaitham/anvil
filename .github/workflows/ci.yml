@@ -1,0 +1,266 @@
+# Anvil CI — runs the repo's real verification gates on every push to main
+# and every pull request, and deploys the live progress page to GitHub Pages.
+#
+# Job map (what each job gates, and what it deliberately does NOT prove,
+# is documented in .github/workflows/README.md):
+#
+#   hmalloc          build.sh + run_tests.sh (matrix: clang, gcc) + the
+#                    aarch64 cross-check and the short bench on the clang leg.
+#                    Hard gate: any nonzero script exit fails the job.
+#   kernel-fragments warm the Kconfig cache against the pinned upstream tree,
+#                    then assert the exact same validation works --offline,
+#                    plus the offline unit suite (once its fixture lands).
+#   matrix           matrix_lint.py --render must be a no-op against the
+#                    committed matrix/README.md (staleness gate) and every
+#                    device YAML must pass the honesty lint.
+#   patches          placeholder that lights up when
+#                    tools/patches/apply_check.sh lands (guarded, not skipped
+#                    silently).
+#   pages            regenerate progress/index.html and deploy progress/ to
+#                    GitHub Pages on main pushes; PRs only validate the
+#                    generation.
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege by default; each job widens only what it needs.
+permissions: {}
+
+# Cancel superseded runs of the same branch/PR so red/green always reflects
+# the latest commit.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # hardened_malloc: pinned-commit upstream build + upstream test suite
+  # (per compiler) + aarch64 cross-check + short bench (clang leg).
+  # ---------------------------------------------------------------------------
+  hmalloc:
+    name: hmalloc (${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [clang, gcc]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install gcc-14 / g++-14 (c23-capable; the scripts' probe rejects gcc-13)
+        if: matrix.compiler == 'gcc'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gcc-14 g++-14
+
+      - name: Build pinned upstream hardened_malloc (default + light)
+        run: >
+          integration/hardened_malloc/build.sh
+          --variant ${{ matrix.compiler }} --config both
+
+      - name: Upstream test suite (${{ matrix.compiler }}, default config)
+        run: >
+          integration/hardened_malloc/run_tests.sh
+          --compiler ${{ matrix.compiler }}
+
+      - name: aarch64 cross-check (compile-only probe, clang)
+        if: matrix.compiler == 'clang'
+        run: integration/hardened_malloc/cross-check.sh
+
+      - name: Short bench (3 timed reps, 500k ops per phase, vs glibc baseline)
+        if: matrix.compiler == 'clang'
+        run: >
+          integration/hardened_malloc/bench/run_bench.sh
+          --repeats 3 --ops 500000
+
+      - name: Upload test results (${{ matrix.compiler }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hmalloc-tests-${{ matrix.compiler }}
+          path: results/hmalloc/tests-*.json
+          if-no-files-found: error
+
+      - name: Upload cross-check + bench results (clang leg)
+        if: always() && matrix.compiler == 'clang'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hmalloc-crosscheck-bench
+          path: |
+            results/hmalloc/cross-check-*.json
+            results/hmalloc/bench-*.json
+          if-no-files-found: error
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hmalloc-logs-${{ matrix.compiler }}
+          path: results/hmalloc/logs/
+          if-no-files-found: ignore
+
+  # ---------------------------------------------------------------------------
+  # Kernel fragments: validate against the pinned upstream tree's real Kconfig
+  # definitions. Warm (network) run populates .cache/kconfig (cached across
+  # runs); the same invocation must then succeed --offline, which is what
+  # contributors with a warm cache run locally.
+  # ---------------------------------------------------------------------------
+  kernel-fragments:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache the Kconfig definition cache (.cache/kconfig)
+        uses: actions/cache@v4
+        with:
+          path: .cache/kconfig
+          key: kconfig-${{ runner.os }}-${{ hashFiles('tools/kernelconfig/check.py') }}
+          restore-keys: kconfig-${{ runner.os }}-
+
+      # check.py shells out to `gh api` (preinstalled on runners). The token
+      # only matters on a cold cache; with a warm cache the run makes zero
+      # API calls.
+      - name: Warm run — validate all fragments + manifest against pinned tree (network)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          python3 tools/kernelconfig/check.py
+          hardening/kernel/base.cfg
+          hardening/kernel/arch-arm64.cfg
+          hardening/kernel/arch-x86_64.cfg
+          hardening/kernel/soc/qualcomm.cfg
+          hardening/kernel/soc/mediatek.cfg
+          hardening/kernel/soc/exynos.cfg
+          hardening/kernel/soc/tensor.cfg
+          --manifest hardening/kernel/MANIFEST.yaml
+
+      - name: Offline assertion — same invocation, cache only
+        run: >
+          python3 tools/kernelconfig/check.py
+          hardening/kernel/base.cfg
+          hardening/kernel/arch-arm64.cfg
+          hardening/kernel/arch-x86_64.cfg
+          hardening/kernel/soc/qualcomm.cfg
+          hardening/kernel/soc/mediatek.cfg
+          hardening/kernel/soc/exynos.cfg
+          hardening/kernel/soc/tensor.cfg
+          --manifest hardening/kernel/MANIFEST.yaml
+          --offline
+
+      - name: Offline assertion — base.cfg alone
+        run: python3 tools/kernelconfig/check.py hardening/kernel/base.cfg --offline
+
+      - name: Offline unit suite (test_check.py)
+        run: |
+          if [ -d tools/kernelconfig/testdata/kconfig ]; then
+            python3 tools/kernelconfig/test_check.py
+          else
+            echo "::warning::tools/kernelconfig/testdata/ is not committed yet — test_check.py skipped. Commit the fixture cache to light this gate up."
+          fi
+
+  # ---------------------------------------------------------------------------
+  # Device matrix: honesty lint over every device YAML + evidence file, and a
+  # staleness gate on the rendered matrix/README.md.
+  # ---------------------------------------------------------------------------
+  matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Lint all device YAMLs against schema.json
+        run: python3 tools/matrix/matrix_lint.py --render
+
+      - name: Fail if the committed matrix/README.md is stale
+        run: |
+          git diff --exit-code matrix/README.md || {
+            echo "::error::matrix/README.md is stale. Run 'python3 tools/matrix/matrix_lint.py --render' and commit the result."
+            exit 1
+          }
+
+  # ---------------------------------------------------------------------------
+  # Patch portability: lights up when tools/patches/apply_check.sh lands.
+  # ---------------------------------------------------------------------------
+  patches:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # The patch piece is being built in parallel; its runner script is
+      # expected at tools/patches/apply_check.sh but the tree so far shows a
+      # patches/ directory at the repo root. Probe both layouts and run the
+      # first script that exists — visible warning, never a silent skip.
+      - name: Run the patch apply check (or report it missing)
+        run: |
+          if [ -f tools/patches/apply_check.sh ]; then
+            echo "running tools/patches/apply_check.sh"
+            exec bash tools/patches/apply_check.sh
+          fi
+          cand="$(find patches -type f -name apply_check.sh 2>/dev/null | sort | head -n1 || true)"
+          if [ -n "$cand" ]; then
+            echo "running $cand"
+            exec bash "$cand"
+          fi
+          echo "::warning::no apply_check.sh yet (looked for tools/patches/apply_check.sh and patches/**/apply_check.sh) — this job is a guarded placeholder and will run the real gate the moment that script lands."
+
+  # ---------------------------------------------------------------------------
+  # Pages: regenerate the live progress page and deploy it. Independent of the
+  # gate jobs so docs/status updates deploy fast. PRs validate the generation
+  # but do not deploy.
+  # ---------------------------------------------------------------------------
+  pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Regenerate progress/index.html from progress.json
+        run: python3 tools/progress/generate.py
+
+      - name: Upload pages artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: progress/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v4
