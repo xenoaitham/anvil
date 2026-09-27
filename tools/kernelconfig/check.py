@@ -1052,6 +1052,12 @@ def load_manifest(path: str) -> dict:
         data = yaml.safe_load(text)
     except ImportError:
         data = _mini_yaml(text)
+        for sym, body in (data or {}).items():
+            if isinstance(body, dict) and isinstance(body.get("value"), (dict, list)):
+                raise SystemExit(
+                    f"manifest: row {sym!r} uses a nested per-arch value mapping "
+                    "that the flat fallback parser cannot read; install PyYAML "
+                    "(pip install pyyaml) to validate this manifest")
     rows = {}
     for sym, body in (data or {}).items():
         if sym == "meta" and isinstance(body, dict):

@@ -129,6 +129,12 @@ jobs:
         with:
           python-version: '3.11'
 
+      # MANIFEST.yaml uses nested per-arch value mappings; check.py's flat
+      # fallback parser cannot read them and refuses the run (by design).
+      # Install the real parser instead of degrading the gate.
+      - name: Install PyYAML for the manifest parser
+        run: python3 -m pip install --quiet 'pyyaml>=6'
+
       - name: Cache the Kconfig definition cache (.cache/kconfig)
         uses: actions/cache@v4
         with:
@@ -216,6 +222,11 @@ jobs:
       # patches/ directory at the repo root. Probe both layouts and run the
       # first script that exists — visible warning, never a silent skip.
       - name: Run the patch apply check (or report it missing)
+        env:
+          # apply_check.sh fetches pinned blobs via `gh api`; without a token
+          # every fetch fails and the gate reports transport failures, not
+          # content mismatches.
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ -f tools/patches/apply_check.sh ]; then
             echo "running tools/patches/apply_check.sh"

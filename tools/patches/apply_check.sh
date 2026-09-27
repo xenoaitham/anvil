@@ -163,7 +163,15 @@ for id in "${ORDER[@]}"; do
         if got="$(fetch_one "$repo" "$ref" "$path" "$sha")"; then
             echo "content OK   $id $path ($got)"
         else
-            echo "content FAIL $id $path"
+            # distinguish a fetch/transport failure (no network copy, auth,
+            # rate limit) from a real hash mismatch: fetch_one prints the
+            # reason to stderr ("fetch: ..." vs "content: ...").
+            if gh api "repos/$repo/contents/$path?ref=$ref" --jq .sha >/dev/null 2>&1 \
+               || [ -s "$CACHE/$repo/$ref/$path" ]; then
+                echo "content FAIL $id $path (hash mismatch against $repo@$ref)"
+            else
+                echo "fetch FAIL   $id $path (no authenticated API access and no cache; set GH_TOKEN or run --offline from a warm cache)"
+            fi
             CONTENT_STATUS["$id"]=fail
             CONTENT_FAILS+=("$id $path")
         fi
