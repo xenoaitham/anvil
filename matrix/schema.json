@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://grafene.dev/anvil/matrix/schema.json",
+  "title": "Anvil per-device security matrix entry",
+  "description": "One device family per file. The defining virtue of this matrix is honesty: a cell says yes ONLY with an evidence citation, hardware-forbidden cells say 'no' plainly, and anything that could not be confirmed from a public source says 'unverified' with a note describing what would verify it. Every evidence id referenced here must be defined in matrix/evidence/<id>.md.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Stable family id; must equal the YAML file name without extension.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "name": {
+      "description": "Human-readable device family name.",
+      "type": "string",
+      "minLength": 1
+    },
+    "reference": {
+      "description": "True for reference rows (GrapheneOS-supported Pixels) that define what full support means.",
+      "type": "boolean",
+      "default": false
+    },
+    "soc": {
+      "description": "System-on-chip capability row. MTE/BTI/PAC here describe the HARDWARE's capability class; whether the vendor actually enables them on this device is documented in mte_notes and limitations.",
+      "type": "object",
+      "properties": {
+        "model": {
+          "description": "SoC model(s); note both variants for dual-chip families.",
+          "type": "string",
+          "minLength": 1
+        },
+        "mte": {
+          "description": "yes = SoC's cores implement ARM MTE (cited); no = cores predate ARMv8.5, so MTE is hardware-forbidden; unverified = capability could not be confirmed from a public source.",
+          "enum": ["yes", "no", "unverified"]
+        },
+        "bti_pac": {
+          "description": "Hardware coarse-grained CFI (BTI/PAC). partial = mixed-core SoC where only some cores implement it (e.g. big cores yes, Cortex-A55 no).",
+          "enum": ["yes", "no", "partial", "unverified"]
+        },
+        "note": {
+          "description": "Chip-variant split, core generation, and caveats on the capability claims.",
+          "type": "string"
+        }
+      },
+      "required": ["model", "mte", "bti_pac"],
+      "additionalProperties": false
+    },
+    "bootloader": {
+      "description": "Bootloader unlock/relock story. On most non-Pixel devices both 'officially unlockable' and 'relockable' are gated by vendor policy, not Android.",
+      "type": "object",
+      "properties": {
+        "officially_unlockable": {
+          "description": "Vendor provides a documented, supported unlock path. boolean, or the literal string 'unverified'.",
+          "anyOf": [
+            { "type": "boolean" },
+            { "const": "unverified" }
+          ]
+        },
+        "relockable": {
+          "description": "Bootloader can be re-locked after flashing. Note: on most vendors this only works with vendor-signed images, not with a custom OS — that nuance lives in verified_boot.",
+          "anyOf": [
+            { "type": "boolean" },
+            { "const": "unverified" }
+          ]
+        },
+        "rollback_protection": {
+          "description": "Bootloader refuses older, more vulnerable firmware/OS (anti-rollback). partial = enforced for some partitions/paths only.",
+          "enum": ["yes", "no", "partial", "unverified"]
+        },
+        "note": {
+          "description": "Unlock mechanics, fuse/warranty consequences, waiting periods, regional restrictions.",
+          "type": "string"
+        }
+      },
+      "required": ["officially_unlockable", "relockable", "rollback_protection"],
+      "additionalProperties": false
+    },
+    "verified_boot": {
+      "description": "Android Verified Boot story, focused on the GrapheneOS criterion: can the user run THEIR OWN OS with the bootloader locked and full verified boot?",
+      "type": "object",
+      "properties": {
+        "own_os_with_locked_bl": {
+          "description": "yes = own OS (GrapheneOS) with locked bootloader and full verified boot incl. user-visible key state; partial = relock possible with vendor-signed OS but not demonstrated with a custom OS; no = locked bootloader cannot run a custom OS; unverified = not established.",
+          "enum": ["yes", "no", "partial", "unverified"]
+        },
+        "note": {
+          "description": "Key ownership (vendor vs user keys), yellow/orange boot state behavior, caveats.",
+          "type": "string"
+        }
+      },
+      "required": ["own_os_with_locked_bl", "note"],
+      "additionalProperties": false
+    },
+    "attestation": {
+      "description": "Remote attestation row, mirroring GrapheneOS's Auditor/AttestationServer criteria.",
+      "type": "object",
+      "properties": {
+        "hardware": {
+          "description": "Hardware-backed key attestation (TEE or StrongBox). Mandatory for devices launching with Android 8.0+ per CDD/CTS; 'yes' cites that rule plus the launch OS.",
+          "enum": ["yes", "no", "unverified"]
+        },
+        "strongbox": {
+          "description": "StrongBox keystore provided by a dedicated secure element (true/false), or 'unverified'.",
+          "anyOf": [
+            { "type": "boolean" },
+            { "const": "unverified" }
+          ]
+        },
+        "remote_supported_by_grapheneos_auditor": {
+          "description": "Device model is explicitly integrated into GrapheneOS Auditor/AttestationServer (their supported lists are Pixel-only; per-model integration is required).",
+          "enum": ["yes", "no", "unverified"]
+        },
+        "note": {
+          "description": "Attestation strength caveats (TEE vs StrongBox, softkey-only, remote provisioning).",
+          "type": "string"
+        }
+      },
+      "required": ["hardware", "strongbox", "remote_supported_by_grapheneos_auditor"],
+      "additionalProperties": false
+    },
+    "updates": {
+      "description": "Vendor security-update promise row. ONLY a published vendor commitment goes in the months field; a widely-reported promise you could not reach at review time stays null with the note pointing at the verification path.",
+      "type": "object",
+      "properties": {
+        "vendor_security_period_months": {
+          "description": "Published vendor commitment in months from launch (integer), or null when unverified/EOL.",
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 240
+        },
+        "note": {
+          "description": "What the number means, its source or its verification path, OS-update generations, EOL date if reached.",
+          "type": "string"
+        }
+      },
+      "required": ["vendor_security_period_months", "note"],
+      "additionalProperties": false
+    },
+    "kernel": {
+      "description": "Kernel situation: GKI version if known, mainline proximity, vendor kernel age.",
+      "type": "object",
+      "properties": {
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["note"],
+      "additionalProperties": false
+    },
+    "mte_notes": {
+      "description": "The honest MTE story for this device: capability vs. actual enablement in the shipping OS, and what would verify it.",
+      "type": "string"
+    },
+    "custom_os": {
+      "description": "Custom-OS reality on this device.",
+      "type": "object",
+      "properties": {
+        "gsi_feasibility": {
+          "description": "Can a Generic System Image serve as a daily-driver hardened OS? GrapheneOS's own docs reject GSIs outright (kernel changes required); 'good' would require positive evidence for a specific device.",
+          "enum": ["good", "poor", "untested"]
+        },
+        "lineage_official": {
+          "description": "Device is on LineageOS's official supported device list (cited), or 'unverified'.",
+          "anyOf": [
+            { "type": "boolean" },
+            { "const": "unverified" }
+          ]
+        },
+        "note": {
+          "description": "Official builds, trustworthiness caveats of community builds, GSI caveats.",
+          "type": "string"
+        }
+      },
+      "required": ["gsi_feasibility", "lineage_official"],
+      "additionalProperties": false
+    },
+    "portable_hardening_score": {
+      "description": "Computed by tools/matrix/matrix_lint.py — redeclared here so files are diff-stable. Weights: MTE 3, relockable own-OS verified boot 3 (partial 1.5), rollback protection 2 (partial 1), hardware attestation 2, vendor security period >= 48 months 1. Maximum 11.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 11
+    },
+    "limitations": {
+      "description": "The brutally honest list: hardware-forbidden features, policy walls, unverified areas. Every non-Pixel family must carry at least one entry; entries must state what would verify an 'unverified' area where applicable.",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "evidence": {
+      "description": "Map of field path or field-group name -> evidence id defined in matrix/evidence/<id>.md. Every non-'no' capability claim MUST carry an evidence entry (exact field path like 'soc.mte', or a group like 'soc'). 'no'/false/null cells may cite evidence too and usually should.",
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+      "minProperties": 1
+    },
+    "last_reviewed": {
+      "description": "Date of the last human review pass over every cell and citation.",
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "soc",
+    "bootloader",
+    "verified_boot",
+    "attestation",
+    "updates",
+    "kernel",
+    "mte_notes",
+    "custom_os",
+    "portable_hardening_score",
+    "limitations",
+    "evidence",
+    "last_reviewed"
+  ],
+  "additionalProperties": false
+}
