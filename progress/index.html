@@ -28,9 +28,9 @@
 <h1>Anvil — live build progress</h1>
 <p class="tagline">Portable GrapheneOS-derived hardening for every Android device that can physically take it</p>
 <div class="metrics">
-  <div class="metric"><b>2/7</b>pieces passed</div>
-  <div class="metric"><b>1</b>blind critic wins (ours)</div>
-  <div class="metric"><b>5</b>review rounds</div>
+  <div class="metric"><b>5/7</b>pieces passed</div>
+  <div class="metric"><b>4</b>blind critic wins (ours)</div>
+  <div class="metric"><b>6</b>review rounds</div>
 </div>
 <table>
 <thead><tr><th>piece</th><th>status</th><th>critic rounds</th><th>commits</th><th>evidence</th></tr></thead>
@@ -49,8 +49,8 @@
   <td><span class="dim">—</span></td>
 </tr><tr>
   <td><strong>Layered kernel hardening config fragments + dependency-checked validator</strong><br><span class="dim">builder-kernel</span></td>
-  <td><span class="pill" style="background:#b45309">in progress</span></td>
-  <td>R1: <strong>critic running</strong> — blind critic dispatched; 3-symbol spot-checks against their tree mandatory</td>
+  <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
+  <td>R1: <strong>ours</strong> — n/a — critic&#x27;s mechanical audit: 49/58 arm64 =y lines literal defconfig; 9 exceptions = verified default-pins; 7 removals commit-attributed; validator parses 16,647 symbols, 0 hardcoded</td>
   <td><span class="dim">—</span></td>
   <td><code>hardening/kernel/ (99 symbols across 4 layers)</code><br><code>hardening/kernel/MANIFEST.yaml (97 rows)</code><br><code>tools/kernelconfig/check.py (19/19 tests)</code><br><code>25 hardening commit SHAs cited</code></td>
 </tr><tr>
