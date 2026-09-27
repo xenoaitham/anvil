@@ -159,6 +159,7 @@ jobs:
           hardening/kernel/soc/tensor.cfg
           --manifest hardening/kernel/MANIFEST.yaml
           --branch "$KERNEL_TREE_PIN"
+          --max-fetch 2000
 
       - name: Offline assertion — same invocation, cache only
         run: >
