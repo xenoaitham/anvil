@@ -1,0 +1,406 @@
+# Anvil kernel hardening fragments - provenance manifest.
+# One row per non-comment config line in hardening/kernel/ fragments.
+# Source tree: GrapheneOS/kernel_common-6.6 branch "17", head f97a55ff191d
+# (2026-09-14). "GOS <sha>" = commit authored by GrapheneOS against their
+# gki_defconfig; "GKI baseline" = AOSP android15-6.6 state carried unchanged in
+# their tree; "Anvil pin" = branch default restated to survive baseline drift.
+# Symbols whose value differs per arch layer carry a value mapping keyed
+# by arch (arch-arm64.cfg -> "arm64", arch-x86_64.cfg -> "x86_64").
+# Validate: python3 tools/kernelconfig/check.py hardening/kernel/base.cfg \
+#   hardening/kernel/arch-*.cfg hardening/kernel/soc/*.cfg \
+#   --manifest hardening/kernel/MANIFEST.yaml --offline
+
+ARCH_MMAP_RND_BITS:
+  value:
+    arm64: 33
+    x86_64: 32
+  provenance: "arm64: GOS efaafdbd8fa7 (33 = max for 48-bit VA); x86: GOS 202da0eeca54 (32)"
+  portability_class: arch
+ARCH_MMAP_RND_COMPAT_BITS:
+  value:
+    arm64: 16
+    x86_64: 16
+  provenance: "GOS kernel_common-6.6 commit 202da0eeca54 (both gki_defconfigs)"
+  portability_class: arch
+ARM64_BTI:
+  value: y
+  provenance: "Anvil pin of branch default y (verified vs kernel_common-6.6 @ f97a55ff191d arch/arm64/Kconfig)"
+  portability_class: arch
+ARM64_BTI_KERNEL:
+  value: y
+  provenance: "GOS commit 77d2b002c384; default y on branch 17, Anvil pin"
+  portability_class: arch
+ARM64_EPAN:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d)"
+  portability_class: arch
+ARM64_MTE:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d); hardware-gated, see soc/"
+  portability_class: arch
+ARM64_PAN:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d)"
+  portability_class: arch
+ARM64_PTR_AUTH:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d)"
+  portability_class: arch
+ARM64_PTR_AUTH_KERNEL:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d)"
+  portability_class: arch
+ARM64_SW_TTBR0_PAN:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/arm64/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: arch
+ARM64_TAGGED_ADDR_ABI:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d); MTE userspace contract rides on it"
+  portability_class: arch
+ARM64_VA_BITS_48:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit e985b6d73030 (arm64)"
+  portability_class: arch
+ARMV8_DEPRECATED:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/arm64/configs/gki_defconfig @ f97a55ff191d; required by BTI/PTR_AUTH/PAN/MTE depends"
+  portability_class: arch
+AUDIT:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d; required by SECURITY_SELINUX depends"
+  portability_class: universal
+BINFMT_MISC:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit 4a84a30c7b20 (arm64 gki_defconfig)"
+  portability_class: universal
+BPF_UNPRIV_DEFAULT_OFF:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d; GOS keeps mainline-off state, userspace gates BPF"
+  portability_class: universal
+BUG_ON_DATA_CORRUPTION:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+CACHESTAT_SYSCALL:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit 7e33a10a03f5 (arm64 gki_defconfig)"
+  portability_class: universal
+CALL_DEPTH_TRACKING:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+CFI_CLANG:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+COMPAT:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/arm64/configs/gki_defconfig @ f97a55ff191d; required by BTI/PTR_AUTH/PAN/MTE depends"
+  portability_class: arch
+COMPAT_BRK:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+CORE_DUMP_DEFAULT_ELF_HEADERS:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+CPU_IBRS_ENTRY:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+CPU_SRSO:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+CPU_UNRET_ENTRY:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+DEBUG_MEMORY_INIT:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+DEBUG_SG:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit f37a3bac746b (both gki_defconfigs)"
+  portability_class: universal
+DEFAULT_MMAP_MIN_ADDR:
+  value:
+    arm64: 32768
+    x86_64: 65536
+  provenance: "arm64: GKI baseline (32768); x86: GOS commit 2ceae5736aee (65536); both @ f97a55ff191d"
+  portability_class: arch
+DEVMEM:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+DEVPORT:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+DMI:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/arm64/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: arch
+EFI_DISABLE_PCI_DMA:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit be937dd7da8b (both gki_defconfigs)"
+  portability_class: universal
+EFI_STUB:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit a2aec6633cd7 (x86 gki_defconfig)"
+  portability_class: arch
+FW_CACHE:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+GUNYAH_QCOM_PLATFORM:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/arm64/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: soc-gated
+HARDENED_USERCOPY:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+HIBERNATION:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit 07dd867518bf (both gki_defconfigs)"
+  portability_class: universal
+INIT_ON_ALLOC_DEFAULT_ON:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+INIT_ON_FREE_DEFAULT_ON:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit 7749342e2592 (both gki_defconfigs)"
+  portability_class: universal
+KASAN:
+  value: y
+  provenance: "AOSP GKI commit bcc6abad89b7, carried @ f97a55ff191d"
+  portability_class: arch
+KASAN_HW_TAGS:
+  value: y
+  provenance: "AOSP GKI commit bcc6abad89b7, carried @ f97a55ff191d; MTE-hardware-gated, see soc/"
+  portability_class: arch
+KFENCE:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d; AOSP-aligned per GOS e349da113c86"
+  portability_class: universal
+KFENCE_NUM_OBJECTS:
+  value: "63"
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+KFENCE_SAMPLE_INTERVAL:
+  value: "500"
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+LDISC_AUTOLOAD:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit 21096668d993 (arm64 gki_defconfig)"
+  portability_class: universal
+LEGACY_TIOCSTI:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit 51d1fa9fb9ea (arm64 gki_defconfig)"
+  portability_class: universal
+LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit b19b430760c4 (both gki_defconfigs)"
+  portability_class: universal
+MAGIC_SYSRQ:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d (kept on; keys disabled via DEFAULT_ENABLE)"
+  portability_class: universal
+MAGIC_SYSRQ_DEFAULT_ENABLE:
+  value: "0x0"
+  provenance: "GOS kernel_common-6.6 commit 30ba0f40cdfc (both gki_defconfigs)"
+  portability_class: universal
+MAGIC_SYSRQ_SERIAL:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit 30ba0f40cdfc (both gki_defconfigs)"
+  portability_class: universal
+MEMORY_HOTPLUG:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit d86d224813b3 (both gki_defconfigs)"
+  portability_class: universal
+MEMORY_HOTREMOVE:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit d86d224813b3 (both gki_defconfigs)"
+  portability_class: universal
+MITIGATE_SPECTRE_BRANCH_HISTORY:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/arm64/Kconfig)"
+  portability_class: arch
+MITIGATION_RFDS:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+MITIGATION_SPECTRE_BHI:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+MODULE_SIG_FORCE:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit ec69683a7042 (both gki_defconfigs)"
+  portability_class: universal
+MODULE_SIG_SHA256:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit 91aa73a28405 (both gki_defconfigs)"
+  portability_class: universal
+MODVERSIONS:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit 816d1996b2c8 (dropped as randstruct-incompatible)"
+  portability_class: universal
+NET:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d; required by SECURITY_SELINUX depends"
+  portability_class: universal
+PAGE_TABLE_ISOLATION:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+PANIC_ON_OOPS:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+PANIC_TIMEOUT:
+  value: "-1"
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+RANDOMIZE_BASE:
+  value: y
+  provenance: "arm64: explicit in GOS gki_defconfig @ f97a55ff191d; x86: branch default (Anvil pin)"
+  portability_class: arch
+RANDOMIZE_KSTACK_OFFSET_DEFAULT:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit 9c7603114913 (both gki_defconfigs)"
+  portability_class: universal
+RANDOMIZE_MEMORY:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+RANDOMIZE_MODULE_REGION_FULL:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/arm64/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: arch
+RANDOM_KMALLOC_CACHES:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit 2dfdb1062888 (both gki_defconfigs)"
+  portability_class: universal
+RANDSTRUCT_FULL:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit 816d1996b2c8 (both gki_defconfigs)"
+  portability_class: universal
+RESET_ATTACK_MITIGATION:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit a2aec6633cd7 (both gki_defconfigs)"
+  portability_class: universal
+RETHUNK:
+  value: y
+  provenance: "Anvil pin of branch default y if X86_64 (verified @ f97a55ff191d)"
+  portability_class: arch
+RETPOLINE:
+  value: y
+  provenance: "Anvil pin of branch default y (verified @ f97a55ff191d arch/x86/Kconfig)"
+  portability_class: arch
+SECURITY:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+SECURITY_LOCKDOWN_LSM:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit b19b430760c4 (both gki_defconfigs)"
+  portability_class: universal
+SECURITY_LOCKDOWN_LSM_EARLY:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit b19b430760c4 (both gki_defconfigs)"
+  portability_class: universal
+SECURITY_NETWORK:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+SECURITY_SAFESETID:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d; AOSP de6599b44559/fc6be87d0713"
+  portability_class: universal
+SECURITY_SELINUX:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+SHADOW_CALL_STACK:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/arm64/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: arch
+SHUFFLE_PAGE_ALLOCATOR:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+SLAB_FREELIST_HARDENED:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+SLAB_FREELIST_RANDOM:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+SLAB_MERGE_DEFAULT:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+SPMI_MSM_PMIC_ARB:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/arm64/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: soc-gated
+STATIC_USERMODEHELPER:
+  value: y
+  provenance: "AOSP GKI commit 4a0622c2681a, carried @ f97a55ff191d"
+  portability_class: universal
+STATIC_USERMODEHELPER_PATH:
+  value: '""'
+  provenance: "AOSP GKI commit 183a32873919, carried @ f97a55ff191d"
+  portability_class: universal
+SYN_COOKIES:
+  value: y
+  provenance: "GOS kernel_common-6.6 commit 615bd95d91f0 (both gki_defconfigs)"
+  portability_class: universal
+SYSFS_SYSCALL:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+TIPC:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit cfa719a29313 (both gki_defconfigs)"
+  portability_class: universal
+UBSAN:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+UBSAN_BOOL:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+UBSAN_ENUM:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+UBSAN_SHIFT:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+UBSAN_TRAP:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: universal
+UNWINDER_FRAME_POINTER:
+  value: y
+  provenance: "GOS kernel_common-6.6 arch/x86/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: arch
+UNWIND_PATCH_PAC_INTO_SCS:
+  value: n
+  provenance: "GOS kernel_common-6.6 commit d1bdd7adcd3c (arm64)"
+  portability_class: arch
+X86_5LEVEL:
+  value: n
+  provenance: "GOS kernel_common-6.6 arch/x86/configs/gki_defconfig @ f97a55ff191d"
+  portability_class: arch
