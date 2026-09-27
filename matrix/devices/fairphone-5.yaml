@@ -1,0 +1,64 @@
+# The sustainability pick: best non-Pixel custom-OS story (official LineageOS,
+# vendor-documented unlock), but MTE is hardware-forbidden on its IoT-grade SoC.
+id: fairphone-5
+name: Fairphone 5 (QCM6490)
+
+soc:
+  model: QCM6490 (Qualcomm, IoT/industrial grade bin of the Snapdragon 778G-class platform)
+  mte: "no"
+  bti_pac: "partial"
+  note: "Pre-ARMv8.5 cores (public spec: Kryo cores derived from Cortex-A78/A55), so MTE is architecturally impossible per the kernel's own MTE documentation. Big cores of this generation implement PAC/BTI while Cortex-A55-class little cores do not, hence partial. Core identification from public spec material; no primary vendor page reached at review."
+
+bootloader:
+  officially_unlockable: true
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "LineageOS's official FP5 install guide defers unlocking to Fairphone Support's own instructions — a vendor-documented unlock path — with the standard data-wipe warning. Fairphone is widely reported to support relocking the bootloader with supported OSes, but that was not confirmable from a reachable primary source; verification path: support.fairphone.com bootloader article."
+
+verified_boot:
+  own_os_with_locked_bl: "partial"
+  note: "The install guide contemplates relocking (FAQ pointer), and Fairphone's long-support model is friendly to custom OSes, but locked-bootloader verified boot with a custom OS is not demonstrated here. Relock with vendor-signed Fairphone OS is the reported path."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Launched with Android 13, inside the hardware-attestation mandate. StrongBox unverified. GrapheneOS Auditor supports Pixels only."
+
+updates:
+  vendor_security_period_months: null
+  note: "Fairphone publicly promises very long support (widely reported as security updates into the 2030s); the exact commitment page was unreachable at review. Verification path: fairphone.com support/announcement pages. The promise is real marketing — this cell stays null until the primary source is reached."
+
+kernel:
+  note: "Vendor Qualcomm Android kernel on a long-lifecycle IoT SoC platform; GKI status not publicly documented here."
+
+mte_notes: "Hardware-forbidden: QCM6490 cores predate ARMv8.5, and the arm64 kernel documentation defines MTE as an ARMv8.5 feature. No kernel, ROM, or update can add MTE to this device. This is the single hardest ceiling for the 'sustainable phone' pitch."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: true
+  note: "Officially supported by LineageOS (FP5) — combined with the vendor unlock path, the best-documented non-Pixel custom-OS story in this matrix."
+
+portable_hardening_score: 3.5
+limitations:
+  - "MTE is hardware-forbidden: the SoC predates ARMv8.5, so the headline GrapheneOS hardening layer can never port here."
+  - "BTI/PAC at best partial (little cores lack the feature architecturally)."
+  - "The celebrated long-support promise is unverified in this review; no primary page was reachable to fix a month count."
+  - "Relock-with-custom-OS not demonstrated; rollback protection status unverified."
+  - "Modest SoC: long support on slower hardware trades performance for longevity — relevant to whether the security ceiling matters."
+evidence:
+  bootloader: lineageos-install-fp5
+  attestation: auditor-about
+  soc.mte: kernel-mte-doc
+  soc.bti_pac: kernel-mte-doc
+  bootloader.officially_unlockable: lineageos-install-fp5
+  bootloader.rollback_protection: aosp-verified-boot
+  verified_boot.own_os_with_locked_bl: lineageos-install-fp5
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  custom_os.lineage_official: lineageos-device-list
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  limitations: grapheneos-faq-criteria
+  verification-path-relock: verification-path-fairphone-relock
+  verification-path-updates: verification-path-fairphone-updates
+last_reviewed: "2026-09-27"

@@ -1,0 +1,64 @@
+# Nothing's pitch is transparency, but transparency is not verified boot:
+# unlock is easy, everything above it is unproven in public documentation.
+id: nothing-phone-2
+name: Nothing Phone (2) (Snapdragon 8+ Gen 1)
+
+soc:
+  model: Snapdragon 8+ Gen 1
+  mte: "unverified"
+  bti_pac: "unverified"
+  note: "ARMv9-era cores (Cortex-X2/A710/A510 per public spec). Public reporting around this core generation says MTE was dropped/disabled in the prime and big cores, but the source could not be reached at review, so the honest cell is unverified rather than no. Core details not confirmed from a primary vendor page."
+
+bootloader:
+  officially_unlockable: true
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "LineageOS's official pong install guide documents the plain fastboot flashing unlock path (OEM unlock toggle, one command, data wipe) with no vendor token or waiting period. Relocking is pointed to the LineageOS FAQ only; an unavoidable boot warning is documented."
+
+verified_boot:
+  own_os_with_locked_bl: "partial"
+  note: "Relock after installing LineageOS is contemplated by the guide's FAQ pointer but not demonstrated; verified boot with custom keys is not available on this chain."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Launched with Android 13, inside the hardware-attestation mandate. StrongBox unverified. GrapheneOS Auditor supports Pixels only."
+
+updates:
+  vendor_security_period_months: null
+  note: "Nothing's launch messaging (3 OS generations, 4 years security, per public reporting) was not confirmable at review. Verification path: nothing.tech support pages."
+
+kernel:
+  note: "Vendor Android kernel; MTE-related kernel config not publicly documented."
+
+mte_notes: "Unverified in both directions: this core generation is the one public reporting associates with dropped MTE support, and no vendor documentation shows it enabled either. Verification path: HWCAP2_MTE on stock firmware; ARM/Qualcomm core documentation for X2/A710 MTE status."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: true
+  note: "Officially supported by LineageOS (pong)."
+
+portable_hardening_score: 3.5
+limitations:
+  - "Cannot run GrapheneOS: fails the published criteria set (no demonstrated own-OS verified boot, MTE status unproven at best, auditor exclusion)."
+  - "MTE is the open question this row cannot answer: neither present-and-enabled nor definitively absent could be cited at review."
+  - "Relock/rollback unverified; locked-bootloader custom OS not demonstrated."
+  - "Custom OS inherits the vendor firmware maintenance window; decay applies after it closes."
+evidence:
+  soc: kernel-mte-doc
+  bootloader: lineageos-install-pong
+  attestation: auditor-about
+  soc.mte: kernel-mte-doc
+  bootloader.officially_unlockable: lineageos-install-pong
+  bootloader.rollback_protection: aosp-verified-boot
+  verified_boot.own_os_with_locked_bl: lineageos-install-pong
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  custom_os.lineage_official: lineageos-device-list
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  limitations: grapheneos-faq-criteria
+  verification-path-mte: verification-path-mte-enablement
+  verification-path-relock: verification-path-relock-custom
+  verification-path-updates: verification-path-nothing-updates
+last_reviewed: "2026-09-27"

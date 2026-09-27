@@ -1,0 +1,20 @@
+# Evidence — pixel-9-pro
+
+Citation list for `matrix/devices/pixel-9-pro.yaml`. Every evidence id
+referenced there is defined below; format is `- \`id\`: claim — source.`
+Access date for all web citations: 2026-09-27.
+
+## Cloned GrapheneOS sources (arbiter — local refs)
+
+- `grapheneos-install`: GrapheneOS install documentation (cloned: `ref/grapheneos.org/static/install/web.html`, incl. the 'Locking the bootloader' steps): the documented Pixel flow — unlock the bootloader, flash GrapheneOS, then lock the bootloader again, ending with full verified boot on the owner's OS. Citation for officially_unlockable/relockable = true on the Pixel reference rows.
+- `grapheneos-faq-updates`: GrapheneOS FAQ: 8th-generation Pixels and later carry a 7-year minimum support guarantee from launch (previous generations: 5 years); MTE, Pointer Authentication and Branch Target Identification arrived with the ARMv9 cores of 8th-generation Pixels. Cloned source: `ref/grapheneos.org/static/faq.html`.
+- `grapheneos-faq-criteria`: GrapheneOS FAQ, non-exhaustive requirements for supported devices: verified boot with rollback protection for firmware AND OS, hardware memory tagging (MTE or equivalent), BTI/PAC coarse-grained CFI, StrongBox keystore + hardware key attestation + attest key, Weaver, isolated radios, A/B updates, hardware USB-data disable, reset-attack mitigation, and more. Cloned source: `ref/grapheneos.org/static/faq.html`.
+- `grapheneos-attest-guide`: GrapheneOS Attestation compatibility guide: hardware attestation has been mandatory for devices since Android 8 (detectable via `ro.product.first_api_level` > 25); remote verifiers should enforce `verifiedBootState` Verified or SelfSigned, matching published GrapheneOS verified-boot key fingerprints (https://grapheneos.org/attestation.json) — a list that only includes devices "receiving proper security updates for the kernel, drivers and firmware". Cloned source: `ref/grapheneos.org/static/articles/attestation-compatibility-guide.html`.
+- `grapheneos-faq-attestation`: GrapheneOS FAQ: Android devices launching with Android 8 or later provide hardware-based attestation; "secure devices like Pixels" provide BOTH the TEE (TrustZone) keystore and a StrongBox secure element, each providing attestation; these AOSP features implement the Auditor app. Cloned source: `ref/grapheneos.org/static/faq.html`.
+- `grapheneos-faq-gsi`: GrapheneOS FAQ: GrapheneOS "does not support being used as a Generic System Image" — the required kernel changes cannot run under a GSI, and GSIs do not ship/patch the device-support code. Cloned source: `ref/grapheneos.org/static/faq.html`.
+- `grapheneos-faq-eol`: GrapheneOS FAQ, "Why are older devices no longer supported?": GrapheneOS "cannot" provide a reasonably secure device "once device support code like firmware, kernel and vendor code is no longer actively maintained" — the decay-curve rationale this matrix adopts for EOL rows. Cloned source: `ref/grapheneos.org/static/faq.html`.
+
+## Web sources (all accessed 2026-09-27)
+
+- `auditor-about`: Auditor/AttestationServer overview, https://attestation.app/about (accessed 2026-09-27): any Android 13+ device can run Auditor as the VERIFIER; only devices launched with Android 8.0+ have the hardware support to be verified; each device model must be explicitly integrated; the per-model supported lists (basic, StrongBox, attest key, GrapheneOS verification) are Pixel-only (Pixel 6 through 10a); alternative OSes can only be verified if their verified boot key ships in Auditor, and "most alternative operating systems lack support for full verified boot and most devices don't support using verified boot with a custom key".
+- `lineageos-device-list`: LineageOS officially supported devices, https://wiki.lineageos.org/devices/ (accessed 2026-09-27): lists panther (Pixel 7), husky (Pixel 8 Pro), caiman (Pixel 9 Pro), waffle (OnePlus 12), FP5 (Fairphone 5), pong (Nothing Phone 2), pdx237 (Xperia 5 V), beyond1lte (Galaxy S10). Does NOT list: Galaxy S24, Galaxy A55, Xiaomi 14, Motorola Edge 50, Zenfone 10.

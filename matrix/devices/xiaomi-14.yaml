@@ -1,0 +1,63 @@
+# The wall-of-policy row: the hardware is flagship-class, the unlock path is a
+# vendor gatekeeping funnel, and almost nothing is publicly verifiable.
+id: xiaomi-14
+name: Xiaomi 14 (Snapdragon 8 Gen 3)
+
+soc:
+  model: Snapdragon 8 Gen 3
+  mte: "unverified"
+  bti_pac: "unverified"
+  note: "Nominal ARMv9.2 cores per public spec; Xiaomi documents no MTE/BTI/PAC enablement for the shipping build."
+
+bootloader:
+  officially_unlockable: "unverified"
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "Xiaomi's public process (widely documented): the Mi Unlock desktop tool with Mi-account binding and a mandatory waiting period. Xiaomi tightened unlock policy in 2024-2025 per public reporting, and the official unlock page was not reachable at review. Verification path: current HyperOS/MIUI unlock documentation. Nothing here should be read as a working guarantee."
+
+verified_boot:
+  own_os_with_locked_bl: "unverified"
+  note: "No official custom-OS channel; not on LineageOS's official device list. Locked-bootloader custom OS not demonstrated."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Launched with Android 14; hardware-backed key attestation mandatory. StrongBox unverified. GrapheneOS Auditor supports Pixels only."
+
+updates:
+  vendor_security_period_months: null
+  note: "No reachable primary source for the security-update period at review. Verification path: Xiaomi security-center pages and launch announcements."
+
+kernel:
+  note: "Vendor Android kernel; kernel config and GKI status not publicly documented."
+
+mte_notes: "Architecturally plausible on ARMv9.2 cores; no public evidence of enablement; user-facing answer is 'not available'. Verification path: HWCAP2_MTE on stock firmware, kernel source."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: false
+  note: "Not on LineageOS's official device list; GSI route is explicitly ruled out by GrapheneOS's own docs as an OS base and is worse on Xiaomi's boot chain."
+
+portable_hardening_score: 2.0
+limitations:
+  - "Cannot run GrapheneOS; no official custom-OS channel (no LineageOS official build)."
+  - "Bootloader unlock is a vendor-gated process (account binding, waiting period, tightened policy per public reporting) and could not be verified as currently available at review."
+  - "MTE enablement undocumented; treat as unusable until demonstrated."
+  - "Update period unverified; no published promise confirmed from a primary source."
+evidence:
+  soc: kernel-mte-doc
+  bootloader: verification-path-xiaomi-unlock
+  verified_boot: verification-path-xiaomi-unlock
+  attestation: auditor-about
+  soc.mte: kernel-mte-doc
+  bootloader.rollback_protection: aosp-verified-boot
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  custom_os.lineage_official: lineageos-device-list
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  limitations: grapheneos-faq-criteria
+  verification-path-mte: verification-path-mte-enablement
+  verification-path-unlock: verification-path-xiaomi-unlock
+  verification-path-updates: verification-path-xiaomi-updates
+last_reviewed: "2026-09-27"

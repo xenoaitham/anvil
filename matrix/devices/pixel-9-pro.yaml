@@ -1,0 +1,59 @@
+# Reference row: current-generation Pixel, full GrapheneOS support.
+id: pixel-9-pro
+name: Google Pixel 9 Pro
+reference: true
+
+soc:
+  model: Google Tensor G4
+  mte: "yes"
+  bti_pac: "yes"
+  note: "ARMv9 cores with hardware memory tagging, Pointer Authentication and Branch Target Identification, per GrapheneOS's own device documentation."
+
+bootloader:
+  officially_unlockable: true
+  relockable: true
+  rollback_protection: "yes"
+  note: "Vendor-supported unlock and relock. Firmware and OS anti-rollback are GrapheneOS device criteria met by 9th-generation Pixels."
+
+verified_boot:
+  own_os_with_locked_bl: "yes"
+  note: "GrapheneOS with locked bootloader and full verified boot; GrapheneOS verified boot keys published for attestation pinning."
+
+attestation:
+  hardware: "yes"
+  strongbox: true
+  remote_supported_by_grapheneos_auditor: "yes"
+  note: "TEE keystore plus StrongBox secure element with attestation; caiman is on GrapheneOS Auditor/AttestationServer supported-device lists with attest-key pinning."
+
+updates:
+  vendor_security_period_months: 84
+  note: "7-year minimum support guarantee from launch (August 2024), per GrapheneOS's device documentation."
+
+kernel:
+  note: "Vendor GKI lineage maintained by Google for the full support window; per-device versions visible in GrapheneOS kernel manifest trees."
+
+mte_notes: "Hardware memory tagging on by default in GrapheneOS for base OS and compatible apps, per-app opt-in/out supported. Stock-OS enablement out of scope for this row."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: true
+  note: "GrapheneOS is the reference custom OS; GSI explicitly not usable for GrapheneOS. LineageOS also lists caiman officially."
+
+portable_hardening_score: 11.0
+limitations:
+  - "Support ends when the 7-year vendor window closes; GrapheneOS drops devices once firmware/device-support code stops being maintained."
+evidence:
+  bootloader: grapheneos-install
+  soc: grapheneos-faq-updates
+  soc.mte: grapheneos-faq-updates
+  bootloader.rollback_protection: grapheneos-faq-criteria
+  verified_boot: grapheneos-faq-criteria
+  verified_boot.own_os_with_locked_bl: grapheneos-attest-guide
+  attestation: grapheneos-faq-attestation
+  attestation.strongbox: grapheneos-faq-attestation
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  updates.vendor_security_period_months: grapheneos-faq-updates
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  custom_os.lineage_official: lineageos-device-list
+  limitations: grapheneos-faq-eol
+last_reviewed: "2026-09-27"

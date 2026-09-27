@@ -1,0 +1,63 @@
+# Effectively frozen: public reporting says ASUS ended its unlock program, and
+# without unlock none of the other columns can even be exercised.
+id: asus-zenfone-10
+name: Asus Zenfone 10 (Snapdragon 8 Gen 2)
+
+soc:
+  model: Snapdragon 8 Gen 2
+  mte: "unverified"
+  bti_pac: "unverified"
+  note: "Nominal ARMv9.2 cores (Cortex-X3/A715/A710/A510 per public spec). No public evidence shows ASUS enabling MTE in the shipping kernel. Core details not confirmed from a primary vendor page at review."
+
+bootloader:
+  officially_unlockable: "unverified"
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "Public reporting from 2023 onward says ASUS discontinued its official bootloader-unlock tool program, leaving recent Zenfones without a documented official unlock path; ASUS support pages were not reachable at review. Verification path: ASUS support/ZenTalk announcements. Assume frozen to stock until proven otherwise."
+
+verified_boot:
+  own_os_with_locked_bl: "unverified"
+  note: "Moot without a confirmed unlock path; nothing demonstrated for this model."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Launched with Android 13, inside the hardware-attestation mandate. StrongBox unverified. GrapheneOS Auditor supports Pixels only."
+
+updates:
+  vendor_security_period_months: null
+  note: "ASUS Zenfone messaging (2 OS generations, 4 years security, per public reporting) not confirmable at review. Verification path: ASUS support pages."
+
+kernel:
+  note: "Vendor Android kernel; kernel config and GKI status not publicly documented."
+
+mte_notes: "Architecturally plausible on ARMv9.2 cores; no public evidence of enablement; user-facing answer is 'not available'. Verification path: HWCAP2_MTE on stock firmware, kernel source."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: false
+  note: "Not on LineageOS's official device list; no maintained custom-OS channel. GSI route ruled out by GrapheneOS's own docs as an OS base."
+
+portable_hardening_score: 2.0
+limitations:
+  - "Cannot run GrapheneOS; no official custom-OS channel."
+  - "No documented official unlock path at review time (ASUS unlock program reportedly ended in 2023): the device is effectively stock-frozen, which makes every other column unreachable."
+  - "MTE enablement undocumented; treat as unusable until demonstrated."
+  - "Update period unverified; short Zenfone support windows reported but not confirmed from a primary source."
+evidence:
+  soc: kernel-mte-doc
+  bootloader: verification-path-asus-unlock
+  verified_boot: verification-path-asus-unlock
+  attestation: auditor-about
+  soc.mte: kernel-mte-doc
+  bootloader.rollback_protection: aosp-verified-boot
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  custom_os.lineage_official: lineageos-device-list
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  limitations: grapheneos-faq-criteria
+  verification-path-mte: verification-path-mte-enablement
+  verification-path-unlock: verification-path-asus-unlock
+  verification-path-updates: verification-path-asus-updates
+last_reviewed: "2026-09-27"

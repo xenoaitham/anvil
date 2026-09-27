@@ -1,0 +1,64 @@
+# The best-behaved non-Pixel unlock story (official Sony portal, official
+# LineageOS) — with a DRM-key warning the reachable docs no longer spell out.
+id: sony-xperia-5-v
+name: Sony Xperia 5 V (Snapdragon 8 Gen 2)
+
+soc:
+  model: Snapdragon 8 Gen 2
+  mte: "unverified"
+  bti_pac: "unverified"
+  note: "Nominal ARMv9.2 cores (Cortex-X3/A715/A710/A510 per public spec). No public evidence shows Sony enabling MTE in the shipping kernel. Core details not confirmed from a primary vendor page at review."
+
+bootloader:
+  officially_unlockable: true
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "LineageOS's official pdx237 install guide documents Sony's official unlock path: check 'Bootloader unlock allowed: Yes' in the service menu (*#*#7378423#*#*), record the IMEI, and generate an unlock code on Sony's official opendevices.sony.net portal, then fastboot oem unlock <code>. Data wipe required. Relocking is pointed to the LineageOS FAQ and not documented here."
+
+verified_boot:
+  own_os_with_locked_bl: "partial"
+  note: "Relock after installing LineageOS is contemplated by the guide's FAQ pointer but not demonstrated; verified boot with custom keys is not available on this chain."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Launched with Android 14, inside the hardware-attestation mandate. StrongBox unverified. GrapheneOS Auditor supports Pixels only."
+
+updates:
+  vendor_security_period_months: null
+  note: "Sony's traditional 2 OS + 3 years security messaging is public reporting; no reachable primary page at review. Verification path: Sony support and software-update pages."
+
+kernel:
+  note: "Vendor Android kernel; kernel config and GKI status not publicly documented."
+
+mte_notes: "Architecturally plausible on ARMv9.2 cores; no public evidence of enablement; user-facing answer is 'not available'. Verification path: HWCAP2_MTE on stock firmware, kernel source."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: true
+  note: "Officially supported by LineageOS (pdx237) on the strength of Sony's long-running official open-devices unlock program."
+
+portable_hardening_score: 3.5
+limitations:
+  - "Cannot run GrapheneOS: fails the published criteria set (no demonstrated own-OS verified boot, no MTE evidence, auditor exclusion)."
+  - "Unlocking is widely reported to destroy DRM-secured functionality (camera image processing, Widevine L1), but the reachable LineageOS page does not mention it and Sony's own open-devices documentation was not reachable at review — treat as unverified and check Sony's unlock warnings before relying on this row."
+  - "Relock/rollback unverified; locked-bootloader custom OS not demonstrated."
+  - "Update period unverified; Sony windows have historically been shorter than Samsung/Google promises."
+evidence:
+  soc: kernel-mte-doc
+  bootloader: lineageos-install-pdx237
+  attestation: auditor-about
+  soc.mte: kernel-mte-doc
+  bootloader.officially_unlockable: lineageos-install-pdx237
+  bootloader.rollback_protection: aosp-verified-boot
+  verified_boot.own_os_with_locked_bl: lineageos-install-pdx237
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  custom_os.lineage_official: lineageos-device-list
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  limitations: grapheneos-faq-criteria
+  verification-path-mte: verification-path-mte-enablement
+  verification-path-relock: verification-path-relock-custom
+  verification-path-updates: verification-path-sony-updates
+last_reviewed: "2026-09-27"

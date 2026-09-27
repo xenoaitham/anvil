@@ -1,0 +1,63 @@
+# Decay-curve exemplar: a once-flagship that custom ROMs keep alive on top of
+# firmware nobody maintains. Score does not capture how unsafe the tail is.
+id: samsung-galaxy-s10
+name: Samsung Galaxy S10 (Exynos 9820 / Snapdragon 855)
+
+soc:
+  model: "Exynos 9820 (international) or Snapdragon 855 (some markets)"
+  mte: "no"
+  bti_pac: "unverified"
+  note: "Pre-ARMv8.5 cores (public spec: Exynos M4 / Cortex-A75/A76 big cores, A55 little cores), so ARM MTE is architecturally impossible per the kernel's own MTE documentation (ARMv8.5 feature). BTI/PAC status for this generation not confirmed from a primary source."
+
+bootloader:
+  officially_unlockable: true
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "LineageOS's official beyond1lte install guide documents the Samsung unlock flow: enable OEM unlock, boot Download mode (Volume Down + Bixby + USB), follow the on-device unlock prompt, mandatory factory reset. An unavoidable boot warning appears afterwards. Relock behavior requires Samsung-signed images per public reporting and is unverified here."
+
+verified_boot:
+  own_os_with_locked_bl: "partial"
+  note: "Relock is only meaningful with Samsung-signed stock; LineageOS install docs point relocking questions to their FAQ and the device shows a permanent boot warning. A locked bootloader running a custom OS is not demonstrated for this device."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Launched with Android 9, inside the Android 8.0+ hardware-attestation mandate. StrongBox unverified. GrapheneOS Auditor supports Pixels only."
+
+updates:
+  vendor_security_period_months: null
+  note: "The S10 family has left Samsung's monthly security-update program per public reporting; a definitive end date was not confirmable at review. Verification path: security.samsungmobile.com model tables."
+
+kernel:
+  note: "Vendor kernel frozen at the last Samsung release; no ongoing maintenance — the definition of GrapheneOS's reason for dropping EOL devices."
+
+mte_notes: "Hardware-forbidden. The SoC's cores predate ARMv8.5, and the arm64 kernel documentation defines MTE as an ARMv8.5 feature — no ROM can add it. This is the decay curve's floor: even a perfectly maintained ROM inherits unmaintained firmware on silicon without modern memory-safety features."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: true
+  note: "Officially supported by LineageOS (beyond1lte) — the strongest custom-OS channel a non-Pixel can have — but it runs on top of Samsung firmware that no longer receives security maintenance."
+
+portable_hardening_score: 3.5
+limitations:
+  - "End-of-life: firmware, kernel and vendor components are unmaintained, which is exactly the condition GrapheneOS cites for refusing EOL devices — a community ROM does not fix that."
+  - "MTE hardware-forbidden (pre-ARMv8.5 cores); no software path can add it."
+  - "Relock and rollback behavior unverified; locked-bootloader custom OS not demonstrated."
+  - "Knox eFuse permanence on unlock applies (public reporting, unverified here)."
+evidence:
+  soc: kernel-mte-doc
+  bootloader: lineageos-install-beyond1lte
+  attestation: auditor-about
+  soc.mte: kernel-mte-doc
+  bootloader.officially_unlockable: lineageos-install-beyond1lte
+  bootloader.rollback_protection: aosp-verified-boot
+  verified_boot.own_os_with_locked_bl: lineageos-install-beyond1lte
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  custom_os.lineage_official: lineageos-device-list
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  limitations: grapheneos-faq-eol
+  verification-path-updates: verification-path-samsung-updates
+  verification-path-relock: verification-path-relock-custom
+last_reviewed: "2026-09-27"

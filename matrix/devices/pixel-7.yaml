@@ -1,0 +1,61 @@
+# Reference row: previous-generation Pixel. Full GrapheneOS support, but the
+# MTE cell is hardware-forbidden and the support window is the 5-year one.
+id: pixel-7
+name: Google Pixel 7
+reference: true
+
+soc:
+  model: Google Tensor G2
+  mte: "no"
+  bti_pac: "partial"
+  note: "ARMv8.2-class cores (public spec: Cortex-X1/A78/A55). GrapheneOS documents hardware memory tagging as arriving with the ARMv9 cores of 8th-generation Pixels, so G2 hardware cannot take MTE. Big cores implement PAC/BTI; Cortex-A55-class little cores do not, and OS-level deployment for this generation is not separately documented here."
+
+bootloader:
+  officially_unlockable: true
+  relockable: true
+  rollback_protection: "yes"
+  note: "Vendor-supported unlock and relock; anti-rollback per GrapheneOS device criteria."
+
+verified_boot:
+  own_os_with_locked_bl: "yes"
+  note: "GrapheneOS with locked bootloader and full verified boot; GrapheneOS verified boot keys published for pinning."
+
+attestation:
+  hardware: "yes"
+  strongbox: true
+  remote_supported_by_grapheneos_auditor: "yes"
+  note: "TEE keystore plus StrongBox with attestation; panther is on GrapheneOS Auditor/AttestationServer supported-device lists."
+
+updates:
+  vendor_security_period_months: 60
+  note: "5-year minimum guarantee from launch (October 2022) — the pre-8th-generation window that GrapheneOS documents."
+
+kernel:
+  note: "Vendor GKI lineage maintained by Google through the 5-year window."
+
+mte_notes: "Hardware-forbidden: Tensor G2's cores predate ARMv8.5 MTE (GrapheneOS attributes MTE to 8th-generation Pixels' ARMv9 cores). No kernel or OS setting can add MTE to this silicon. BTI/PAC deployment is partial: little cores lack the feature architecturally."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: true
+  note: "GrapheneOS reference custom OS; GSI explicitly rejected by GrapheneOS. LineageOS also lists panther officially."
+
+portable_hardening_score: 8.0
+limitations:
+  - "No MTE is possible on this hardware — a hard hardware-forbidden cell, not a configuration choice."
+  - "5-year support window (to October 2027) is the older, shorter guarantee; GrapheneOS drops the device when Google stops maintaining firmware."
+evidence:
+  bootloader: grapheneos-install
+  soc.mte: grapheneos-faq-updates
+  soc.bti_pac: grapheneos-faq-criteria
+  bootloader.rollback_protection: grapheneos-faq-criteria
+  verified_boot: grapheneos-faq-criteria
+  verified_boot.own_os_with_locked_bl: grapheneos-attest-guide
+  attestation: grapheneos-faq-attestation
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  updates.vendor_security_period_months: grapheneos-faq-updates
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  custom_os.lineage_official: lineageos-device-list
+  kernel-mte-rule: kernel-mte-doc
+  limitations: grapheneos-faq-eol
+last_reviewed: "2026-09-27"

@@ -1,0 +1,64 @@
+# Flagship non-Pixel: cannot run GrapheneOS. Both chip variants are nominal
+# ARMv9 parts, but no public evidence shows MTE enabled on either, so the cell
+# is unverified rather than yes.
+id: samsung-galaxy-s24
+name: Samsung Galaxy S24 (Snapdragon 8 Gen 3 / Exynos 2400)
+
+soc:
+  model: "Snapdragon 8 Gen 3 for Galaxy (most markets) or Exynos 2400 (some markets)"
+  mte: "unverified"
+  bti_pac: "unverified"
+  note: "Both variants are nominally ARMv9.2-core parts per public spec sheets, but neither Samsung nor the chipset vendors documents MTE/BTI/PAC enablement in the shipping Android build for this device. Core-generation details here come from public spec material, not a primary vendor page reached at review time."
+
+bootloader:
+  officially_unlockable: "unverified"
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "Samsung devices use a Download-mode OEM-unlock flow (documented by LineageOS for the Samsung Galaxy S10), but the S24-specific flow, its regional/carrier restrictions, and relock behavior were not confirmable from a reachable primary source at review. Public reporting says unlocking permanently burns the Knox eFuse warranty bit and relocking requires Samsung-signed images; treat both as unverified. US carrier units are frequently unlock-blocked."
+
+verified_boot:
+  own_os_with_locked_bl: "unverified"
+  note: "No official custom-OS channel. Relocking with a custom OS is not demonstrated publicly; relock with Samsung-signed stock is reported but unverified here."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Hardware-backed key attestation has been mandatory for devices launching with Android 8.0+; the S24 launched with Android 14, so TEE attestation is present. StrongBox (dedicated secure element) presence unverified. GrapheneOS Auditor/AttestationServer explicitly integrate only Pixels, so remote verification with pinning is not available to this device."
+
+updates:
+  vendor_security_period_months: null
+  note: "Samsung's January 2024 launch messaging widely reported as 7 years of OS and security updates, but the announcement page was unreachable at review. Verification path: news.samsung.com launch release and security.samsungmobile.com model tables. Do not treat the hearsay number as a cell value."
+
+kernel:
+  note: "Vendor Android kernel; GKI version and MTE-related kernel config not publicly documented for this device."
+
+mte_notes: "CPU cores are nominal ARMv9.2 parts where MTE is architecturally available, but no public evidence shows Samsung enabling MTE in the shipping kernel (CONFIG_ARM64_MTE plus boot config) for either S24 variant. Verification path: check HWCAP2_MTE via getauxval or /proc/cpuinfo on stock firmware; inspect vendor kernel source and boot config. Until then: unverified, and the practical answer for a user is 'not usable'."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: false
+  note: "Not on LineageOS's official device list. GrapheneOS's own docs reject GSIs outright (kernel changes required), and Samsung's locked-down boot chain makes GSI-based daily driving worse than on most vendors."
+
+portable_hardening_score: 2.0
+limitations:
+  - "Cannot run GrapheneOS: GrapheneOS supports Pixels only, and its published device criteria (full verified boot with relock, MTE, StrongBox, updates cadence) are not met by publicly verifiable evidence on this device."
+  - "Reported Knox eFuse burn on bootloader unlock is permanent and voids Knox-dependent features (public reporting, not confirmed from a primary source here — verify via Samsung Knox documentation)."
+  - "MTE enablement undocumented for both chip variants; treat MTE as unusable until demonstrated on stock firmware."
+  - "The 7-year update promise is hearsay in this review: the announcement could not be fetched, so the updates cell stays null."
+evidence:
+  soc: kernel-mte-doc
+  bootloader: verification-path-samsung-unlock
+  verified_boot: verification-path-samsung-unlock
+  attestation: auditor-about
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  bootloader.rollback_protection: aosp-verified-boot
+  soc.mte: kernel-mte-doc
+  verification-path-mte: verification-path-mte-enablement
+  verification-path-unlock: verification-path-samsung-unlock
+  verification-path-updates: verification-path-samsung-updates
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  custom_os.lineage_official: lineageos-device-list
+  limitations: grapheneos-faq-criteria
+last_reviewed: "2026-09-27"

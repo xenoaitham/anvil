@@ -1,0 +1,60 @@
+# Reference row: defines what FULL GrapheneOS support means. Every yes here is
+# arbitrated by the cloned GrapheneOS docs (matrix/evidence/pixel-8-pro.md).
+id: pixel-8-pro
+name: Google Pixel 8 Pro
+reference: true
+
+soc:
+  model: Google Tensor G3
+  mte: "yes"
+  bti_pac: "yes"
+  note: "ARMv9 cores. First Tensor generation with hardware memory tagging, Pointer Authentication and Branch Target Identification, per GrapheneOS's own device documentation."
+
+bootloader:
+  officially_unlockable: true
+  relockable: true
+  rollback_protection: "yes"
+  note: "Vendor-supported unlock and relock. Anti-rollback for firmware and OS is one of GrapheneOS's stated device criteria, met by 8th-generation Pixels."
+
+verified_boot:
+  own_os_with_locked_bl: "yes"
+  note: "GrapheneOS runs as the owner's OS with a locked bootloader and full verified boot; GrapheneOS's verified boot key fingerprints are published for attestation pinning (SelfSigned verifiedBootState)."
+
+attestation:
+  hardware: "yes"
+  strongbox: true
+  remote_supported_by_grapheneos_auditor: "yes"
+  note: "TEE keystore plus StrongBox secure element, both providing attestation; husky is explicitly on GrapheneOS Auditor/AttestationServer supported-device lists with attest-key pinning."
+
+updates:
+  vendor_security_period_months: 84
+  note: "7-year minimum support guarantee from launch (October 2023) for full security updates, per GrapheneOS's device documentation."
+
+kernel:
+  note: "Vendor GKI lineage maintained by Google for the full support window; per-device versions visible in GrapheneOS's kernel manifest trees (ref clone: kernel_manifest-6.6)."
+
+mte_notes: "GrapheneOS enables hardware memory tagging by default for the base OS and known-compatible apps, with per-app opt-in/out. Stock-OS enablement is out of scope for this row."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: true
+  note: "GrapheneOS is the reference custom OS. GSIs are explicitly rejected by GrapheneOS (required kernel changes do not survive a GSI). LineageOS also lists husky officially."
+
+portable_hardening_score: 11.0
+limitations:
+  - "Support ends when the 7-year vendor window closes: GrapheneOS drops devices whose firmware, kernel and device-support code are no longer maintained, so even this row has a decay date."
+evidence:
+  bootloader: grapheneos-install
+  soc: grapheneos-faq-updates
+  soc.mte: grapheneos-faq-updates
+  bootloader.rollback_protection: grapheneos-faq-criteria
+  verified_boot: grapheneos-faq-criteria
+  verified_boot.own_os_with_locked_bl: grapheneos-attest-guide
+  attestation: grapheneos-faq-attestation
+  attestation.strongbox: grapheneos-faq-attestation
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  updates.vendor_security_period_months: grapheneos-faq-updates
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  custom_os.lineage_official: lineageos-device-list
+  limitations: grapheneos-faq-eol
+last_reviewed: "2026-09-27"

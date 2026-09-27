@@ -1,0 +1,63 @@
+# Mid-range reality: same vendor walls as the S24 with a shorter reported
+# support tail and none of the flagship halo.
+id: samsung-galaxy-a55
+name: Samsung Galaxy A55 (Exynos 1480)
+
+soc:
+  model: Exynos 1480
+  mte: "unverified"
+  bti_pac: "unverified"
+  note: "Public spec material lists ARMv9.2-class cores (Cortex-X4/A720/A520); Samsung does not document MTE/BTI/PAC enablement in the shipping build. Core details not confirmed from a primary vendor page at review."
+
+bootloader:
+  officially_unlockable: "unverified"
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "Samsung Download-mode OEM-unlock flow exists (documented by LineageOS for Galaxy S10), but A55-specific unlock/relock behavior and Knox eFuse consequences were not confirmable from a reachable primary source. US/carrier units frequently unlock-blocked."
+
+verified_boot:
+  own_os_with_locked_bl: "unverified"
+  note: "No official custom-OS channel; locked-bootloader custom OS not demonstrated for this model."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Launched with Android 14, so hardware-backed key attestation is mandatory per the Android 8.0+ rule. StrongBox unverified. GrapheneOS Auditor supports Pixels only."
+
+updates:
+  vendor_security_period_months: null
+  note: "Samsung's A-series messaging (roughly 4 OS generations / 5 years security) is public reporting; no reachable primary page at review. Verification path: news.samsung.com and security.samsungmobile.com."
+
+kernel:
+  note: "Vendor Android kernel; kernel config and GKI status not publicly documented."
+
+mte_notes: "Nominal ARMv9.2 cores make MTE architecturally plausible, but with no public evidence of kernel enablement the honest cell is unverified — and for a user the practical answer is 'not available'. Verification path: HWCAP2_MTE on stock firmware, vendor kernel source."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: false
+  note: "Not on LineageOS's official device list; community GSIs only, which GrapheneOS's own docs rule out as a real OS base."
+
+portable_hardening_score: 2.0
+limitations:
+  - "Cannot run GrapheneOS; no official custom-OS channel at all (no LineageOS official build)."
+  - "Mid-range Samsung support promises are weaker and less documented than the S-series; the update period could not be verified at review."
+  - "MTE: unverified enablement on a chip where vendor documentation is absent; treat as hardware the user cannot actually use."
+  - "Reported Knox eFuse permanence on unlock applies (public reporting, unverified here)."
+evidence:
+  soc: kernel-mte-doc
+  bootloader: verification-path-samsung-unlock
+  verified_boot: verification-path-samsung-unlock
+  attestation: auditor-about
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  bootloader.rollback_protection: aosp-verified-boot
+  soc.mte: kernel-mte-doc
+  verification-path-mte: verification-path-mte-enablement
+  verification-path-unlock: verification-path-samsung-unlock
+  verification-path-updates: verification-path-samsung-updates
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  custom_os.lineage_official: lineageos-device-list
+  limitations: grapheneos-faq-criteria
+last_reviewed: "2026-09-27"

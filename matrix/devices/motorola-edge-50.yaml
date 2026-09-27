@@ -1,0 +1,64 @@
+# Uncertainty row: even the unlock path is unclear for this model generation,
+# and with no official LineageOS there is no maintained custom-OS channel.
+id: motorola-edge-50
+name: Motorola Edge 50 (Snapdragon 7 Gen 1-class)
+
+soc:
+  model: Snapdragon 7-series (7 Gen 1-class per public spec)
+  mte: "no"
+  bti_pac: "partial"
+  note: "Pre-ARMv8.5 cores (public spec: Cortex-A78/A55-class), so MTE is architecturally impossible per the kernel's own MTE documentation. Big cores of this generation implement PAC/BTI; A55-class little cores do not. Motorola does not publish core-level security documentation for this model."
+
+bootloader:
+  officially_unlockable: "unverified"
+  relockable: "unverified"
+  rollback_protection: "unverified"
+  note: "Motorola has historically operated an official bootloader-unlock portal, but eligibility is per-model, recent Edge models are widely reported as excluded, and the portal was not reachable at review. Verification path: Motorola's official unlock portal listing for this exact model. Until confirmed: unverified, and a buyer should assume there may be no official path."
+
+verified_boot:
+  own_os_with_locked_bl: "unverified"
+  note: "Without a confirmed unlock path, a locked-bootloader custom OS is moot; nothing demonstrated for this model."
+
+attestation:
+  hardware: "yes"
+  strongbox: "unverified"
+  remote_supported_by_grapheneos_auditor: "no"
+  note: "Launched with Android 14, inside the hardware-attestation mandate. StrongBox unverified. GrapheneOS Auditor supports Pixels only."
+
+updates:
+  vendor_security_period_months: null
+  note: "No reachable primary source for this model's update period at review. Verification path: Motorola support pages and launch announcements."
+
+kernel:
+  note: "Vendor Android kernel; kernel config and GKI status not publicly documented."
+
+mte_notes: "Hardware-forbidden on the A78/A55-class cores: the kernel's own documentation defines MTE as an ARMv8.5 feature this SoC generation predates. No ROM can add it."
+
+custom_os:
+  gsi_feasibility: poor
+  lineage_official: false
+  note: "Not on LineageOS's official device list. GSI route is ruled out by GrapheneOS's own docs as an OS base and is the weakest possible option on an undocumented boot chain."
+
+portable_hardening_score: 2.0
+limitations:
+  - "Cannot run GrapheneOS; no official custom-OS channel (no LineageOS official build)."
+  - "No confirmed official bootloader-unlock path for this model; Motorola's per-model eligibility could not be verified at review."
+  - "MTE hardware-forbidden (pre-ARMv8.5 cores)."
+  - "Update period unverified; no published promise confirmed from a primary source."
+evidence:
+  soc: kernel-mte-doc
+  bootloader: verification-path-motorola-unlock
+  verified_boot: verification-path-motorola-unlock
+  attestation: auditor-about
+  soc.mte: kernel-mte-doc
+  soc.bti_pac: kernel-mte-doc
+  bootloader.rollback_protection: aosp-verified-boot
+  attestation.hardware: grapheneos-attest-guide
+  attestation.remote_supported_by_grapheneos_auditor: auditor-about
+  custom_os.lineage_official: lineageos-device-list
+  custom_os.gsi_feasibility: grapheneos-faq-gsi
+  limitations: grapheneos-faq-criteria
+  verification-path-mte: verification-path-mte-enablement
+  verification-path-unlock: verification-path-motorola-unlock
+  verification-path-updates: verification-path-motorola-updates
+last_reviewed: "2026-09-27"
