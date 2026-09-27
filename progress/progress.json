@@ -1,13 +1,13 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-27T19:05:00Z",
+  "updated": "2026-09-27T22:25:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 7,
-    "pieces_passed": 1,
-    "critic_wins_ours": 0,
-    "total_review_rounds": 0
+    "pieces_passed": 2,
+    "critic_wins_ours": 1,
+    "total_review_rounds": 5
   },
   "pieces": [
     {
@@ -29,9 +29,16 @@
     {
       "id": "baseline",
       "title": "GrapheneOS reference baseline (real repos, real numbers)",
-      "status": "in_progress",
+      "status": "passed",
       "owner": "builder-baseline",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "ours",
+          "gap": "n/a \u2014 critic spot-checks passed: config values line-exact, defconfig symbols line-exact, SHAs resolve",
+          "detail": "Blind pick: winner=B(ours), confidence=high. Loser(A=upstream docs) gaps: no kernel/allocator inventory, no SHA/symbol traceability."
+        }
+      ],
       "commits": [],
       "evidence": []
     },
@@ -40,9 +47,20 @@
       "title": "Layered kernel hardening config fragments + dependency-checked validator",
       "status": "in_progress",
       "owner": "builder-kernel",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "critic running",
+          "gap": "blind critic dispatched; 3-symbol spot-checks against their tree mandatory"
+        }
+      ],
       "commits": [],
-      "evidence": []
+      "evidence": [
+        "hardening/kernel/ (99 symbols across 4 layers)",
+        "hardening/kernel/MANIFEST.yaml (97 rows)",
+        "tools/kernelconfig/check.py (19/19 tests)",
+        "25 hardening commit SHAs cited"
+      ]
     },
     {
       "id": "matrix",

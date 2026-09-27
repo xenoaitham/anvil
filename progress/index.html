@@ -28,9 +28,9 @@
 <h1>Anvil — live build progress</h1>
 <p class="tagline">Portable GrapheneOS-derived hardening for every Android device that can physically take it</p>
 <div class="metrics">
-  <div class="metric"><b>1/7</b>pieces passed</div>
-  <div class="metric"><b>0</b>blind critic wins (ours)</div>
-  <div class="metric"><b>0</b>review rounds</div>
+  <div class="metric"><b>2/7</b>pieces passed</div>
+  <div class="metric"><b>1</b>blind critic wins (ours)</div>
+  <div class="metric"><b>5</b>review rounds</div>
 </div>
 <table>
 <thead><tr><th>piece</th><th>status</th><th>critic rounds</th><th>commits</th><th>evidence</th></tr></thead>
@@ -43,16 +43,16 @@
   <td><code>progress/index.html (served 200 at http://127.0.0.1:8777)</code></td>
 </tr><tr>
   <td><strong>GrapheneOS reference baseline (real repos, real numbers)</strong><br><span class="dim">builder-baseline</span></td>
-  <td><span class="pill" style="background:#b45309">in progress</span></td>
-  <td><span class="dim">—</span></td>
+  <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
+  <td>R1: <strong>ours</strong> — n/a — critic spot-checks passed: config values line-exact, defconfig symbols line-exact, SHAs resolve</td>
   <td><span class="dim">—</span></td>
   <td><span class="dim">—</span></td>
 </tr><tr>
   <td><strong>Layered kernel hardening config fragments + dependency-checked validator</strong><br><span class="dim">builder-kernel</span></td>
   <td><span class="pill" style="background:#b45309">in progress</span></td>
+  <td>R1: <strong>critic running</strong> — blind critic dispatched; 3-symbol spot-checks against their tree mandatory</td>
   <td><span class="dim">—</span></td>
-  <td><span class="dim">—</span></td>
-  <td><span class="dim">—</span></td>
+  <td><code>hardening/kernel/ (99 symbols across 4 layers)</code><br><code>hardening/kernel/MANIFEST.yaml (97 rows)</code><br><code>tools/kernelconfig/check.py (19/19 tests)</code><br><code>25 hardening commit SHAs cited</code></td>
 </tr><tr>
   <td><strong>Per-device security matrix, evidence-cited, schema-linted</strong><br><span class="dim">builder-matrix</span></td>
   <td><span class="pill" style="background:#b45309">in progress</span></td>
