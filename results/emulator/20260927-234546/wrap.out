@@ -1,0 +1,1 @@
+selinux_entry=Enforcing status=pass note=pid 7434 alive with libhardened_malloc mapped (3 regions)

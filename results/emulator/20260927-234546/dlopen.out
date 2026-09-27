@@ -1,0 +1,1 @@
+ANVIL_SMOKE_RESULT mode=dlopen ok=1 narenas=0 note="bionic refused dlopen with the initial-exec TLS signature, as upstream's tls_model requires"

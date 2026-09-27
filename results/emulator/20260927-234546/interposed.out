@@ -1,0 +1,1 @@
+ANVIL_SMOKE_RESULT mode=interposed ok=1 narenas=5 note="hardened_malloc serving allocations, verified malloc-family traffic"
