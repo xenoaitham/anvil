@@ -1,11 +1,11 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-27T18:40:00Z",
+  "updated": "2026-09-27T19:05:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 7,
-    "pieces_passed": 0,
+    "pieces_passed": 1,
     "critic_wins_ours": 0,
     "total_review_rounds": 0
   },
@@ -13,16 +13,23 @@
     {
       "id": "skeleton",
       "title": "Repository skeleton, license, live progress page",
-      "status": "in_progress",
+      "status": "passed",
       "owner": "orchestrator",
       "rounds": [],
-      "commits": [],
-      "evidence": ["progress/index.html"]
+      "commits": [
+        "f00f864",
+        "18976a3",
+        "4c7b400",
+        "fbc2162"
+      ],
+      "evidence": [
+        "progress/index.html (served 200 at http://127.0.0.1:8777)"
+      ]
     },
     {
       "id": "baseline",
       "title": "GrapheneOS reference baseline (real repos, real numbers)",
-      "status": "pending",
+      "status": "in_progress",
       "owner": "builder-baseline",
       "rounds": [],
       "commits": [],
@@ -31,7 +38,7 @@
     {
       "id": "kernel-config",
       "title": "Layered kernel hardening config fragments + dependency-checked validator",
-      "status": "pending",
+      "status": "in_progress",
       "owner": "builder-kernel",
       "rounds": [],
       "commits": [],
@@ -40,7 +47,7 @@
     {
       "id": "matrix",
       "title": "Per-device security matrix, evidence-cited, schema-linted",
-      "status": "pending",
+      "status": "in_progress",
       "owner": "builder-matrix",
       "rounds": [],
       "commits": [],
@@ -49,7 +56,7 @@
     {
       "id": "hmalloc",
       "title": "hardened_malloc integration: build glue, test runs, real benchmarks",
-      "status": "pending",
+      "status": "in_progress",
       "owner": "builder-hmalloc",
       "rounds": [],
       "commits": [],
@@ -75,7 +82,7 @@
     },
     {
       "id": "readme",
-      "title": "README, methodology, limitations — the honest front door",
+      "title": "README, methodology, limitations \u2014 the honest front door",
       "status": "pending",
       "owner": "builder-docs",
       "rounds": [],
