@@ -1,13 +1,13 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-27T23:05:00Z",
+  "updated": "2026-09-27T23:40:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 7,
     "pieces_passed": 5,
     "critic_wins_ours": 4,
-    "total_review_rounds": 6
+    "total_review_rounds": 7
   },
   "pieces": [
     {
@@ -95,9 +95,19 @@
       "title": "CI: real builds, tests, lint, Pages progress deployment",
       "status": "pending",
       "owner": "builder-ci",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "critic running",
+          "gap": "blind critic dispatched; traces one gate end-to-end + checks live GitHub run"
+        }
+      ],
       "commits": [],
-      "evidence": []
+      "evidence": [
+        ".github/workflows/ci.yml (5 jobs)",
+        ".github/workflows/README.md",
+        "live run 36346119912"
+      ]
     },
     {
       "id": "readme",
