@@ -493,6 +493,107 @@ class KconfigDB:
             "fetched": self.fetch_count,
         }, indent=1))
 
+    def _bulk_fetch_tarball(self) -> bool:
+        """Fetch the whole pinned tree as one anonymous codeload tarball and
+        extract every Kconfig file into the hashed cache.
+
+        A kernel tree holds >1000 Kconfig files; fetching them one-by-one
+        through the contents API cannot fit inside the Actions installation
+        token's 1000 req/hour budget, so a cold CI cache could never complete
+        a warm run. The codeload endpoint serves the exact commit (SHA refs)
+        without authentication and costs a single request. Returns False on
+        any failure so callers fall back to the per-file API walk.
+        """
+        if not hasattr(self, "_bulk_attempted"):
+            self._bulk_attempted = True
+        # repo and ref reach this URL from argv; constrain both to strict
+        # allowlists so no path, scheme, or userinfo trickery can be smuggled
+        # into the request target.
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", self.repo):
+            raise SystemExit(f"invalid repository slug: {self.repo!r}")
+        if (".." in self.branch
+                or not re.fullmatch(r"[A-Za-z0-9._][A-Za-z0-9._/-]{0,119}", self.branch)):
+            raise SystemExit(f"invalid ref: {self.branch!r}")
+        url = f"https://codeload.github.com/{self.repo}/tar.gz/{self.branch}"
+        max_bytes = 1 << 30  # refuse absurd downloads; kernel tarballs ~300MB
+        try:
+            import ipaddress
+            import socket
+            import urllib.parse
+            import urllib.request
+            self._log(f"[fetch] bulk tarball {url} ...")
+            parsed = urllib.parse.urlparse(url)
+            # request-target pinning: scheme and host are fixed, no ports or
+            # userinfo; anything else is refused before any I/O.
+            if parsed.scheme != "https" or parsed.hostname != "codeload.github.com" \
+                    or parsed.port is not None or parsed.username or parsed.password:
+                raise SystemExit(f"refusing non-codeload fetch target: {url!r}")
+            # resolve the pinned hostname and refuse any private, loopback,
+            # link-local, reserved, or otherwise non-public answer (SSRF and
+            # DNS-rebinding defense: every address the name may return is
+            # screened before a connection is made).
+            for info in socket.getaddrinfo(parsed.hostname, 443,
+                                           proto=socket.IPPROTO_TCP):
+                addr = ipaddress.ip_address(info[4][0])
+                if (addr.is_private or addr.is_loopback or addr.is_link_local
+                        or addr.is_reserved or addr.is_multicast
+                        or addr.is_unspecified):
+                    raise SystemExit(
+                        "refusing fetch: codeload.github.com resolves to "
+                        f"non-public address {addr}")
+            # redirects disabled outright: codeload answers 200 directly, and
+            # any 3xx means the target moved — fail rather than follow.
+            class _NoRedirects(urllib.request.HTTPRedirectHandler):
+                def redirect_request(self, req, fp, code, msg, headers, newurl):
+                    return None  # surfacing as HTTPError to the caller
+
+            opener = urllib.request.build_opener(_NoRedirects)
+            req = urllib.request.Request(parsed.geturl(), method="GET")
+            with opener.open(req, timeout=300) as resp:  # noqa: S310
+                payload = resp.read(max_bytes + 1)
+            if len(payload) > max_bytes:
+                self._log("[warn] tarball exceeds 1GiB sanity cap; skipping bulk fetch")
+                return False
+        except SystemExit:
+            raise
+        except Exception as exc:
+            self._log(f"[warn] tarball fetch failed ({exc}); falling back to per-file API")
+            return False
+
+        kc_re = re.compile(r"^[^/]+/(.+)$")  # strip the <repo>-<sha>/ prefix
+        fetched = 0
+        try:
+            with tarfile.open(fileobj=io.BytesIO(payload), mode="r:gz") as tar:
+                for member in tar.getmembers():
+                    if not member.isfile():
+                        continue
+                    m = kc_re.match(member.name)
+                    if not m or not re.search(
+                            r"(^|/)Kconfig[A-Za-z0-9._-]*$", m.group(1)):
+                        continue
+                    rel = self.sanitize_rel(m.group(1))
+                    fh = tar.extractfile(member)
+                    if fh is None:
+                        continue
+                    text = fh.read().decode("utf-8", errors="replace")
+                    disk = self.file_path(rel)
+                    os.makedirs(os.path.dirname(disk), exist_ok=True)
+                    self._write_cache_file(disk, text)
+                    self.index[rel] = ""  # blob sha not needed for validation
+                    self.path_map[rel] = os.path.basename(disk)
+                    fetched += 1
+        except tarfile.TarError as exc:
+            self._log(f"[warn] tarball extraction failed ({exc}); falling back")
+            return False
+        if fetched == 0:
+            self._log("[warn] tarball held no Kconfig files; falling back")
+            return False
+        if re.fullmatch(r"[0-9a-f]{40}", self.branch):
+            self.head_sha = self.branch
+        self.fetch_count += 1  # one transport-level fetch
+        self._log(f"[fetch] tarball extracted {fetched} Kconfig files into cache")
+        return True
+
     def ensure_index(self):
         if self.index:
             return
@@ -504,6 +605,13 @@ class KconfigDB:
             return
         if self.offline:
             raise SystemExit(f"error: --offline and cache missing under {self.cache}")
+        if self._bulk_fetch_tarball():
+            self.save_meta()
+            self._write_cache_file(
+                os.path.join(self.cache, "tree_index.json"), json.dumps(self.index))
+            self._log(f"[fetch] index done (tarball): {len(self.index)} Kconfig paths, "
+                      f"head {self.head_sha[:12] or '?'}")
+            return
         self._log(f"[fetch] git tree index for {self.repo}@{self.branch} ...")
         data = self.gh_api(
             f"repos/{self.repo}/git/trees/{self.branch}?recursive=1")
