@@ -42,9 +42,8 @@ jobs:
   hmalloc-native-aarch64:
     name: hmalloc (native aarch64, gcc)
     runs-on: ubuntu-24.04-arm
-    # Budget from x86 evidence: the 58-test suite takes ~40 s per run and the
-    # LTO builds a few minutes on ci.yml's x86 leg (same 30-min job ceiling).
-    # The arm64 runner is slower but the margin holds.
+    # Budget from x86 evidence; the first arm64 run came in faster still
+    # (builds ~20 s, suite 4 s), so 30 min holds a wide margin either way.
     timeout-minutes: 30
     permissions:
       contents: read
@@ -68,7 +67,10 @@ jobs:
 
       - name: LD_PRELOAD interposition proof (native aarch64)
         run: |
-          echo "host arch: $(uname -m)"
+          # Assert, don't display (critic round 1): a wrong host or a wrong
+          # ELF must fail this step, not just print something odd.
+          [ "$(uname -m)" = "aarch64" ] || { echo "::error::not an aarch64 host: $(uname -m)"; exit 1; }
+          echo "host arch: aarch64 confirmed"
           # build.sh names output dirs <resolved-cc>-<config> (gcc-14-default
           # on this runner); glob rather than hardcode the compiler version.
           lib="$(ls -1 build/hmalloc/gcc-*-default/libhardened_malloc.so | head -n1)"
@@ -76,6 +78,8 @@ jobs:
           echo "proof artifact: $lib"
           echo "== built library is a real aarch64 ELF =="
           readelf -h "$lib" | grep -E 'Class:|Machine:'
+          readelf -h "$lib" | grep -q 'Machine:.*AArch64' \
+            || { echo "::error::$lib is not an AArch64 ELF"; exit 1; }
           echo "== child process ran with the allocator interposed =="
           # The child (cat) prints its OWN maps while the preload is active;
           # if libhardened_malloc.so is not mapped, grep fails the step.
