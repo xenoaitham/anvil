@@ -1,9 +1,10 @@
 name: emulator
 
-# Dispatch-only by design: until this workflow's first green run exists, the
-# repo's honesty policy forbids citing it as coverage. GitHub-hosted runners
-# expose no KVM, so the emulator boots under software acceleration — slow
-# (15-30 min) but real.
+# Dispatch-only by design: an emulator boot is slow and the evidence it
+# produces is campaign material, not a per-push merge gate. First green run:
+# 36364446629 (2026-09-28) — raw captures committed under results/emulator/.
+# GitHub-hosted runners expose no KVM, so the emulator boots under software
+# acceleration — slow (~11 min boot) but real.
 
 on:
   workflow_dispatch:

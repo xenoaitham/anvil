@@ -79,6 +79,31 @@ Fix: `-Dalignas=_Alignas` (labeled deviation, recorded in each artifact's
 - `wrap.out`: `selinux_entry=Enforcing status=pass note=pid 7434 alive with
   libhardened_malloc mapped (3 regions)`; `selinux_final.txt`: `Enforcing`.
 
+## §4 — CI reproduction (first green emulator.yml run)
+
+Run [36364446629](https://github.com/xenoaitham/anvil/actions/runs/36364446629)
+(2026-09-28, `ubuntu-latest`, no KVM — AVD booted under software
+acceleration in ~11 min, job wall 21m21s): the same smoke and posture
+harness ran on a clean machine and reproduced every §3 claim. Raw captures
+committed next to this document: `20260928-012121/` (smoke) and
+`20260928-012332/` (posture). Quoted from the CI artifacts:
+
+```
+ANVIL_SMOKE_RESULT mode=interposed ok=1 narenas=5 note="hardened_malloc serving allocations, verified malloc-family traffic"
+ANVIL_SMOKE_RESULT mode=dlopen ok=1 narenas=0 note="bionic refused dlopen with the initial-exec TLS signature, as upstream's tls_model requires"
+selinux_entry=Enforcing status=pass note=pid 3700 alive with libhardened_malloc mapped (3 regions)
+Enforcing
+```
+
+The `hmalloc-android` job in the same run rebuilt both ABIs + the proof
+variant from the pinned commit on the clean runner (23 s wall). Two drive-
+to-green defects were hit and fixed on the way (both CI-portability, not
+milestone-science): step-level `ANVIL_SDK_ROOT: ${{ env.ANDROID_HOME }}`
+expands empty at workflow scope (scripts now resolve ANDROID_HOME
+themselves), and CI images export `ANDROID_NDK_HOME` to a preinstalled
+clang-18 NDK that fails upstream's clang≥19 floor (smoke.sh now pins the
+NDK it uses).
+
 ## Known-honest limits of this campaign
 
 - Kernel: stock `6.12.38-android16-5-gbb9513914902` goldfish; **no Anvil

@@ -1,0 +1,19 @@
+{
+  "mode": "emulator smoke",
+  "image": "system-images;android-36.1;google_apis;x86_64",
+  "allocator": "GrapheneOS/hardened_malloc @ 01df350c (proof variant: CONFIG_STATS=true, -z nodlopen dropped)",
+  "interposed": {
+    "pass": true,
+    "narenas": 5
+  },
+  "dlopen": {
+    "pass": true,
+    "narenas": 0
+  },
+  "wrap_demo": {
+    "status": "pass",
+    "note": "pid 3700 alive with libhardened_malloc mapped (3 regions)",
+    "selinux_at_entry": "Enforcing",
+    "selinux_temporarily_relaxed": true
+  }
+}

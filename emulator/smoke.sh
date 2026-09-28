@@ -125,8 +125,10 @@ python3 - "$RAW/smoke-$STAMP.json" \
 import json, re, sys
 out_path, inter, dlop, wrap_status, wrap_note, sel = sys.argv[1:7]
 def parse(block):
+    # Same strict predicate as the shell gates above: ok=1, not any ok= digit.
     m = re.search(r'ok=(\d) narenas=(\d+)', block)
-    return {"pass": bool(m), "narenas": int(m.group(2)) if m else None}
+    passed = bool(m) and m.group(1) == "1"
+    return {"pass": passed, "narenas": int(m.group(2)) if m else None}
 json.dump({
     "mode": "emulator smoke",
     "image": "system-images;android-36.1;google_apis;x86_64",

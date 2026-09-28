@@ -1,13 +1,13 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-28T01:05:00Z",
+  "updated": "2026-09-28T02:10:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 10,
-    "pieces_passed": 7,
-    "critic_wins_ours": 7,
-    "total_review_rounds": 9
+    "pieces_passed": 9,
+    "critic_wins_ours": 9,
+    "total_review_rounds": 11
   },
   "pieces": [
     {
@@ -163,9 +163,16 @@
     {
       "id": "emulator-milestone",
       "title": "Emulator milestone: hardened_malloc stack runs on a booted Android system",
-      "status": "in_progress",
+      "status": "passed",
       "owner": "builder-emulator",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "ours",
+          "gap": "secondary applied: EVIDENCE.md §4 numbering gap closed; smoke.sh JSON now uses the same ok=1 predicate as the shell gates",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic audited the tombstone recursion frames, the mprotect EINVAL arithmetic (3072=128×24, addr&4095==3480) and the machine-parsed gates, then named the loser: GrapheneOS platform_build_release is 16,634 flag textprotos of build configuration with zero runtime verification. Secondary defects in ours fixed in the same commit."
+        }
+      ],
       "commits": [
         "198bbbc",
         "644f108",
@@ -177,26 +184,33 @@
       "evidence": [
         "results/emulator/EVIDENCE.md + timestamped raw capture dirs",
         "first green runs 20260927-234546 (smoke) / 20260927-234618 (posture)",
-        "emulator.yml first dispatch drive-to-green in progress (run 36363227919)",
+        "emulator.yml FIRST GREEN CI RUN 36364446629 (21m21s, software-emulated boot); CI-repro captures committed as results/emulator/20260928-012121 (smoke) + 20260928-012332 (posture)",
         "toolchain findings upstreamed: android/ndk#2255 (alignas), emutls build-floor finding documented in EVIDENCE.md §1",
-        "blind review not yet run — pending"
+        "blind review: round 1 won (see rounds)"
       ]
     },
     {
       "id": "arm64-native",
       "title": "aarch64 execution: hardened_malloc runs natively on GitHub's free arm64 runners",
-      "status": "in_progress",
+      "status": "passed",
       "owner": "builder-arm64",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "ours",
+          "gap": "secondary applied: proof step now asserts AArch64 host + ELF machine instead of displaying them (commit 17dfeea)",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic verified the results JSON line-by-line (58 unique tests, counts sum, pinned SHA, arch from uname -m) and the workflow's claims against real script interfaces. Loser(B=upstream's own build-and-test.yml): executes natively but captures no evidence, no pin articulation, no permissions/timeout/concurrency — 'competent upstream CI, not a self-verifying merge gate'."
+        }
+      ],
       "commits": [
         "8cc61a5",
-        "36bb3cb"
+        "36bb3cb",
+        "17dfeea"
       ],
       "evidence": [
-        ".github/workflows/arm64.yml — green run 36363636029 (ubuntu-24.04-arm, gcc-14.2.0)",
+        ".github/workflows/arm64.yml — green runs 36363636029 + 36364446671 (ubuntu-24.04-arm, gcc-14.2.0)",
         "results/hmalloc/tests-20260928-aarch64-gcc-14.json — 58/58 upstream tests pass natively, pinned commit 01df350c",
-        "LD_PRELOAD interposition proof: AArch64 ELF confirmed, allocator mapped in child /proc/self/maps",
-        "blind review not yet run — pending"
+        "LD_PRELOAD interposition proof: AArch64 ELF asserted, allocator mapped in child /proc/self/maps"
       ]
     },
     {

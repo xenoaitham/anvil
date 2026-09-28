@@ -65,8 +65,9 @@ Not claimed from this milestone: kernel fragments were not executed (stock
 goldfish kernel — Cuttlefish + custom kernel is the follow-up), the aarch64
 **Android** artifacts are still compile-checked only (native aarch64
 execution now runs in CI on glibc — [arm64.yml](.github/workflows/arm64.yml)),
-and nothing transfers to hardware claims. This milestone has not been through
-blind review yet.
+and nothing transfers to hardware claims. This milestone passed blind review
+round 1 ([protocol](docs/review-protocol.md),
+[ledger](progress/progress.json)).
 
 ## Quickstarts
 

@@ -28,9 +28,9 @@
 <h1>Anvil — live build progress</h1>
 <p class="tagline">Portable GrapheneOS-derived hardening for every Android device that can physically take it</p>
 <div class="metrics">
-  <div class="metric"><b>7/10</b>pieces passed</div>
-  <div class="metric"><b>7</b>blind critic wins (ours)</div>
-  <div class="metric"><b>9</b>review rounds</div>
+  <div class="metric"><b>9/10</b>pieces passed</div>
+  <div class="metric"><b>9</b>blind critic wins (ours)</div>
+  <div class="metric"><b>11</b>review rounds</div>
 </div>
 <table>
 <thead><tr><th>piece</th><th>status</th><th>critic rounds</th><th>commits</th><th>evidence</th></tr></thead>
@@ -85,16 +85,16 @@
   <td><code>README.md</code><br><code>docs/methodology.md</code></td>
 </tr><tr>
   <td><strong>Emulator milestone: hardened_malloc stack runs on a booted Android system</strong><br><span class="dim">builder-emulator</span></td>
-  <td><span class="pill" style="background:#b45309">in progress</span></td>
-  <td><span class="dim">—</span></td>
+  <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
+  <td>R1: <strong>ours</strong> — secondary applied: EVIDENCE.md §4 numbering gap closed; smoke.sh JSON now uses the same ok=1 predicate as the shell gates</td>
   <td><code>198bbbc</code><br><code>644f108</code><br><code>240b116</code><br><code>bddd2cc</code><br><code>f3953c5</code><br><code>947a3c9</code></td>
-  <td><code>results/emulator/EVIDENCE.md + timestamped raw capture dirs</code><br><code>first green runs 20260927-234546 (smoke) / 20260927-234618 (posture)</code><br><code>emulator.yml first dispatch drive-to-green in progress (run 36363227919)</code><br><code>toolchain findings upstreamed: android/ndk#2255 (alignas), emutls build-floor finding documented in EVIDENCE.md §1</code><br><code>blind review not yet run — pending</code></td>
+  <td><code>results/emulator/EVIDENCE.md + timestamped raw capture dirs</code><br><code>first green runs 20260927-234546 (smoke) / 20260927-234618 (posture)</code><br><code>emulator.yml FIRST GREEN CI RUN 36364446629 (21m21s, software-emulated boot); CI-repro captures committed as results/emulator/20260928-012121 (smoke) + 20260928-012332 (posture)</code><br><code>toolchain findings upstreamed: android/ndk#2255 (alignas), emutls build-floor finding documented in EVIDENCE.md §1</code><br><code>blind review: round 1 won (see rounds)</code></td>
 </tr><tr>
   <td><strong>aarch64 execution: hardened_malloc runs natively on GitHub&#x27;s free arm64 runners</strong><br><span class="dim">builder-arm64</span></td>
-  <td><span class="pill" style="background:#b45309">in progress</span></td>
-  <td><span class="dim">—</span></td>
-  <td><code>8cc61a5</code><br><code>36bb3cb</code></td>
-  <td><code>.github/workflows/arm64.yml — green run 36363636029 (ubuntu-24.04-arm, gcc-14.2.0)</code><br><code>results/hmalloc/tests-20260928-aarch64-gcc-14.json — 58/58 upstream tests pass natively, pinned commit 01df350c</code><br><code>LD_PRELOAD interposition proof: AArch64 ELF confirmed, allocator mapped in child /proc/self/maps</code><br><code>blind review not yet run — pending</code></td>
+  <td><span class="pill" style="background:#15803d">critic-picked: ours</span></td>
+  <td>R1: <strong>ours</strong> — secondary applied: proof step now asserts AArch64 host + ELF machine instead of displaying them (commit 17dfeea)</td>
+  <td><code>8cc61a5</code><br><code>36bb3cb</code><br><code>17dfeea</code></td>
+  <td><code>.github/workflows/arm64.yml — green runs 36363636029 + 36364446671 (ubuntu-24.04-arm, gcc-14.2.0)</code><br><code>results/hmalloc/tests-20260928-aarch64-gcc-14.json — 58/58 upstream tests pass natively, pinned commit 01df350c</code><br><code>LD_PRELOAD interposition proof: AArch64 ELF asserted, allocator mapped in child /proc/self/maps</code></td>
 </tr><tr>
   <td><strong>Kernel fragments boot on Cuttlefish: self-built android-common kernel, hardening symbols proven live</strong><br><span class="dim">builder-cuttlefish</span></td>
   <td><span class="pill" style="background:#b45309">in progress</span></td>
