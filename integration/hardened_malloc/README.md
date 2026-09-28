@@ -132,9 +132,11 @@ integration/hardened_malloc/run_tests.sh --compiler clang --repeat 3
 
 Outputs per compiler:
 
-- `results/hmalloc/tests-<UTCdate>-x86_64-<compiler>.json` — schema
+- `results/hmalloc/tests-<UTCdate>-<arch>-<compiler>.json` — schema
   `anvil.hmalloc.tests/1`: per-test status array (58 entries), totals,
-  pass/fail, machine facts, upstream SHA, compiler versions.
+  pass/fail, machine facts, upstream SHA, compiler versions. `<arch>` is
+  `uname -m` of the running host (`x86_64` locally / x86 CI, `aarch64` on
+  arm64 runners), so every result name says which arch actually ran it.
 - `results/hmalloc/logs/tests-*.log` — full make + unittest transcripts.
 
 A failing or flaky test is **committed as a failure** with its log and a
@@ -209,9 +211,9 @@ Everything numeric lives under `results/hmalloc/`:
 
 | File | Content |
 |---|---|
-| `tests-<date>-x86_64-<compiler>.json` | per-test suite results (schema v1) |
-| `bench-<date>-x86_64.json` | allocator bench means/stdev (schema v1) |
-| `cross-check-<date>-x86_64.json` | aarch64 blockers + CI plan |
+| `tests-<date>-<arch>-<compiler>.json` | per-test suite results (schema v1); `<arch>` = `uname -m` of the run host |
+| `bench-<date>-x86_64.json` | allocator bench means/stdev (schema v1; x86 host by design — single-machine `ratio_vs_glibc` comparison) |
+| `cross-check-<date>-<arch>.json` | aarch64 blockers + CI plan (filename names the cross-checking host) |
 | `logs/` | full human-readable transcripts of every run |
 | `SUMMARY.md` | the honest rollup tying every number to its JSON/log |
 

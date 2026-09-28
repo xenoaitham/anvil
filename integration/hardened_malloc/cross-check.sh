@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Anvil hardened_malloc cross-arch check (x86_64 host -> aarch64 target).
+# Anvil hardened_malloc cross-arch check (host arch via `uname -m` ->
+# aarch64 target; the stage-2 host-header probe is written for an
+# x86_64-class host and records what it sees).
 #
 # SCOPE HONESTY: this machine has NO aarch64 glibc sysroot, NO Android NDK
 # and NO qemu-user. A full aarch64 build+run is therefore CI-planned, not
@@ -23,7 +25,9 @@
 #      undefined under the aarch64 triple) — i.e., there is no legitimate
 #      shortcut; headers must come from an aarch64 sysroot.
 #
-# Output: results/hmalloc/cross-check-<UTCdate>-x86_64.json
+# Output: results/hmalloc/cross-check-<UTCdate>-<arch>.json
+#   (<arch> = `uname -m` of the running host, so the filename names the host
+#    that actually performed the cross-check)
 # Exit status: 0 if all the *locally verifiable* checks behave as documented
 # (backend emission works; every source fails exactly at a libc/C++ stdlib
 # header). A source that failed ANYWHERE ELSE would be a real finding and
@@ -35,6 +39,7 @@ readonly ANVIL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 readonly SRC_DIR="${ANVIL_ROOT}/.cache/upstream-hardened_malloc"
 readonly RESULTS="${ANVIL_ROOT}/results/hmalloc"
 readonly DATE="$(date -u +%Y%m%d)"
+readonly HOST_ARCH="$(uname -m)"   # names the host that ran the cross-check
 
 log()  { printf '[cross-check.sh] %s\n' "$*"; }
 fail() { printf '[cross-check.sh] ERROR: %s\n' "$*" >&2; exit 1; }
@@ -81,7 +86,7 @@ export SRC_DIR DEFS WORK
 
 # --- 2. per-source cross-compile attempt -------------------------------------
 declare -a SRC_FILES=(chacha.c memory.c pages.c random.c util.c h_malloc.c new.cc)
-python3 - "$RESULTS/cross-check-${DATE}-x86_64.json" \
+python3 - "$RESULTS/cross-check-${DATE}-${HOST_ARCH}.json" \
           "$HM_SHA" "$CLANG_VER" "$backend_ok" "$emission_kind" <<'PY'
 import json, os, platform, re, subprocess, sys, datetime
 

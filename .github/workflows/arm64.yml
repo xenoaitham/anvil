@@ -1,0 +1,100 @@
+# Anvil arm64 — NATIVE aarch64 execution of the hardened_malloc gate on
+# GitHub's free arm64-hosted runners (label: ubuntu-24.04-arm, free for
+# public repos).
+#
+# Why this workflow exists: ci.yml's `hmalloc` job executes upstream's test
+# suite only on x86_64; aarch64 coverage there is compile-check only
+# (cross-check.sh). This workflow runs the SAME pinned-commit build and the
+# SAME upstream unittest suite natively on aarch64/glibc, then proves the
+# built .so actually interposes allocation by running a trivial dynamic
+# binary under LD_PRELOAD and checking that libhardened_malloc.so appears in
+# the child's /proc/self/maps.
+#
+# What this job deliberately does NOT prove is documented in
+# .github/workflows/README.md: nothing here touches Android/bionic — the
+# aarch64 artifacts under build/hmalloc-android/ are still never executed
+# anywhere. This is glibc Linux execution, not Android.
+#
+# Result files land as results/hmalloc/tests-<date>-aarch64-gcc-14.json etc.
+# (the scripts derive the arch from `uname -m`; x86_64 names are unchanged).
+
+name: arm64
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least privilege by default; matches ci.yml.
+permissions: {}
+
+# Cancel superseded runs of the same ref, like ci.yml.
+concurrency:
+  group: arm64-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # hardened_malloc, native aarch64: pinned-commit upstream build (gcc,
+  # default + light) + upstream test suite execution + LD_PRELOAD
+  # interposition proof, all on arm64 hardware under glibc.
+  # ---------------------------------------------------------------------------
+  hmalloc-native-aarch64:
+    name: hmalloc (native aarch64, gcc)
+    runs-on: ubuntu-24.04-arm
+    # Budget from x86 evidence: the 58-test suite takes ~40 s per run and the
+    # LTO builds a few minutes on ci.yml's x86 leg (same 30-min job ceiling).
+    # The arm64 runner is slower but the margin holds.
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install gcc-14 / g++-14 (c23-capable; the scripts' probe rejects gcc-13)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gcc-14 g++-14
+
+      - name: Build pinned upstream hardened_malloc (default + light, gcc)
+        run: >
+          integration/hardened_malloc/build.sh
+          --variant gcc --config both
+
+      - name: Upstream test suite (gcc, default config, native aarch64)
+        run: >
+          integration/hardened_malloc/run_tests.sh
+          --compiler gcc
+
+      - name: LD_PRELOAD interposition proof (native aarch64)
+        run: |
+          echo "host arch: $(uname -m)"
+          lib="$(pwd)/build/hmalloc/gcc-default/libhardened_malloc.so"
+          test -f "$lib" || { echo "::error::default .so missing at $lib"; exit 1; }
+          echo "== built library is a real aarch64 ELF =="
+          readelf -h "$lib" | grep -E 'Class:|Machine:'
+          echo "== child process ran with the allocator interposed =="
+          # The child (cat) prints its OWN maps while the preload is active;
+          # if libhardened_malloc.so is not mapped, grep fails the step.
+          LD_PRELOAD="$lib" cat /proc/self/maps | grep -F 'libhardened_malloc.so'
+          echo "== trivial dynamic binary executed under the interposed allocator =="
+          LD_PRELOAD="$lib" /usr/bin/printf 'ok: this process allocated through hardened_malloc\n'
+
+      - name: Upload test results (native aarch64)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hmalloc-aarch64-tests
+          path: results/hmalloc/tests-*.json
+          if-no-files-found: error
+
+      # Green-run logs are kept too: this is the first native-aarch64
+      # execution evidence in the repo, and the evidence-first policy wants
+      # the artifact behind any future claim, not only behind failures.
+      - name: Upload logs (native aarch64)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hmalloc-aarch64-logs
+          path: results/hmalloc/logs/
+          if-no-files-found: ignore

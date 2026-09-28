@@ -14,8 +14,12 @@
 # against the default config. Documented, not worked around.
 #
 # Outputs:
-#   results/hmalloc/tests-<UTCdate>-x86_64-<compiler>.json   (per-test results)
-#   results/hmalloc/logs/tests-<UTCdate>-x86_64-<compiler>.log
+#   results/hmalloc/tests-<UTCdate>-<arch>-<compiler>.json   (per-test results)
+#   results/hmalloc/logs/tests-<UTCdate>-<arch>-<compiler>.log
+#
+# <arch> is `uname -m` of the running host: "x86_64" locally / on the x86 CI
+# legs (byte-identical filenames to the pre-uname era), "aarch64" on arm64
+# runners — results are named for the arch that actually ran them.
 #
 # Exit status: 0 only if every selected compiler's suite fully passed.
 
@@ -27,6 +31,7 @@ readonly SRC_DIR="${ANVIL_ROOT}/.cache/upstream-hardened_malloc"
 readonly RESULTS="${ANVIL_ROOT}/results/hmalloc"
 readonly LOGS="${RESULTS}/logs"
 readonly DATE="$(date -u +%Y%m%d)"
+readonly HOST_ARCH="$(uname -m)"
 
 COMPILER_SEL='all'
 REPEAT=1
@@ -95,8 +100,8 @@ overall_rc=0
 for cc in "${COMPILERS[@]}"; do
     cxx="$(cxx_for "$cc")"
     tag="${cc}"
-    jsonf="${RESULTS}/tests-${DATE}-x86_64-${tag}.json"
-    logf="${LOGS}/tests-${DATE}-x86_64-${tag}.log"
+    jsonf="${RESULTS}/tests-${DATE}-${HOST_ARCH}-${tag}.json"
+    logf="${LOGS}/tests-${DATE}-${HOST_ARCH}-${tag}.log"
     : >"$logf"
 
     log "=== $cc: building default lib + test binaries ==="
@@ -118,7 +123,7 @@ for cc in "${COMPILERS[@]}"; do
     runs_json=()
     for i in $(seq 1 "$REPEAT"); do
         log "=== $cc: unittest run $i/$REPEAT ==="
-        runlog="${LOGS}/tests-${DATE}-x86_64-${tag}.run${i}.log"
+        runlog="${LOGS}/tests-${DATE}-${HOST_ARCH}-${tag}.run${i}.log"
         start_ts="$(date -u +%FT%TZ)"
         if ! ( cd "$SRC_DIR" && python3 -m unittest discover -v --start-directory test/ ) \
                 >"$runlog" 2>&1; then

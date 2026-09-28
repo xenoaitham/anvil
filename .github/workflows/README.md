@@ -1,20 +1,23 @@
 # Anvil CI
 
-One workflow (`ci.yml`), triggered on every push to `main` and every pull
-request. It runs the repository's real verification gates — the same scripts
-a contributor runs locally — plus the GitHub Pages deploy of the live
-progress page. Nothing here is a mock: every job maps to a real script and a
-real artifact in the repo.
+Two workflows guard the repo. `ci.yml` runs on every push to `main` and every
+pull request (x86_64 runners); `arm64.yml` runs on pushes to `main` and manual
+`workflow_dispatch` on GitHub's free arm64-hosted runners
+(`ubuntu-24.04-arm`). Together they run the repository's real verification
+gates — the same scripts a contributor runs locally — plus the GitHub Pages
+deploy of the live progress page. Nothing here is a mock: every job maps to a
+real script and a real artifact in the repo.
 
 ## Jobs
 
-| Job | Runs | Gates |
-|---|---|---|
-| `hmalloc` (matrix: `clang`, `gcc`) | `integration/hardened_malloc/build.sh --variant <cc> --config both`, `run_tests.sh --compiler <cc>`, `cross-check.sh` and `run_bench.sh --repeats 3 --ops 500000` (clang leg) | pinned-commit upstream builds, upstream test suite, cross-arch probe, bench harness |
-| `kernel-fragments` | `tools/kernelconfig/check.py` (warm, then `--offline`), `tools/kernelconfig/test_check.py` | every fragment symbol exists in the pinned upstream tree's real Kconfig; manifest coverage; offline reproducibility |
-| `matrix` | `tools/matrix/matrix_lint.py --render`, then `git diff --exit-code matrix/README.md` | device YAML schema + honesty lint; rendered README is never stale |
-| `patches` | `tools/patches/apply_check.sh` | patch portability — each patch must apply against its pinned upstream blob; fails on drift |
-| `pages` | `tools/progress/generate.py`, then Pages upload/deploy on main pushes only | progress page is regenerable from `progress.json` |
+| Job | Workflow | Runs | Gates |
+|---|---|---|---|
+| `hmalloc` (matrix: `clang`, `gcc`) | `ci.yml` | `integration/hardened_malloc/build.sh --variant <cc> --config both`, `run_tests.sh --compiler <cc>`, `cross-check.sh` and `run_bench.sh --repeats 3 --ops 500000` (clang leg) | pinned-commit upstream builds, upstream test suite, cross-arch probe, bench harness |
+| `hmalloc-native-aarch64` (gcc) | `arm64.yml` | `build.sh --variant gcc --config both`, `run_tests.sh --compiler gcc`, LD_PRELOAD interposition proof | native aarch64/glibc build + execution of the pinned upstream suite; the built .so really interposes allocation |
+| `kernel-fragments` | `ci.yml` | `tools/kernelconfig/check.py` (warm, then `--offline`), `tools/kernelconfig/test_check.py` | every fragment symbol exists in the pinned upstream tree's real Kconfig; manifest coverage; offline reproducibility |
+| `matrix` | `ci.yml` | `tools/matrix/matrix_lint.py --render`, then `git diff --exit-code matrix/README.md` | device YAML schema + honesty lint; rendered README is never stale |
+| `patches` | `ci.yml` | `tools/patches/apply_check.sh` | patch portability — each patch must apply against its pinned upstream blob; fails on drift |
+| `pages` | `ci.yml` | `tools/progress/generate.py`, then Pages upload/deploy on main pushes only | progress page is regenerable from `progress.json` |
 
 ## What each job proves — and what it deliberately does not
 
@@ -38,11 +41,12 @@ real artifact in the repo.
 
 - **No device boots. Nothing runs on Android.** No bionic variant is built;
   no Android NDK is involved.
-- **No aarch64 execution.** `cross-check.sh` is compile-only by design (see
-  its header: no sysroot, no NDK, no qemu-user in this environment). It
-  *reports* blockers and exits 0 unless its own probe machinery breaks —
-  the full aarch64 build+run (cross toolchain + arm64 runner) is future work
-  tracked in its `ci_plan` field.
+- **No aarch64 execution in this workflow.** `cross-check.sh` is
+  compile-only by design (see its header: no sysroot, no NDK, no qemu-user
+  in this environment). It *reports* blockers and exits 0 unless its own
+  probe machinery breaks. Native aarch64 execution is `arm64.yml`'s job
+  (next section) — and that proves glibc-Linux execution only, never
+  Android.
 - The upstream test suite covers the **default config only** — upstream's
   `test/Makefile` rejects non-default variants. `light` is built and shipped
   as an artifact, not tested by upstream's suite.
@@ -66,6 +70,54 @@ real artifact in the repo.
 
 Artifacts: `hmalloc-tests-<cc>`, `hmalloc-crosscheck-bench`, and
 `hmalloc-logs-<cc>` (only on failure) under `results/hmalloc/`.
+
+### hmalloc-native-aarch64 (`arm64.yml`)
+
+Runs on GitHub's free arm64-hosted runner (`ubuntu-24.04-arm`), on pushes to
+`main` and manual dispatch. gcc toolchain only.
+
+**Proves:**
+
+- The pinned upstream commit (`01df350c…` in `build.sh`) builds **natively
+  on real aarch64/glibc hardware** with gcc-14, in both upstream variants
+  (`default`, `light`), using upstream's own Makefile unmodified.
+- Upstream's own test suite **executes natively on aarch64**: every test
+  binary runs as a real arm64 process under upstream's unittest backend, and
+  the suite must pass or the job is red. This closes the "aarch64 is
+  compile-check only" gap for native Linux/glibc: ci.yml proves x86_64
+  execution, `cross-check.sh` proves aarch64 *compilation*, this job proves
+  aarch64 *execution*.
+- The built default `.so` genuinely **interposes allocation**: a trivial
+  dynamic binary runs under `LD_PRELOAD=…/libhardened_malloc.so` and the
+  step fails unless `libhardened_malloc.so` shows up in the child's
+  `/proc/self/maps`; `readelf` additionally confirms the library is
+  `EM_AARCH64`.
+- Result files are named for the arch that actually ran them (the scripts
+  derive the arch from `uname -m`): `tests-<date>-aarch64-gcc-14.json` here,
+  with the existing `tests-<date>-x86_64-*` history unchanged.
+
+**Does NOT prove:**
+
+- **The Android/bionic aarch64 artifacts under `build/hmalloc-android/` are
+  still NOT executed anywhere** — not in this job, not in ci.yml, not
+  locally. This is glibc Linux execution, not Android: no bionic sysroot,
+  no NDK, no emulator, no device boots.
+- `light` is built but not tested — upstream's `test/Makefile` rejects
+  non-default variants (same caveat as the x86 legs).
+- Only gcc runs here; there is no clang-on-aarch64 execution claim yet.
+- Nothing about performance: arm64 runner hardware is a different machine
+  class than the x86 bench host, no bench runs in this job, and no timing
+  value gates anything.
+
+**Reading a red `hmalloc-native-aarch64` job:** build step red → the pinned
+tree stopped building natively on aarch64/gcc-14. test step red → upstream's
+suite failed natively on aarch64 (the loudest signal this workflow adds).
+interposition step red → the `.so` is not a real aarch64 object or was not
+mapped into a preloaded child — a genuine execution-gap finding, not
+flakiness.
+
+Artifacts: `hmalloc-aarch64-tests` and `hmalloc-aarch64-logs` under
+`results/hmalloc/`.
 
 ### kernel-fragments
 
@@ -152,12 +204,15 @@ validation step but do not deploy. Deployments serialize through the
 `actions/checkout@v4`, `actions/setup-python@v5` (3.11),
 `actions/cache@v4`, `actions/upload-artifact@v4`,
 `actions/upload-pages-artifact@v3`, `actions/deploy-pages@v4`.
+`arm64.yml` uses the same pinned `checkout@v4` / `upload-artifact@v4`.
 Top-level `permissions: {}`; each job grants the minimum (`contents: read`
 everywhere; the pages job adds `pages: write` + `id-token: write`).
 
 ## Timeouts
 
-`hmalloc` 30 min (includes the bench leg), `kernel-fragments` 25 min (a
+`hmalloc` 30 min (includes the bench leg), `hmalloc-native-aarch64` 30 min
+(x86 evidence: the 58-test suite takes ~40 s per run plus a few minutes of
+LTO build — the arm64 runner is slower but the margin holds), `kernel-fragments` 25 min (a
 cold-cache Kconfig walk makes hundreds of small API calls),
 `matrix`/`pages` 10 min, `patches` 15 min. A timeout is a failure, never a
 retry-and-hope: if the cold walk starts tripping it, the cache is doing its

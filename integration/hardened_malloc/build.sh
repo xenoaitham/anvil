@@ -2,7 +2,8 @@
 # Anvil hardened_malloc integration build.
 #
 # Clones upstream GrapheneOS/hardened_malloc at a PINNED commit (never a fork,
-# never a moving ref) and builds native x86_64 glibc artifacts for the
+# never a moving ref) and builds NATIVE glibc artifacts (host arch detected
+# via `uname -m`: x86_64 locally/CI, aarch64 on arm64 runners) for the
 # {clang, gcc} x {default, light} configuration matrix, using upstream's own
 # Makefile and config/*.mk files unmodified.
 #
@@ -30,7 +31,8 @@ readonly REF_DIR="${ANVIL_ROOT}/../ref/hardened_malloc"
 readonly CACHE_DIR="${ANVIL_ROOT}/.cache"
 readonly SRC_DIR="${CACHE_DIR}/upstream-hardened_malloc"
 readonly OUT_BASE="${ANVIL_ROOT}/build/hmalloc"
-readonly JOBS=8   # 12-core / 15GiB machine; -j8 keeps LTO comfortable
+readonly JOBS=8   # -j8 keeps LTO comfortable on 4-12 core hosts
+readonly HOST_ARCH="$(uname -m)"   # honest provenance: x86_64 | aarch64 | ...
 
 VARIANT_SEL='all'   # clang | gcc | all  (compiler axis)
 CONFIG_SEL='both'   # default | light | both
@@ -192,14 +194,14 @@ build_one() { # $1=cc  $2=config(default|light)
     cp -f "$libpath" "$outdir/$lib"
 
     # machine-readable provenance for every artifact
-    python3 - "$outdir/meta.json" "$HMALLOC_SHA" "$id" "$cc" "$cxx" "$ccver" "$cfg" <<'PY'
+    python3 - "$outdir/meta.json" "$HMALLOC_SHA" "$id" "$cc" "$cxx" "$ccver" "$cfg" "$HOST_ARCH" <<'PY'
 import json, sys
-out, sha, ident, cc, cxx, ccver, cfg = sys.argv[1:8]
+out, sha, ident, cc, cxx, ccver, cfg, arch = sys.argv[1:9]
 json.dump({
     "id": ident, "upstream_sha": sha, "upstream_url":
     "https://github.com/GrapheneOS/hardened_malloc", "config_variant": cfg,
     "cc": cc, "cxx": cxx, "cc_version": ccver,
-    "target": "x86_64-pc-linux-gnu (native, glibc)",
+    "target": arch + "-pc-linux-gnu (native, glibc)",
     "artifact": "libhardened_malloc" + ("" if cfg == "default" else "-" + cfg) + ".so",
 }, open(out, "w"), indent=2)
 PY
@@ -245,7 +247,7 @@ for cc in "${TARGETS[@]}"; do
 done
 
 # summary table
-printf '\n=== hardened_malloc build summary (x86_64 native, glibc) ===\n'
+printf '\n=== hardened_malloc build summary (%s native, glibc) ===\n' "$HOST_ARCH"
 printf '%-18s %-8s %s\n' 'VARIANT' 'STATUS' 'COMPILER'
 for row in "${SUMMARY_ROWS[@]}"; do
     IFS='|' read -r id status ver <<<"$row"
