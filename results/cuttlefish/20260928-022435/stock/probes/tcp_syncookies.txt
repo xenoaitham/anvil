@@ -1,0 +1,2 @@
+$ cat /proc/sys/net/ipv4/tcp_syncookies
+cat: /proc/sys/net/ipv4/tcp_syncookies: No such file or directory

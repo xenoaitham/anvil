@@ -1,0 +1,2 @@
+$ cat /sys/devices/system/cpu/vulnerabilities/meltdown
+Not affected

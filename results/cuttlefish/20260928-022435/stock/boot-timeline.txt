@@ -1,0 +1,2 @@
+kernel_log_monitor I 09-28 05:22:42 298751 298751 kernel_log_server.cc:145] VIRTUAL_DEVICE_BOOT_STARTED
+kernel_log_monitor I 09-28 05:22:43 298751 298751 kernel_log_server.cc:145] VIRTUAL_DEVICE_BOOT_COMPLETED

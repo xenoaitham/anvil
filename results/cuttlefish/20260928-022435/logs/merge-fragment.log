@@ -1,0 +1,106 @@
+Using /tmp/base.config as base
+Merging /home/potato/grafene/anvil/hardening/kernel/base.cfg
+Value of CONFIG_CACHESTAT_SYSCALL is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_CACHESTAT_SYSCALL=y
+New value: # CONFIG_CACHESTAT_SYSCALL is not set
+
+Value of CONFIG_LEGACY_TIOCSTI is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_LEGACY_TIOCSTI=y
+New value: # GOS 51d1fa9fb9ea "android: disable unused CONFIG_LEGACY_TIOCSTI" # CONFIG_LEGACY_TIOCSTI is not set
+
+Value of CONFIG_LDISC_AUTOLOAD is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_LDISC_AUTOLOAD=y
+New value: # CONFIG_LDISC_AUTOLOAD is not set
+
+Value of CONFIG_TIPC is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_TIPC=m
+New value: # CONFIG_TIPC is not set
+
+Value of CONFIG_BINFMT_MISC is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_BINFMT_MISC=y
+New value: # CONFIG_BINFMT_MISC is not set
+
+Value of CONFIG_SYN_COOKIES is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_SYN_COOKIES is not set
+New value: # GOS 615bd95d91f0 "enable CONFIG_SYN_COOKIES" CONFIG_SYN_COOKIES=y
+
+Value of CONFIG_RANDOM_KMALLOC_CACHES is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_RANDOM_KMALLOC_CACHES is not set
+New value: # GOS 2dfdb1062888 "enable CONFIG_RANDOM_KMALLOC_CACHES" (per-size randomized CONFIG_RANDOM_KMALLOC_CACHES=y
+
+Value of CONFIG_INIT_ON_FREE_DEFAULT_ON is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_INIT_ON_FREE_DEFAULT_ON is not set
+New value: # GOS 7749342e2592 "enable CONFIG_INIT_ON_FREE_DEFAULT_ON" CONFIG_INIT_ON_FREE_DEFAULT_ON=y
+
+Value of CONFIG_MEMORY_HOTPLUG is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_MEMORY_HOTPLUG=y
+New value: # CONFIG_MEMORY_HOTPLUG is not set
+
+Value of CONFIG_MEMORY_HOTREMOVE is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_MEMORY_HOTREMOVE=y
+New value: # CONFIG_MEMORY_HOTREMOVE is not set
+
+Value of CONFIG_HIBERNATION is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_HIBERNATION=y
+New value: # GOS 07dd867518bf "disable CONFIG_HIBERNATION" (hibernate image = arbitrary # CONFIG_HIBERNATION is not set
+
+Value of CONFIG_RANDSTRUCT_FULL is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_RANDSTRUCT_FULL is not set
+New value: # GOS 816d1996b2c8 "enable CONFIG_RANDSTRUCT_FULL" (full struct layout CONFIG_RANDSTRUCT_FULL=y
+
+Value of CONFIG_MODVERSIONS is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_MODVERSIONS=y
+New value: # CONFIG_MODVERSIONS is not set
+
+Value of CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT is not set
+New value: CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
+
+Value of CONFIG_MODULE_SIG_FORCE is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_MODULE_SIG_FORCE is not set
+New value: CONFIG_MODULE_SIG_FORCE=y
+
+Value of CONFIG_MODULE_SIG_SHA256 is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_MODULE_SIG_SHA256 is not set
+New value: CONFIG_MODULE_SIG_SHA256=y
+
+Value of CONFIG_SECURITY_LOCKDOWN_LSM is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_SECURITY_LOCKDOWN_LSM is not set
+New value: CONFIG_SECURITY_LOCKDOWN_LSM=y
+
+Value of CONFIG_DEBUG_SG is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_DEBUG_SG is not set
+New value: CONFIG_DEBUG_SG=y
+
+Value of CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE=0x1
+New value: CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE=0x0
+
+Value of CONFIG_MAGIC_SYSRQ_SERIAL is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: CONFIG_MAGIC_SYSRQ_SERIAL=y
+New value: # CONFIG_MAGIC_SYSRQ_SERIAL is not set
+
+Value of CONFIG_EFI_DISABLE_PCI_DMA is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/base.cfg:
+Previous value: # CONFIG_EFI_DISABLE_PCI_DMA is not set
+New value: # GOS be937dd7da8b "enable CONFIG_EFI_DISABLE_PCI_DMA" (EFI_DURING handoff: CONFIG_EFI_DISABLE_PCI_DMA=y
+
+Merging /home/potato/grafene/anvil/hardening/kernel/arch-x86_64.cfg
+Value of CONFIG_ARCH_MMAP_RND_BITS is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/arch-x86_64.cfg:
+Previous value: CONFIG_ARCH_MMAP_RND_BITS=28
+New value: CONFIG_ARCH_MMAP_RND_BITS=32
+
+Value of CONFIG_ARCH_MMAP_RND_COMPAT_BITS is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/arch-x86_64.cfg:
+Previous value: CONFIG_ARCH_MMAP_RND_COMPAT_BITS=8
+New value: CONFIG_ARCH_MMAP_RND_COMPAT_BITS=16
+
+Value of CONFIG_DEFAULT_MMAP_MIN_ADDR is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/arch-x86_64.cfg:
+Previous value: CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
+New value: CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
+
+Value of CONFIG_EFI_STUB is redefined by fragment /home/potato/grafene/anvil/hardening/kernel/arch-x86_64.cfg:
+Previous value: # CONFIG_EFI_STUB is not set
+New value: CONFIG_EFI_STUB=y
+
+#
+# merged configuration written to .config.anvil (needs make)
+#

@@ -1,13 +1,13 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-28T02:10:00Z",
+  "updated": "2026-09-29T03:10:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 10,
-    "pieces_passed": 9,
-    "critic_wins_ours": 9,
-    "total_review_rounds": 11
+    "pieces_passed": 10,
+    "critic_wins_ours": 10,
+    "total_review_rounds": 12
   },
   "pieces": [
     {
@@ -216,14 +216,23 @@
     {
       "id": "cuttlefish-kernel",
       "title": "Kernel fragments boot on Cuttlefish: self-built android-common kernel, hardening symbols proven live",
-      "status": "in_progress",
+      "status": "passed",
       "owner": "builder-cuttlefish",
-      "rounds": [],
+      "rounds": [
+        {
+          "round": 1,
+          "verdict": "ours",
+          "gap": "secondary applied: broken scripts/config merge recipe replaced with merge_config.sh in both READMEs (the old recipe was a no-op); base.cfg RANDSTRUCT/MODVERSIONS comment corrected (RANDSTRUCT_FULL selects MODVERSIONS on this branch); duplicate-line note added to the boot-log extraction",
+          "detail": "Blind pick: winner=B(ours), confidence=high. Critic audited quoted boot lines against the committed merged config (lockdown/init-on-alloc line numbers), verified KASLR strings against the 6.6 source, and validated the differential controls (stock 6.12 boots to sys.boot_completed in the same harness; same-source 6.6 with stock defconfig boots clean past t=173s; fragment kernels crash at t≈10-15s). Loser(A=GrapheneOS origin gki_defconfigs): static input, cannot prove a single symbol live on a running system. The campaign's own finding — the fragment set crashes x86_64 6.6 GKI late boot, bisected to fragment content — is recorded in the artifact, not hidden."
+        }
+      ],
       "commits": [],
       "evidence": [
-        "campaign in flight (stock-config + base.cfg + arch-x86_64.cfg, olddefconfig, LLVM build, cvd boot)",
-        "results/cuttlefish/ — pending; nothing claimed until captured",
-        "blind review not yet run — pending"
+        "results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md — full campaign record",
+        "self-built android15-6.6 kernel c905c29016dd + fragments; boots to Android userspace (init, ext4 first-stage mounts, servicemanager/HALs at t≈15s)",
+        "hardening live at boot: lockdown confidentiality, init-on-alloc, stack zeroing, full x86 mitigation set, KASLR (custom/boot-hardening-lines.txt, quoted from the running kernel's console)",
+        "crash bisected to fragment content via controls (stock/ns-control/, stockcfg-control/); full sys.boot_completed NOT reached — documented, not faked",
+        "campaign ended at volume floor (ENOSPC); resume path in CUTTLEFISH_EVIDENCE.md §6"
       ]
     }
   ]

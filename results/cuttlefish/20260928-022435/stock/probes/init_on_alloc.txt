@@ -1,0 +1,2 @@
+$ cat /sys/module/page_alloc/parameters/init_on_alloc
+cat: /sys/module/page_alloc/parameters/init_on_alloc: No such file or directory

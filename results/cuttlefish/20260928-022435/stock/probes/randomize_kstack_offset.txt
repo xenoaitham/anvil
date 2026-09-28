@@ -1,0 +1,2 @@
+$ cat /proc/sys/kernel/randomize_kstack_offset
+cat: /proc/sys/kernel/randomize_kstack_offset: No such file or directory

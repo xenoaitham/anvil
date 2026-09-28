@@ -1,0 +1,2 @@
+$ cat /proc/net/protocols | grep -i tipc; echo rc=$?
+rc=1

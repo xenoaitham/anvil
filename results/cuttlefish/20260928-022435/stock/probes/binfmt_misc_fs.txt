@@ -1,0 +1,3 @@
+$ cat /proc/filesystems | grep -i binfmt; echo rc=$?
+nodev	binfmt_misc
+rc=0

@@ -1,0 +1,2 @@
+$ cat /sys/module/page_alloc/parameters/page_shuffle
+cat: /sys/module/page_alloc/parameters/page_shuffle: No such file or directory

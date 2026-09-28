@@ -1,0 +1,2 @@
+$ cat /sys/devices/system/cpu/vulnerabilities/spec_store_bypass
+Mitigation: Speculative Store Bypass disabled via prctl

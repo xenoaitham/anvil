@@ -1,0 +1,3 @@
+Linux version 6.6.142-gc905c29016dd
+lockdown-lines: 0
+last-line: [  205.195708] servicemanager: Caller(pid=4063,uid=1000,sid=u:r:surfaceflinger:s0) Tried t

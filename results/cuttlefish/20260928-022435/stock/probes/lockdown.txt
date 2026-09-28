@@ -1,0 +1,2 @@
+$ cat /sys/kernel/security/lockdown
+cat: /sys/kernel/security/lockdown: No such file or directory

@@ -1,0 +1,7 @@
+# Excerpt — INIT_ON_FREE=n boot (#4), #DF stack overflow at t=9.96s.
+# Full console lost when the instance dir was reused by the stock-config
+# control run; these lines were captured verbatim during the run.
+
+[    9.892633] init: processing action (apexd.status=ready && ro.product.cpu.abilist64=*) from (/system/etc/init/hw/init.boringssl...
+[    9.963650] BUG: #DF stack guard page was hit at 000000007cedc26a (stack is 0000000047af8177..00000000a1ad5ef5)
+[    9.963651] stack guard page: 0000 [#3]

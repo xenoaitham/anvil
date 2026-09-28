@@ -15,7 +15,7 @@ documented, not papered over. Nothing is claimed to boot without a boot.
 
 ## Status
 
-All six pieces passed blind review ([protocol](docs/review-protocol.md),
+All ten pieces passed blind review ([protocol](docs/review-protocol.md),
 [ledger](progress/progress.json)): in each round, a fresh-context critic
 received Anvil's artifact and GrapheneOS's nearest real equivalent with labels
 stripped, picked a winner, and named the loser's biggest gap.
@@ -28,8 +28,11 @@ stripped, picked a winner, and named the loser's biggest gap.
 | hmalloc | [integration/hardened_malloc/](integration/hardened_malloc/README.md), [results/hmalloc/SUMMARY.md](results/hmalloc/SUMMARY.md) | Won round 1 |
 | platform-patches | [patches/platform/](patches/platform/), [docs/patches.md](docs/patches.md) | Won round 1 |
 | ci | [.github/workflows/ci.yml](.github/workflows/ci.yml) ([what it gates](.github/workflows/README.md)) | Won round 1 |
+| emulator-milestone | [results/emulator/EVIDENCE.md](results/emulator/EVIDENCE.md), [emulator/](emulator/README.md) | Won round 1 |
+| arm64-native | [.github/workflows/arm64.yml](.github/workflows/arm64.yml), [results/hmalloc/tests-20260928-aarch64-gcc-14.json](results/hmalloc/tests-20260928-aarch64-gcc-14.json) | Won round 1 |
+| cuttlefish-kernel | [results/cuttlefish/](results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md) | Won round 1 |
 
-Two defects critics caught and got fixed:
+Defects critics caught and got fixed:
 
 - **hmalloc:** the upstream test-binary count was overstated (63); corrected to
   62, matching upstream's `test/Makefile`
@@ -38,9 +41,16 @@ Two defects critics caught and got fixed:
   the upstream branch head, which had drifted from the pinned tree; fixed by
   pinning the fetch to a tree SHA (`KERNEL_TREE_PIN`,
   [.github/workflows/ci.yml](.github/workflows/ci.yml)).
+- **emulator-milestone:** EVIDENCE.md section numbering gap; the smoke JSON's
+  pass predicate was looser than the shell gates — both fixed.
+- **cuttlefish-kernel:** the documented `scripts/config` merge recipe was a
+  no-op (its `--file` flag overwrites, it cannot merge); replaced with
+  `merge_config.sh` in both READMEs, and base.cfg's RANDSTRUCT/MODVERSIONS
+  comment was backwards for this branch (RANDSTRUCT_FULL selects MODVERSIONS)
+  — corrected.
 
 Ledger: the full per-piece record — every round verdict, every named gap,
-and the aggregate tally (7 critic wins, 9 review rounds) — is in
+and the aggregate tally (10 critic wins, 12 review rounds) — is in
 [progress/progress.json](progress/progress.json) and rendered on the
 [live progress page](https://xenoaitham.github.io/anvil/).
 
@@ -61,13 +71,35 @@ its first allocation. Full narrative with raw captures:
 honest limits: [emulator/README.md](emulator/README.md); platform evidence:
 [matrix/evidence/sdk-emulator.md](matrix/evidence/sdk-emulator.md).
 
-Not claimed from this milestone: kernel fragments were not executed (stock
-goldfish kernel — Cuttlefish + custom kernel is the follow-up), the aarch64
-**Android** artifacts are still compile-checked only (native aarch64
-execution now runs in CI on glibc — [arm64.yml](.github/workflows/arm64.yml)),
-and nothing transfers to hardware claims. This milestone passed blind review
-round 1 ([protocol](docs/review-protocol.md),
-[ledger](progress/progress.json)).
+Not claimed from this milestone: kernel fragments were not executed on the
+stock goldfish kernel (the Cuttlefish campaign below covers custom-kernel
+execution), the aarch64 **Android** artifacts are still compile-checked only
+(native aarch64 execution now runs in CI on glibc —
+[arm64.yml](.github/workflows/arm64.yml)), and nothing transfers to hardware
+claims. This milestone passed blind review round 1
+([protocol](docs/review-protocol.md), [ledger](progress/progress.json)).
+
+## Kernel-on-Cuttlefish campaign
+
+A self-built `android15-6.6` android-common kernel (`c905c29016dd`, clang 18
+LLVM build) with `base.cfg` + `arch-x86_64.cfg` merged over the stock
+Cuttlefish kernel config **boots and executes into Android userspace** on
+Cuttlefish (Android 17 image): first-stage init, ext4 first-stage mounts,
+second-stage init, servicemanager and HALs by t≈15 s. From the running
+kernel's own console, the hardening is **live**: lockdown LSM in
+confidentiality mode, init-on-alloc + stack zeroing, the full x86_64
+mitigation set (eIBRS, BHI clearing, MMIO stale data, Retbleed), KASLR.
+
+The honest boundary: **`sys.boot_completed` was never reached** — the
+fragment kernel crashes in the 10–15 s service-start window, and the
+differential controls (stock 6.12 image kernel boots fully in the same
+harness; the *same 6.6 source tree* with the pure stock defconfig boots
+clean past t=173 s) attribute the crash to the fragment content on x86_64.
+Which fragment line is responsible is not yet bisected; the campaign volume
+hit ENOSPC and stopped rather than fake past it. adb-level runtime probes
+are therefore not claimed. Full record, controls, crash forensics and the
+resume path: [results/cuttlefish/](results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md).
+Passed blind review round 1.
 
 ## Quickstarts
 
@@ -87,9 +119,10 @@ round 1 ([protocol](docs/review-protocol.md),
   device config, then validate before building
   ([details](hardening/kernel/README.md)):
   ```sh
-  scripts/config --file "$ANVIL/hardening/kernel/base.cfg" \
-                 --file "$ANVIL/hardening/kernel/arch-arm64.cfg" \
-                 --file "$ANVIL/hardening/kernel/soc/qualcomm.cfg"
+  ARCH=arm64 scripts/kconfig/merge_config.sh -m arch/arm64/configs/gki_defconfig \
+      "$ANVIL/hardening/kernel/base.cfg" \
+      "$ANVIL/hardening/kernel/arch-arm64.cfg" \
+      "$ANVIL/hardening/kernel/soc/qualcomm.cfg"
   make ARCH=arm64 olddefconfig
   python3 tools/kernelconfig/check.py \
       hardening/kernel/base.cfg hardening/kernel/arch-arm64.cfg \
@@ -153,7 +186,12 @@ traces to evidence in
 - **No device boots are claimed, anywhere.** CI verifies compilations, test
   suites, static analysis, data lint, and patch applicability — nothing runs
   on Android ([.github/workflows/README.md](.github/workflows/README.md),
-  "Does NOT prove" per job).
+  "Does NOT prove" per job). The one Android-system execution claims are
+  scoped to emulators/virtual machines: the SDK emulator
+  ([results/emulator/](results/emulator/EVIDENCE.md)) and cuttlefish
+  ([results/cuttlefish/](results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md))
+  — and the cuttlefish campaign's fragment kernel does **not** reach
+  `sys.boot_completed` (see the Kernel-on-Cuttlefish section above).
 - **aarch64: glibc execution, not Android execution.** Since
   [arm64.yml](.github/workflows/arm64.yml), upstream's full test suite
   executes natively on aarch64 in CI (58/58, gcc-14, pinned commit —

@@ -79,22 +79,10 @@ absent: Tensor G2).
 
 ### Merging the fragments
 
-Two supported routes, both taking merge order base -> arch -> soc -> device
+One supported route, taking merge order base -> arch -> soc -> device
 (later files win, exactly like Kconfig precedence):
 
-1. **`scripts/config`** (no kernel tree modifications needed):
-   ```sh
-   # in the kernel tree, after defconfig, before build
-   scripts/config --file "$ANVIL/hardening/kernel/base.cfg" \
-                  --file "$ANVIL/hardening/kernel/arch-arm64.cfg" \
-                  --file "$ANVIL/hardening/kernel/soc/qualcomm.cfg"
-   # then: make ARCH=arm64 olddefconfig
-   ```
-   `olddefconfig` resolves dependencies; symbols whose dependencies are not
-   met are silently dropped — which is exactly what `check.py`'s
-   `unsatisfied-dep` warnings predict before you waste a build.
-
-2. **`merge_config.sh`** (kbuild's own merger, warns on unmatched lines):
+1. **`merge_config.sh`** (kbuild's own merger, warns on unmatched lines):
    ```sh
    ARCH=arm64 scripts/kconfig/merge_config.sh -m arch/arm64/configs/gki_defconfig \
        "$ANVIL/hardening/kernel/base.cfg" \
@@ -105,6 +93,16 @@ Two supported routes, both taking merge order base -> arch -> soc -> device
    ```
    Run `merge_config.sh` without `-m` only if you want its `alldefconfig`
    starting point; ROM builders merging onto a GKI defconfig want `-m`.
+   (`scripts/config` cannot do this merge — its `--file` flag selects the
+   single config file to edit and repeated flags overwrite each other; an
+   earlier revision of this README showed a no-op `scripts/config` recipe,
+   caught by blind review of the cuttlefish campaign.) `olddefconfig`
+   resolves dependencies; symbols whose dependencies are not met are
+   silently dropped — which is exactly what `check.py`'s `unsatisfied-dep`
+   warnings predict before you waste a build. Note that Kconfig `select`
+   overrides fragment lines: on this branch `RANDSTRUCT_FULL` selects
+   `MODVERSIONS`, so the carried `# CONFIG_MODVERSIONS is not set` line
+   resolves back to `=y` (`check.py --explain MODVERSIONS` shows why).
 
 Validation before building:
 

@@ -1,0 +1,2 @@
+$ cat /proc/sys/vm/mmap_min_addr
+32768

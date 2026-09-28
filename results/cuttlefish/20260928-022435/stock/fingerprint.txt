@@ -1,0 +1,1 @@
+generic/aosp_cf_x86_64_only_phone/vsoc_x86_64_only:17/CP2A.260605.016/16373615:userdebug/test-keys

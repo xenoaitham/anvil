@@ -1,0 +1,50 @@
+# Fragment-observable boot-time lines from the Anvil-fragment kernel (6.6.142-gc905c29016dd, x86_64, cuttlefish, boot of 2026-09-28T22:46:00Z)
+# Source: full serial console log captured by crosvm (logs/kernel.log, last boot segment)
+# NOTE: many lines appear twice — the kernel mirrors every printk to both the
+# earlycon (bootconsole) and the ttyS0 console in this configuration. The
+# duplication is authentic log content, not padding.
+
+## Lockdown LSM (confidentiality, base.cfg pin)
+[    0.000000] Kernel is locked down from Kernel configuration; see man kernel_lockdown.7
+[    0.182073] Lockdown: swapper: unsafe module parameters is restricted; see man kernel_lockdown.7
+[    0.182073] Lockdown: swapper: unsafe module parameters is restricted; see man kernel_lockdown.7
+[    0.297437] Lockdown: swapper: use of tracefs is restricted; see man kernel_lockdown.7
+
+## KASLR (decompressor, arch-x86_64.cfg)
+Memory KASLR using RDRAND RDTSC...
+Poking KASLR using RDRAND RDTSC...
+
+## SLUB / allocator hardening (base.cfg)
+[    0.295516] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.295516] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+
+## init-on-alloc/free (base.cfg)
+[    0.203335] mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+[    0.203335] mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+
+## CPU mitigations (arch-x86_64.cfg pins)
+[    0.340333] GDS: Unknown: Dependent on hypervisor status
+[    0.340333] ITS: Mitigation: Aligned branch/return thunks
+[    0.340333] MMIO Stale Data: Mitigation: Clear CPU buffers
+[    0.340333] RETBleed: Mitigation: Enhanced IBRS
+[    0.340333] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.340333] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.340333] Spectre V2 : Mitigation: Enhanced / Automatic IBRS
+[    0.340333] Spectre V2 : Spectre BHI mitigation: SW BHB clearing on syscall
+[    0.340333] Spectre V2 : Spectre BHI mitigation: SW BHB clearing on vm exit
+[    0.340333] Spectre V2 : Spectre v2 / PBRSB-eIBRS: Retire a single CALL on VMEXIT
+[    0.340333] Spectre V2 : WARNING: Unprivileged eBPF is enabled with eIBRS on, data leaks possible via Spectre v2 BHB attacks!
+[    0.340333] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+
+## SELinux / security LSMs (base.cfg)
+[    0.340333] LSM: initializing lsm=lockdown,capability,landlock,safesetid,selinux,bpf,integrity
+[    0.340333] SELinux:  Initializing.
+[    1.106744] init: Opening SELinux policy
+[    1.106744] init: Opening SELinux policy
+[    1.110424] init: Loading SELinux policy
+
+## Stack protector / hardened usercopy / page alloc
+[    0.340333] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+
+## Misc fragment observables
+[    0.187244] random: crng init done

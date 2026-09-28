@@ -1,0 +1,2 @@
+$ cat /sys/power/state
+freeze standby mem disk

@@ -1,0 +1,2 @@
+[   27.762165] init: processing action (sys.boot_completed=1) from (/system/etc/init/hw/init.rc:1237)
+[   27.829776] init: processing action (sys.boot_completed=1) from (/system/etc/init/atrace.rc:558)

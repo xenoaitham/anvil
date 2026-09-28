@@ -1,0 +1,4 @@
+$ cat /proc/sys/vm/mmap_rnd_bits /proc/sys/vm/mmap_rnd_compat_bits /proc/sys/vm/mmap_min_addr
+32
+8
+32768

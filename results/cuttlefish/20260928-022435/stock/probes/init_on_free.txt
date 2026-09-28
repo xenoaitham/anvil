@@ -1,0 +1,2 @@
+$ cat /sys/module/page_alloc/parameters/init_on_free
+cat: /sys/module/page_alloc/parameters/init_on_free: No such file or directory

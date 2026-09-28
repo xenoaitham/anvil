@@ -1,0 +1,1 @@
+$ ls /proc/sys/fs/binfmt_misc

@@ -1,0 +1,2 @@
+$ cat /sys/module/module/parameters/sig_enforce
+N

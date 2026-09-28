@@ -1,0 +1,7 @@
+  GENSEED scripts/basic/randstruct.seed
+.config.anvil:283:warning: symbol value 'n' invalid for BASE_SMALL
+.config.anvil:7864:warning: override: RANDSTRUCT_FULL changes choice state
+.config.anvil:7880:warning: override: MODULE_SIG_SHA256 changes choice state
+#
+# configuration written to .config.anvil
+#
