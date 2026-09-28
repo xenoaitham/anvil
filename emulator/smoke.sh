@@ -48,7 +48,10 @@ RAW="$RESULTS_DIR/$STAMP"
 PROOF_SO="$ANVIL_ROOT/build/hmalloc-android/x86_64-default-proof/libhardened_malloc.so"
 if [ ! -f "$PROOF_SO" ]; then
     log "proof .so missing — building Android artifacts (build-android.sh --proof)"
-    ( cd "$HM_DIR" && ./build-android.sh --abi x86_64 --proof )
+    # NDK_HOME pinned: build-android.sh's own default chain prefers
+    # ANDROID_NDK_HOME, which CI runner images export to a *preinstalled*
+    # older NDK (clang 18) that fails upstream's clang>=19 floor.
+    ( cd "$HM_DIR" && NDK_HOME="$NDK_HOME" ./build-android.sh --abi x86_64 --proof )
 fi
 [ -f "$PROOF_SO" ] || fail "proof .so still missing after build"
 
