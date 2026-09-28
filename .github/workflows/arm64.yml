@@ -69,8 +69,11 @@ jobs:
       - name: LD_PRELOAD interposition proof (native aarch64)
         run: |
           echo "host arch: $(uname -m)"
-          lib="$(pwd)/build/hmalloc/gcc-default/libhardened_malloc.so"
-          test -f "$lib" || { echo "::error::default .so missing at $lib"; exit 1; }
+          # build.sh names output dirs <resolved-cc>-<config> (gcc-14-default
+          # on this runner); glob rather than hardcode the compiler version.
+          lib="$(ls -1 build/hmalloc/gcc-*-default/libhardened_malloc.so | head -n1)"
+          test -f "$lib" || { echo "::error::default .so not found under build/hmalloc/"; ls -R build/hmalloc; exit 1; }
+          echo "proof artifact: $lib"
           echo "== built library is a real aarch64 ELF =="
           readelf -h "$lib" | grep -E 'Class:|Machine:'
           echo "== child process ran with the allocator interposed =="
