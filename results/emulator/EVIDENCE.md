@@ -57,7 +57,13 @@ compile-time probes (`emulator/alignas_probe.c`, `emulator/alignas_probe2.c`):
 - `_Alignas(4096)` in the identical position works under every `-std` mode.
 
 Fix: `-Dalignas=_Alignas` (labeled deviation, recorded in each artifact's
-`meta.json`). Upstream sources unmodified.
+`meta.json`). Upstream sources unmodified. Upstream tracking: filed as
+[android/ndk#2255](https://github.com/android/ndk/issues/2255); maintainer
+asked for re-verification on r30 — confirmed **fixed in r30** (clang 21.0.0,
+snapshot `r574158c`, both alignment forms honored on both ABIs, both C23
+modes) and unpatched in r28, so the `-Dalignas=_Alignas` workaround stands
+for r28-pinned builds (r28 remains the floor while upstream hardened_malloc
+requires clang ≥ 19).
 
 ## §3 — first green run (20260927-234546)
 
