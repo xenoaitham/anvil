@@ -1,10 +1,10 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-28T22:20:00Z",
+  "updated": "2026-09-28T01:05:00Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
-    "pieces_total": 7,
+    "pieces_total": 10,
     "pieces_passed": 7,
     "critic_wins_ours": 7,
     "total_review_rounds": 9
@@ -143,14 +143,14 @@
     },
     {
       "id": "readme",
-      "title": "README, methodology, limitations \u2014 the honest front door",
+      "title": "README, methodology, limitations — the honest front door",
       "status": "passed",
       "owner": "builder-docs",
       "rounds": [
         {
           "round": 1,
           "verdict": "ours",
-          "gap": "stale ledger-note sentence (written before the ledger repair) \u2014 fixed",
+          "gap": "stale ledger-note sentence (written before the ledger repair) — fixed",
           "detail": "Blind pick: winner=A(ours), confidence=high. Critic re-ran matrix_lint to verify 13/156/35% claims and cross-checked the ledger tally. Loser(B=upstream landing page): no audience entry points, no verifiable claims."
         }
       ],
@@ -158,6 +158,58 @@
       "evidence": [
         "README.md",
         "docs/methodology.md"
+      ]
+    },
+    {
+      "id": "emulator-milestone",
+      "title": "Emulator milestone: hardened_malloc stack runs on a booted Android system",
+      "status": "in_progress",
+      "owner": "builder-emulator",
+      "rounds": [],
+      "commits": [
+        "198bbbc",
+        "644f108",
+        "240b116",
+        "bddd2cc",
+        "f3953c5",
+        "947a3c9"
+      ],
+      "evidence": [
+        "results/emulator/EVIDENCE.md + timestamped raw capture dirs",
+        "first green runs 20260927-234546 (smoke) / 20260927-234618 (posture)",
+        "emulator.yml first dispatch drive-to-green in progress (run 36363227919)",
+        "toolchain findings upstreamed: android/ndk#2255 (alignas), emutls build-floor finding documented in EVIDENCE.md §1",
+        "blind review not yet run — pending"
+      ]
+    },
+    {
+      "id": "arm64-native",
+      "title": "aarch64 execution: hardened_malloc runs natively on GitHub's free arm64 runners",
+      "status": "in_progress",
+      "owner": "builder-arm64",
+      "rounds": [],
+      "commits": [
+        "8cc61a5",
+        "36bb3cb"
+      ],
+      "evidence": [
+        ".github/workflows/arm64.yml — green run 36363636029 (ubuntu-24.04-arm, gcc-14.2.0)",
+        "results/hmalloc/tests-20260928-aarch64-gcc-14.json — 58/58 upstream tests pass natively, pinned commit 01df350c",
+        "LD_PRELOAD interposition proof: AArch64 ELF confirmed, allocator mapped in child /proc/self/maps",
+        "blind review not yet run — pending"
+      ]
+    },
+    {
+      "id": "cuttlefish-kernel",
+      "title": "Kernel fragments boot on Cuttlefish: self-built android-common kernel, hardening symbols proven live",
+      "status": "in_progress",
+      "owner": "builder-cuttlefish",
+      "rounds": [],
+      "commits": [],
+      "evidence": [
+        "campaign in flight (stock-config + base.cfg + arch-x86_64.cfg, olddefconfig, LLVM build, cvd boot)",
+        "results/cuttlefish/ — pending; nothing claimed until captured",
+        "blind review not yet run — pending"
       ]
     }
   ]

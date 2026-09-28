@@ -113,10 +113,12 @@ upstream default-config defines (no sysroot/NDK on this machine):
 
 ## Not run on this machine (and why)
 
-- **aarch64 full build + test execution** — no aarch64 sysroot/toolchain and
-  no qemu-user here. CI-planned: `gcc-aarch64-linux-gnu` +
-  `make CONFIG_NATIVE=false`, a native `ubuntu-24.04-arm` runner for
-  execution, optional `qemu-user-static` (mirrors upstream's own CI).
+- **aarch64 full build + test execution** — no aarch64 toolchain on this
+  host. **Since 2026-09-28 this runs in CI**: native `ubuntu-24.04-arm`
+  runner, gcc-14, pinned commit, 58/58 upstream tests pass —
+  `tests-20260928-aarch64-gcc-14.json` (+ logs) in this directory, run
+  [36363636029](https://github.com/xenoaitham/anvil/actions/runs/36363636029).
+  The JSON predating that run described the CI-planned path, now executed.
 - **Android bionic variant** — requires an AOSP/NDK bionic sysroot; the
   `Android.bp`-based build was not exercised here and no claim is made
   about it.

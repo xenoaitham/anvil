@@ -62,9 +62,11 @@ honest limits: [emulator/README.md](emulator/README.md); platform evidence:
 [matrix/evidence/sdk-emulator.md](matrix/evidence/sdk-emulator.md).
 
 Not claimed from this milestone: kernel fragments were not executed (stock
-goldfish kernel — Cuttlefish + custom kernel is the follow-up), aarch64
-artifacts are compile-checked only, and nothing transfers to hardware
-claims. This milestone has not been through blind review yet.
+goldfish kernel — Cuttlefish + custom kernel is the follow-up), the aarch64
+**Android** artifacts are still compile-checked only (native aarch64
+execution now runs in CI on glibc — [arm64.yml](.github/workflows/arm64.yml)),
+and nothing transfers to hardware claims. This milestone has not been through
+blind review yet.
 
 ## Quickstarts
 
@@ -151,10 +153,13 @@ traces to evidence in
   suites, static analysis, data lint, and patch applicability — nothing runs
   on Android ([.github/workflows/README.md](.github/workflows/README.md),
   "Does NOT prove" per job).
-- **aarch64 is compile-check only.** The cross-arch check records exact
-  compile blockers; no aarch64 binary is executed here or in CI
-  ([integration/hardened_malloc/README.md](integration/hardened_malloc/README.md) §5,
-  [results/hmalloc/SUMMARY.md](results/hmalloc/SUMMARY.md) "Not run").
+- **aarch64: glibc execution, not Android execution.** Since
+  [arm64.yml](.github/workflows/arm64.yml), upstream's full test suite
+  executes natively on aarch64 in CI (58/58, gcc-14, pinned commit —
+  [results/hmalloc/tests-20260928-aarch64-gcc-14.json](results/hmalloc/tests-20260928-aarch64-gcc-14.json)).
+  Still compile-check only: the **Android/bionic** aarch64 artifacts
+  ([integration/hardened_malloc/README.md](integration/hardened_malloc/README.md) §5) —
+  no aarch64 Android system has run them.
 - **Benchmarks come from one desktop machine**, with raw per-run data
   committed and variance bands documented; they say nothing about devices
   ([results/hmalloc/SUMMARY.md](results/hmalloc/SUMMARY.md)).
