@@ -28,8 +28,11 @@ jobs:
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
             "ndk;28.2.13676358" >/dev/null
       - name: Build hardened_malloc (Android, both ABIs + proof variant)
+        # NDK_HOME explicit: build-android.sh would also resolve it through
+        # ANDROID_HOME, but pinning it here keeps the job self-documenting.
         run: |
-          bash integration/hardened_malloc/build-android.sh --abi all --proof
+          NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358" \
+            bash integration/hardened_malloc/build-android.sh --abi all --proof
       - name: Upload build logs and provenance
         uses: actions/upload-artifact@v4
         with:
@@ -56,21 +59,18 @@ jobs:
             "emulator" "platform-tools" \
             "ndk;28.2.13676358" >/dev/null
       - name: Boot AVD (software acceleration)
+        # The scripts resolve SDK_ROOT from ANDROID_HOME (set by the runner
+        # image) when ANVIL_SDK_ROOT is unset — no workflow-level env needed.
         run: |
           bash emulator/setup-host.sh
           bash emulator/boot.sh --keep --software
         env:
-          ANVIL_SDK_ROOT: ${{ env.ANDROID_HOME }}
           ANVIL_BOOT_TIMEOUT: 1800
       - name: On-device hardened_malloc smoke
         run: bash emulator/smoke.sh
-        env:
-          ANVIL_SDK_ROOT: ${{ env.ANDROID_HOME }}
       - name: Posture dump
         if: always()
         run: bash emulator/posture.sh
-        env:
-          ANVIL_SDK_ROOT: ${{ env.ANDROID_HOME }}
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v4

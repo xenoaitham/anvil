@@ -12,7 +12,7 @@
 set -euo pipefail
 
 ANVIL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SDK_ROOT="${ANVIL_SDK_ROOT:-/mnt/NewVolume/anvil-sdk}"
+SDK_ROOT="${ANVIL_SDK_ROOT:-${ANDROID_HOME:-/mnt/NewVolume/anvil-sdk}}"
 RESULTS_DIR="$ANVIL_ROOT/results/emulator"
 STAMP="$(date -u +%Y%m%d-%H%M%S)"
 

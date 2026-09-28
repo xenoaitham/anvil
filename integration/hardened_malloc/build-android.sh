@@ -56,7 +56,10 @@ readonly SRC_DIR="${CACHE_DIR}/upstream-hardened_malloc"
 readonly OUT_BASE="${ANVIL_ROOT}/build/hmalloc-android"
 readonly JOBS=8
 
-readonly DEFAULT_NDK="${ANDROID_NDK_HOME:-/mnt/NewVolume/anvil-sdk/ndk/28.2.13676358}"
+# Resolution: explicit ANDROID_NDK_HOME, then the SDK root's pinned ndk dir
+# (ANDROID_HOME is set by CI runner images and local SDK setups alike), then
+# the local volume default. Must match emulator/setup-host.sh's NDK pin.
+readonly DEFAULT_NDK="${ANDROID_NDK_HOME:-${ANDROID_HOME:-/mnt/NewVolume/anvil-sdk}/ndk/28.2.13676358}"
 readonly SHIM_DIR="$HERE/ndk-shim"
 
 # ABI triple -> NDK minSdkLevel 28 (getrandom(2) requires API 28; the target

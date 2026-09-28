@@ -18,7 +18,9 @@ CMDLINE_TOOLS_ZIP='https://dl.google.com/android/repository/commandlinetools-lin
 PLATFORM_TOOLS='platform-tools'
 EMULATOR_PKG='emulator'
 IMAGE='system-images;android-36.1;google_apis;x86_64'   # userdebug: adb root works
-NDK_PKG='ndk;27.2.12479018'
+# r28 (clang >= 19): the minimum upstream hardened_malloc builds with, and the
+# version smoke.sh / build-android.sh resolve by default.
+NDK_PKG='ndk;28.2.13676358'
 AVD_NAME='anvil_smoke'
 
 log()  { printf '[setup-host.sh] %s\n' "$*"; }
@@ -100,7 +102,7 @@ fi
 
 # ---- verify -----------------------------------------------------------------
 for p in "$SDK_ROOT/platform-tools/adb" "$SDK_ROOT/emulator/emulator" \
-         "$SDK_ROOT/ndk/27.2.12479018/toolchains/llvm/prebuilt/linux-x86_64/bin/clang"; do
+         "$SDK_ROOT/ndk/28.2.13676358/toolchains/llvm/prebuilt/linux-x86_64/bin/clang"; do
     [ -e "$p" ] || fail "expected $p missing after install"
 done
 log "OK: SDK at $SDK_ROOT, AVD $AVD_NAME ready"

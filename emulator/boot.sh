@@ -11,7 +11,9 @@
 set -euo pipefail
 
 ANVIL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SDK_ROOT="${ANVIL_SDK_ROOT:-/mnt/NewVolume/anvil-sdk}"
+# Same resolution chain as setup-host.sh: explicit override, then the CI
+# runner image's ANDROID_HOME, then the local volume default.
+SDK_ROOT="${ANVIL_SDK_ROOT:-${ANDROID_HOME:-/mnt/NewVolume/anvil-sdk}}"
 AVD_NAME='anvil_smoke'
 BOOT_TIMEOUT=600
 KEEP=0

@@ -22,7 +22,7 @@
 set -euo pipefail
 
 ANVIL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SDK_ROOT="${ANVIL_SDK_ROOT:-/mnt/NewVolume/anvil-sdk}"
+SDK_ROOT="${ANVIL_SDK_ROOT:-${ANDROID_HOME:-/mnt/NewVolume/anvil-sdk}}"
 NDK_HOME="${NDK_HOME:-$SDK_ROOT/ndk/28.2.13676358}"
 HM_DIR="$ANVIL_ROOT/integration/hardened_malloc"
 BUILD_DIR="$ANVIL_ROOT/build/emulator"
