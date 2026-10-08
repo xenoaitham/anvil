@@ -1,0 +1,2 @@
+$ ls /sys/kernel/slab | grep -ic kmalloc
+234

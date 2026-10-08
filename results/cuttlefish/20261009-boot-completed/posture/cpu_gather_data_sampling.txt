@@ -1,0 +1,2 @@
+$ cat /sys/devices/system/cpu/vulnerabilities/gather_data_sampling
+Unknown: Dependent on hypervisor status

@@ -1,0 +1,2 @@
+$ cat /sys/devices/system/cpu/vulnerabilities/reg_file_data_sampling
+Not affected

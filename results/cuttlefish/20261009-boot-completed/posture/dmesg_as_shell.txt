@@ -1,0 +1,3 @@
+$ dmesg | head -2
+[  106.325027] init: Untracked process (pid: 14548 name: (bt_main_thread) ppid: 1 pgrp: 14548 state: Z) did not have an associated service entry and will not be reaped
+[  106.801594] servicemanager: Caller(pid=14553,uid=1002,sid=u:r:bluetooth:s0) Found android.hardware.bluetooth.IBluetoothHci/default in device VINTF manifest.

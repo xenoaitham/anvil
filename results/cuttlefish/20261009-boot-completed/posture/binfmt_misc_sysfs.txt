@@ -1,0 +1,2 @@
+$ ls /proc/sys/fs/binfmt_misc
+ls: /proc/sys/fs/binfmt_misc: No such file or directory

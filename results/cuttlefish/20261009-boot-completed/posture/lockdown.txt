@@ -1,0 +1,2 @@
+$ cat /sys/kernel/security/lockdown
+none integrity [confidentiality]

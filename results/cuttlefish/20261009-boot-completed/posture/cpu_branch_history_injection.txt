@@ -1,0 +1,2 @@
+$ cat /sys/devices/system/cpu/vulnerabilities/branch_history_injection
+cat: /sys/devices/system/cpu/vulnerabilities/branch_history_injection: No such file or directory

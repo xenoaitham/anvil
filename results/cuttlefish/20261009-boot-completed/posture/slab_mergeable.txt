@@ -1,0 +1,2 @@
+$ cat /sys/kernel/slab/km-000/mergeable 2>/dev/null; cat /sys/kernel/slab/kmalloc-8k/mergeable 2>/dev/null; echo "(mergeable attr probe)"
+(mergeable attr probe)

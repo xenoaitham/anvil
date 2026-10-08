@@ -1,0 +1,2 @@
+$ cat /sys/devices/system/cpu/vulnerabilities/spectre_v1
+Mitigation: usercopy/swapgs barriers and __user pointer sanitization

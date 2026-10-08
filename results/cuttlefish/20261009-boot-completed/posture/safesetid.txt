@@ -1,0 +1,3 @@
+$ ls /sys/kernel/security/safesetid
+gid_allowlist_policy
+uid_allowlist_policy

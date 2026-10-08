@@ -1,0 +1,5 @@
+$ ls /sys/kernel/security
+integrity
+lockdown
+lsm
+safesetid

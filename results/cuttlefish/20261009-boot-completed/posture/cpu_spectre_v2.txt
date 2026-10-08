@@ -1,0 +1,2 @@
+$ cat /sys/devices/system/cpu/vulnerabilities/spectre_v2
+Vulnerable: eIBRS with unprivileged eBPF

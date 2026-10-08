@@ -1,0 +1,2 @@
+$ cat /sys/power/disk
+cat: /sys/power/disk: No such file or directory

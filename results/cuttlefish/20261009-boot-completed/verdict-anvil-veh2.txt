@@ -1,0 +1,6 @@
+launch_cvd pid=623326
+adb device online: 127.0.0.1:6520 (t=75s)
+BOOT_COMPLETED t=103s serial=127.0.0.1:6520
+launch_cvd pid=627463
+adb device online: 127.0.0.1:6520 (t=72s)
+BOOT_COMPLETED t=85s serial=127.0.0.1:6520

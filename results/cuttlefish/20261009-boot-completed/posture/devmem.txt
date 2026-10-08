@@ -1,0 +1,2 @@
+$ ls -l /dev/mem
+ls: /dev/mem: No such file or directory

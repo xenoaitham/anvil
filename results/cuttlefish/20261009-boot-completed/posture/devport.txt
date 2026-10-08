@@ -1,0 +1,2 @@
+$ ls -l /dev/port
+ls: /dev/port: No such file or directory

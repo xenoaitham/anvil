@@ -1,0 +1,2 @@
+$ ls /sys/devices/system/memory/
+ls: /sys/devices/system/memory/: No such file or directory
