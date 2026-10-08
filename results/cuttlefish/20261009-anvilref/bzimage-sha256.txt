@@ -1,0 +1,2 @@
+ba7bb2053c2e1040b83575d3174e3cd47d1e3948dde51fd963e2926d371b20fa  /home/potato/anvil-cf/kernel/bzImage-all-gpu
+065e766e38ce03b8763125413ef551faba0ace46a036508db36fedaf4ddbe84b  /home/potato/anvil-cf/kernel/bzImage-anvil-ref

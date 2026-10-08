@@ -5,7 +5,10 @@
 # boot_completed (adb getprop or the VIRTUAL_DEVICE_BOOT_COMPLETED console
 # marker) or a crash. Saves console + verdict; tears the instance down.
 # Exit 0 = boot_completed; 1 = crash/timeout.
-# RECONSTRUCTED 2026-10-08 (identical to pre-deletion version).
+# RECONSTRUCTED 2026-10-08; 2026-10-09: --enable_tap_devices=false added;
+# --initramfs_path re-confirmed REQUIRED (first-stage init must find the
+# versioned /lib/modules/<release>/ dir with this build's signed modules or
+# it falls back to the stock 6.12 flat dir and dies on module sig rejection).
 set -u
 . /home/potato/anvil-cf/evidence/cf-env.sh
 
@@ -16,7 +19,7 @@ LAUNCH_LOG="$CLOG/launch-$NAME.log"
 CONSOLE="$CLOG/boot-console-$NAME.log"
 VERDICT="$CLOG/verdict-$NAME.txt"
 
-df_guard / 1500 "system volume"
+df_guard / 3000 "system volume"
 [ -f "$BZ" ] || { echo "no bzImage-$NAME" >&2; exit 2; }
 
 cd "$HK"
@@ -24,11 +27,18 @@ rm -rf cuttlefish_runtime.1 cuttlefish_runtime
 BOOT_EPOCH=$(date +%s); export BOOT_EPOCH
 # launch_cvd --daemon can stay alive as a supervisor under the user namespace,
 # so run it in the background and poll; stop_cvd at teardown ends it.
+# --initramfs_path is REQUIRED: first-stage init must find the versioned
+# /lib/modules/<release>/ dir (signed modules from this build) or it falls
+# back to the stock 6.12 flat dir, fails "Loading of unsigned module is
+# rejected" on failover.ko, and panics "Attempted to kill init!". The
+# initramfs is rebuilt alongside each kernel (make-initramfs.sh <config>).
 bin/launch_cvd \
     --system_image_dir=$CF/cf/image \
-    --kernel_path="$BZ" --initramfs_path="$IR" \
+    --kernel_path="$BZ" \
+    --initramfs_path="$CF/kernel/initramfs-lz4.img" \
     --gpu_mode=guest_swiftshader --num_instances=1 \
     --vhost_user_vsock=true \
+    --enable_tap_devices=false \
     --blank_data_image_mb=2048 \
     --extra_kernel_cmdline="console=ttyS0 earlyprintk=ttyS0,115200 ignore_loglevel" \
     --daemon >"$LAUNCH_LOG" 2>&1 &

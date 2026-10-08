@@ -1,0 +1,3 @@
+launch_cvd pid=488103
+adb device online: 127.0.0.1:6520 (t=80s)
+TIMEOUT t=903s

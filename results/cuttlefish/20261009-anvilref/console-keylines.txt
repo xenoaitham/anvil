@@ -1,0 +1,8 @@
+[    0.152946] Lockdown: swapper: unsafe module parameters is restricted; see man kernel_lockdown.7
+[    0.152946] Lockdown: swapper: unsafe module parameters is restricted; see man kernel_lockdown.7
+[    0.250937] Lockdown: swapper: use of tracefs is restricted; see man kernel_lockdown.7
+[    0.250937] Lockdown: swapper: use of tracefs is restricted; see man kernel_lockdown.7
+[    0.269138] kfence: initialized - using 524288 bytes for 63 objects at 0x(____ptrval____)-0x(____ptrval____)
+[    0.269138] kfence: initialized - using 524288 bytes for 63 objects at 0x(____ptrval____)-0x(____ptrval____)
+[    0.515304] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    0.516825] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7

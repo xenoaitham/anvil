@@ -1,0 +1,186 @@
+.config.anvil-ref:7559:warning: override: reassigning to symbol VIRTIO_PCI
+.config.anvil-ref:7560:warning: override: reassigning to symbol VIRTIO_BLK
+.config.anvil-ref:7561:warning: override: reassigning to symbol VIRTIO_NET
+.config.anvil-ref:7562:warning: override: reassigning to symbol VIRTIO_CONSOLE
+.config.anvil-ref:7563:warning: override: reassigning to symbol HW_RANDOM_VIRTIO
+.config.anvil-ref:7564:warning: override: reassigning to symbol VIRTIO_VSOCKETS
+.config.anvil-ref:7565:warning: override: reassigning to symbol VIRTIO_INPUT
+.config.anvil-ref:7566:warning: override: reassigning to symbol VIRTIO_VSOCKETS_COMMON
+.config.anvil-ref:7567:warning: override: reassigning to symbol FAILOVER
+.config.anvil-ref:7568:warning: override: reassigning to symbol NET_FAILOVER
+.config.anvil-ref:7569:warning: override: reassigning to symbol CFG80211
+.config.anvil-ref:7575:warning: override: reassigning to symbol DRM
+.config.anvil-ref:7576:warning: override: reassigning to symbol DRM_VIRTIO_GPU
+.config.anvil-ref:7579:warning: override: reassigning to symbol INIT_ON_FREE_DEFAULT_ON
+.config.anvil-ref:7581:warning: override: reassigning to symbol BINFMT_MISC
+.config.anvil-ref:7582:warning: override: reassigning to symbol CACHESTAT_SYSCALL
+.config.anvil-ref:7583:warning: override: reassigning to symbol DEBUG_SG
+.config.anvil-ref:7584:warning: override: reassigning to symbol EFI_DISABLE_PCI_DMA
+.config.anvil-ref:7585:warning: override: reassigning to symbol HIBERNATION
+.config.anvil-ref:7586:warning: override: reassigning to symbol LDISC_AUTOLOAD
+.config.anvil-ref:7587:warning: override: reassigning to symbol LEGACY_TIOCSTI
+.config.anvil-ref:7589:warning: override: reassigning to symbol MAGIC_SYSRQ_DEFAULT_ENABLE
+.config.anvil-ref:7590:warning: override: reassigning to symbol MAGIC_SYSRQ_SERIAL
+.config.anvil-ref:7591:warning: override: reassigning to symbol MEMORY_HOTPLUG
+.config.anvil-ref:7592:warning: override: reassigning to symbol MEMORY_HOTREMOVE
+.config.anvil-ref:7593:warning: override: reassigning to symbol MODULE_SIG_FORCE
+.config.anvil-ref:7594:warning: override: reassigning to symbol MODULE_SIG_SHA256
+.config.anvil-ref:7594:warning: override: MODULE_SIG_SHA256 changes choice state
+.config.anvil-ref:7595:warning: override: reassigning to symbol RANDOMIZE_KSTACK_OFFSET_DEFAULT
+.config.anvil-ref:7596:warning: override: reassigning to symbol RANDOM_KMALLOC_CACHES
+.config.anvil-ref:7597:warning: override: reassigning to symbol RANDSTRUCT_FULL
+.config.anvil-ref:7597:warning: override: RANDSTRUCT_FULL changes choice state
+.config.anvil-ref:7599:warning: override: reassigning to symbol SECURITY_LOCKDOWN_LSM
+.config.anvil-ref:7601:warning: override: reassigning to symbol SYN_COOKIES
+.config.anvil-ref:7602:warning: override: reassigning to symbol TIPC
+.config.anvil-ref:7604:warning: override: reassigning to symbol ARCH_MMAP_RND_BITS
+.config.anvil-ref:7605:warning: override: reassigning to symbol ARCH_MMAP_RND_COMPAT_BITS
+.config.anvil-ref:7606:warning: override: reassigning to symbol DEFAULT_MMAP_MIN_ADDR
+.config.anvil-ref:7607:warning: override: reassigning to symbol EFI_STUB
+.config.anvil-ref:7609:warning: override: reassigning to symbol ACPI_HOTPLUG_MEMORY
+.config.anvil-ref:7612:warning: override: reassigning to symbol ANDROID_DEBUG_KINFO
+.config.anvil-ref:7613:warning: override: reassigning to symbol ANDROID_DEBUG_SYMBOLS
+.config.anvil-ref:7614:warning: override: reassigning to symbol ANDROID_USB_F_MIDI_INFO
+.config.anvil-ref:7616:warning: override: reassigning to symbol ARCH_ENABLE_MEMORY_HOTREMOVE
+.config.anvil-ref:7617:warning: override: reassigning to symbol ARCH_HIBERNATION_HEADER
+.config.anvil-ref:7618:warning: override: reassigning to symbol ARCH_MEMORY_PROBE
+.config.anvil-ref:7619:warning: override: reassigning to symbol AUTOFDO_CLANG
+.config.anvil-ref:7620:warning: override: reassigning to symbol BLK_DEV_THROTTLING
+.config.anvil-ref:7621:warning: override: reassigning to symbol BLK_DEV_THROTTLING_LOW
+.config.anvil-ref:7622:warning: override: reassigning to symbol BLK_WBT_MQ
+.config.anvil-ref:7631:warning: override: reassigning to symbol CFS_BANDWIDTH
+.config.anvil-ref:7632:warning: override: reassigning to symbol CMA_SYSFS
+.config.anvil-ref:7633:warning: override: reassigning to symbol DAMON
+.config.anvil-ref:7634:warning: override: reassigning to symbol DAMON_PADDR
+.config.anvil-ref:7635:warning: override: reassigning to symbol DAMON_SYSFS
+.config.anvil-ref:7636:warning: override: reassigning to symbol DAMON_VADDR
+.config.anvil-ref:7637:warning: override: reassigning to symbol DMABUF_HEAPS_DEFERRED_FREE
+.config.anvil-ref:7638:warning: override: reassigning to symbol DMABUF_HEAPS_PAGE_POOL
+.config.anvil-ref:7639:warning: override: reassigning to symbol DTPM
+.config.anvil-ref:7644:warning: override: reassigning to symbol GACT_PROB
+.config.anvil-ref:7645:warning: override: reassigning to symbol GNSS
+.config.anvil-ref:7646:warning: override: reassigning to symbol HAVE_BOOTMEM_INFO_NODE
+.config.anvil-ref:7647:warning: override: reassigning to symbol HIBERNATE_CALLBACKS
+.config.anvil-ref:7648:warning: override: reassigning to symbol HIBERNATION_SNAPSHOT_DEV
+.config.anvil-ref:7649:warning: override: reassigning to symbol HOTPLUG_PCI
+.config.anvil-ref:7654:warning: override: reassigning to symbol HW_RANDOM_AMD
+.config.anvil-ref:7655:warning: override: reassigning to symbol HW_RANDOM_INTEL
+.config.anvil-ref:7656:warning: override: reassigning to symbol I2C_COMPAT
+.config.anvil-ref:7658:warning: override: reassigning to symbol IP_NF_MATCH_RPFILTER
+.config.anvil-ref:7661:warning: override: reassigning to symbol LSM
+.config.anvil-ref:7671:warning: override: reassigning to symbol MAGIC_SYSRQ_SERIAL_SEQUENCE
+.config.anvil-ref:7672:warning: override: reassigning to symbol MEDIA_CEC_RC
+.config.anvil-ref:7673:warning: override: reassigning to symbol MEMORY_HOTPLUG_DEFAULT_ONLINE
+.config.anvil-ref:7674:warning: override: reassigning to symbol MHP_MEMMAP_ON_MEMORY
+.config.anvil-ref:7675:warning: override: reassigning to symbol MODPROBE_PATH
+.config.anvil-ref:7676:warning: override: reassigning to symbol MODULE_SIG_HASH
+.config.anvil-ref:7677:warning: override: reassigning to symbol MODULE_SIG_PROTECT
+.config.anvil-ref:7678:warning: override: reassigning to symbol MODULE_SIG_SHA1
+.config.anvil-ref:7679:warning: override: reassigning to symbol NETFILTER_XT_TARGET_LOG
+.config.anvil-ref:7680:warning: override: reassigning to symbol NF_LOG_IPV6
+.config.anvil-ref:7681:warning: override: reassigning to symbol NF_LOG_SYSLOG
+.config.anvil-ref:7682:warning: override: reassigning to symbol NINTENDO_FF
+.config.anvil-ref:7684:warning: override: reassigning to symbol PAGE_IDLE_FLAG
+.config.anvil-ref:7686:warning: override: reassigning to symbol PM_STD_PARTITION
+.config.anvil-ref:7687:warning: override: reassigning to symbol PM_USERSPACE_AUTOSLEEP
+.config.anvil-ref:7690:warning: override: reassigning to symbol RANDSTRUCT_NONE
+.config.anvil-ref:7691:warning: override: reassigning to symbol RCU_LAZY_DEFAULT_OFF
+.config.anvil-ref:7692:warning: override: reassigning to symbol RCU_NOCB_CPU_DEFAULT_ALL
+.config.anvil-ref:7693:warning: override: reassigning to symbol READ_ONLY_THP_FOR_FS
+.config.anvil-ref:7695:warning: override: reassigning to symbol SECURITY_LANDLOCK
+.config.anvil-ref:7696:warning: override: reassigning to symbol SECURITY_PATH
+.config.anvil-ref:7697:warning: override: reassigning to symbol THERMAL_STATISTICS
+.config.anvil-ref:7698:warning: override: reassigning to symbol THERMAL_WRITABLE_TRIPS
+.config.anvil-ref:7699:warning: override: reassigning to symbol TIPC_CRYPTO
+.config.anvil-ref:7700:warning: override: reassigning to symbol TIPC_DIAG
+.config.anvil-ref:7701:warning: override: reassigning to symbol TIPC_MEDIA_UDP
+.config.anvil-ref:7702:warning: override: reassigning to symbol UAPI_HEADER_TEST
+.config.anvil-ref:7704:warning: override: reassigning to symbol USB_XHCI_PCI
+.config.anvil-ref:7705:warning: override: reassigning to symbol USB_XHCI_PCI_RENESAS
+.config.anvil-ref:7706:warning: override: reassigning to symbol VIRTIO_DMA_SHARED_BUFFER
+.config.anvil-ref:7707:warning: override: reassigning to symbol VIRTIO_MEM
+.config.anvil-ref:7714:warning: override: reassigning to symbol WLAN_VENDOR_CISCO
+.config.anvil-ref:7715:warning: override: reassigning to symbol X86_AMD_PSTATE
+.config.anvil-ref:7717:warning: override: reassigning to symbol ZONE_DEVICE
+.config.anvil-ref:7723:warning: override: reassigning to symbol DRM_VIRTIO_GPU
+.config.anvil-ref:7724:warning: override: reassigning to symbol DRM_VIRTIO_GPU
+.config.anvil-ref:7725:warning: override: reassigning to symbol DRM_VIRTIO_GPU_KMS
+#
+# configuration written to .config.anvil-ref
+#
+  SYNC    include/config/auto.conf.cmd
+  DESCEND objtool
+  CALL    scripts/checksyscalls.sh
+  INSTALL libsubcmd_headers
+  UPD     kernel/config_data
+  AR      drivers/virtio/built-in.a
+  CC [M]  drivers/virtio/virtio_dma_buf.o
+  CHK     kernel/kheaders_data.tar.xz
+  GZIP    kernel/config_data.gz
+  CC      kernel/configs.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_drv.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_kms.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_gem.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_vram.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_display.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_vq.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_fence.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_object.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_debugfs.o
+  AR      kernel/built-in.a
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_plane.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_ioctl.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_prime.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_trace_points.o
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_submit.o
+  LD [M]  drivers/gpu/drm/virtio/virtio-gpu.o
+  AR      drivers/gpu/drm/built-in.a
+  AR      drivers/gpu/built-in.a
+  AR      drivers/built-in.a
+  AR      built-in.a
+  AR      vmlinux.a
+  LD      vmlinux.o
+vmlinux.o: warning: objtool: x64_sys_call+0x2670: __x64_sys_exit() is missing a __noreturn annotation
+vmlinux.o: warning: objtool: ia32_sys_call+0x2a77: __ia32_sys_exit_group() is missing a __noreturn annotation
+  OBJCOPY modules.builtin.modinfo
+  GEN     modules.builtin
+  GEN     .vmlinux.objs
+  MODPOST Module.symvers
+WARNING: modpost: vmlinux: memblock_end_of_DRAM: EXPORT_SYMBOL used for init symbol. Remove __init or EXPORT_SYMBOL.
+  GEN     vmlinux.symvers
+  CC      .vmlinux.export.o
+  CC [M]  drivers/virtio/virtio_dma_buf.mod.o
+  CC [M]  drivers/gpu/drm/virtio/virtio-gpu.mod.o
+  LD [M]  drivers/gpu/drm/virtio/virtio-gpu.ko
+  LD [M]  drivers/virtio/virtio_dma_buf.ko
+  UPD     include/generated/utsversion.h
+  CC      init/version-timestamp.o
+  LD      .tmp_vmlinux.kallsyms1
+  NM      .tmp_vmlinux.kallsyms1.syms
+  KSYMS   .tmp_vmlinux.kallsyms1.S
+  AS      .tmp_vmlinux.kallsyms1.o
+  LD      .tmp_vmlinux.kallsyms2
+  NM      .tmp_vmlinux.kallsyms2.syms
+  KSYMS   .tmp_vmlinux.kallsyms2.S
+  AS      .tmp_vmlinux.kallsyms2.o
+  LD      vmlinux
+  NM      System.map
+  SORTTAB vmlinux
+  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
+  RSTRIP  vmlinux
+  CC      arch/x86/boot/version.o
+  VOFFSET arch/x86/boot/compressed/../voffset.h
+  OBJCOPY arch/x86/boot/compressed/vmlinux.bin
+  CC      arch/x86/boot/compressed/kaslr.o
+  CC      arch/x86/boot/compressed/misc.o
+  LZ4     arch/x86/boot/compressed/vmlinux.bin.lz4
+  MKPIGGY arch/x86/boot/compressed/piggy.S
+  AS      arch/x86/boot/compressed/piggy.o
+  LD      arch/x86/boot/compressed/vmlinux
+  ZOFFSET arch/x86/boot/zoffset.h
+  OBJCOPY arch/x86/boot/vmlinux.bin
+  AS      arch/x86/boot/header.o
+  LD      arch/x86/boot/setup.elf
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Kernel: arch/x86/boot/bzImage is ready  (#2)
