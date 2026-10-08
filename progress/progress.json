@@ -1,7 +1,7 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-10-08T22:08:33Z",
+  "updated": "2026-10-08T23:26:07Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 10,
@@ -216,7 +216,7 @@
     {
       "id": "cuttlefish-kernel",
       "title": "Kernel fragments boot on Cuttlefish: self-built android-common kernel, hardening symbols proven live",
-      "status": "in_progress",
+      "status": "completed",
       "owner": "builder-cuttlefish",
       "rounds": [
         {
@@ -229,7 +229,7 @@
           "round": 2,
           "verdict": "pending",
           "gap": "",
-          "detail": "Round 2 (2026-10-08): disk recovered (23G free), bisect infrastructure rebuilt \u2014 group configs verified to reproduce the committed crashing config exactly (0-diff olddefconfig check); control re-validation boots started. Live ledger: anvil-cf/campaign2.\nPhase 0 (2026-10-08): committed fragment kernel #4 crash REPRODUCED with full console \u2014 primary fault is rcuop/2 (RCU nocb offload kthread) dereferencing a garbage callback pointer in rcu_do_batch at t=9.77s (unmapped direct-map addr), then hardened-usercopy abort, panic; the old #DF signature is downstream of this corruption. New control result: pure-stock 6.6 GKI kernel TIMEOUTs at 600s without reaching boot_completed \u2014 root cause found in console: vendor early-init waits for /dev/dri/card0, nothing loads virtio-gpu on a 6.6 boot path (6.12 stock loads it from first-stage ramdisk; 6.6-built modules would also fail MODULE_SIG_FORCE). GPU built-in added to all bisect variants; full rebuild of control+GPU variant in progress.\n2026-10-08 ~22:20 the campaign tree /home/potato/anvil-cf was deleted by an external disk-cleaner on this machine. Full reconstruction done: kernel re-fetched at pinned commit c905c29016dd; Android CI artifacts re-downloaded byte-identical (build 16373615, same Android 17 pairing); toolchain debs same versions; scripts rewritten identically and now mirrored in-repo (results/cuttlefish/20261008-campaign/scripts). Attempt 002 (control+GPU=y) had proven: GPU live t=0.7s but the image's drm_hwcomposer SIGSEGVs vs the 6.6 kernel and crash-loops system_server (~80 deaths) \u2014 open problem documented; GPU-less boot keeps system_server healthy but crawls. All-fragments+GPU kernel (attempt 003) now building.\nattempts 000-004 (round 2): GPU-mandatory confirmed on 6.6 (ctrl66 600s timeout, no card0); exact #4 config rebuilt (bit-identical anvil-ref) shows NO kernel crash in 900s \u2014 old rcuop/2 signature is build-dependent; new fragment-linked signature: system_server ashmem EACCES at t~93s (no avc); repacker splits initramfs modules (empty /proc/modules); attempt 004 stockgpu control building to discriminate hwcomposer SIGSEGV"
+          "detail": "Round 2 (2026-10-08): disk recovered (23G free), bisect infrastructure rebuilt \u2014 group configs verified to reproduce the committed crashing config exactly (0-diff olddefconfig check); control re-validation boots started. Live ledger: anvil-cf/campaign2.\nPhase 0 (2026-10-08): committed fragment kernel #4 crash REPRODUCED with full console \u2014 primary fault is rcuop/2 (RCU nocb offload kthread) dereferencing a garbage callback pointer in rcu_do_batch at t=9.77s (unmapped direct-map addr), then hardened-usercopy abort, panic; the old #DF signature is downstream of this corruption. New control result: pure-stock 6.6 GKI kernel TIMEOUTs at 600s without reaching boot_completed \u2014 root cause found in console: vendor early-init waits for /dev/dri/card0, nothing loads virtio-gpu on a 6.6 boot path (6.12 stock loads it from first-stage ramdisk; 6.6-built modules would also fail MODULE_SIG_FORCE). GPU built-in added to all bisect variants; full rebuild of control+GPU variant in progress.\n2026-10-08 ~22:20 the campaign tree /home/potato/anvil-cf was deleted by an external disk-cleaner on this machine. Full reconstruction done: kernel re-fetched at pinned commit c905c29016dd; Android CI artifacts re-downloaded byte-identical (build 16373615, same Android 17 pairing); toolchain debs same versions; scripts rewritten identically and now mirrored in-repo (results/cuttlefish/20261008-campaign/scripts). Attempt 002 (control+GPU=y) had proven: GPU live t=0.7s but the image's drm_hwcomposer SIGSEGVs vs the 6.6 kernel and crash-loops system_server (~80 deaths) \u2014 open problem documented; GPU-less boot keeps system_server healthy but crawls. All-fragments+GPU kernel (attempt 003) now building.\nattempts 000-004 (round 2): GPU-mandatory confirmed on 6.6 (ctrl66 600s timeout, no card0); exact #4 config rebuilt (bit-identical anvil-ref) shows NO kernel crash in 900s \u2014 old rcuop/2 signature is build-dependent; new fragment-linked signature: system_server ashmem EACCES at t~93s (no avc); repacker splits initramfs modules (empty /proc/modules); attempt 004 stockgpu control building to discriminate hwcomposer SIGSEGV\n2026-10-09: sys.boot_completed=1 at t=103s on the FULL Anvil fragment set (anvil-veh2). Root causes across attempts 000-007: (1) vehicle \u2014 origin gki_defconfig lacks CONFIG_DMABUF_HEAPS_SYSTEM=y (allocator HAL dead, composer nullptr SIGSEGV) and 6.6 SELinux predates memfd_class policycap (sys.use_memfd=1 override needed), both proven on the clean control which then boots t=786s; (2) fragment-vehicle interaction \u2014 LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY rejects crosvm's ramoops.mem_address module_param_hw, ramoops binds pstore console to phys 0, #PF t=17s; fixed with PSTORE_RAM off (ramoops-n), lockdown kept. Live posture dump: lockdown [confidentiality], KFENCE 500, sig_enforce Y, mmap_rnd 32, sysrq 0, devmem/binfmt/tipc/hibernate/hotplug absent, 234 randomized kmalloc caches. Old 10-15s crash claim corrected (build-dependent, did not reproduce). Follow-ups: INIT_ON_FREE re-confirm, blind critic round."
         }
       ],
       "commits": [],
@@ -244,7 +244,11 @@
         "campaign2/logs/verdict-ctrl66.txt + boot-console-ctrl66.log \u2014 6.6 control TIMEOUT, /dev/dri/card0 wait failure quoted",
         "results/cuttlefish/20261008-campaign/ \u2014 round-2 ledger, gpu deviation cfgs, reconstructed scripts",
         "results/cuttlefish/20261009-anvilref/boot-console-anvil-ref.log.gz",
-        "results/cuttlefish/20261009-anvilref/console-keylines.txt"
+        "results/cuttlefish/20261009-anvilref/console-keylines.txt",
+        "results/cuttlefish/20261009-boot-completed/FINDINGS.md",
+        "results/cuttlefish/20261009-vehicle-fix/FINDINGS.md",
+        "results/cuttlefish/20261009-boot-completed/posture/",
+        "results/cuttlefish/20261009-boot-completed/boot-console-anvil-veh2.log.gz"
       ]
     }
   ]

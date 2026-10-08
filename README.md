@@ -90,15 +90,31 @@ kernel's own console, the hardening is **live**: lockdown LSM in
 confidentiality mode, init-on-alloc + stack zeroing, the full x86_64
 mitigation set (eIBRS, BHI clearing, MMIO stale data, Retbleed), KASLR.
 
-The honest boundary: **`sys.boot_completed` was never reached** — the
-fragment kernel crashes in the 10–15 s service-start window, and the
-differential controls (stock 6.12 image kernel boots fully in the same
-harness; the *same 6.6 source tree* with the pure stock defconfig boots
-clean past t=173 s) attribute the crash to the fragment content on x86_64.
-Which fragment line is responsible is not yet bisected; the campaign volume
-hit ENOSPC and stopped rather than fake past it. adb-level runtime probes
-are therefore not claimed. Full record, controls, crash forensics and the
-resume path: [results/cuttlefish/](results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md).
+The honest boundary, updated 2026-10-09: **`sys.boot_completed=1` at t=103 s
+— reached** with the full fragment set on the same 6.6 source tree
+([evidence](results/cuttlefish/20261009-boot-completed/): verdict, full
+serial console, and a 42-file live-kernel posture dump — lockdown
+`[confidentiality]`, KFENCE 500, module sig_enforce Y, `vm.mmap_rnd_bits`
+32, sysrq 0, `/dev/mem`/`/dev/port`/binfmt_misc/TIPC/hibernation/
+memory-hotplug absent, 234 randomized kmalloc caches). Getting there
+required root-causing two 6.6-vs-image gaps that are **not fragment
+issues** — both reproduce on the clean stock-defconfig control: the origin
+x86_64 `gki_defconfig` omits `CONFIG_DMABUF_HEAPS_SYSTEM=y` (the image's
+minigbm allocator HAL then dies and the composer SIGSEGVs on an unchecked
+null), and 6.6 SELinux predates the `memfd_class` policycap (the image's
+libcutils then needs the `sys.use_memfd=1` override or system_server dies
+on ashmem). One genuine fragment-vehicle interaction also had to be
+neutralized: `LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY` correctly rejects the
+crosvm `ramoops.mem_address` hardware module_param at boot parse, whereupon
+ramoops binds a pstore console to physical address 0 and panics the kernel
+(t=17 s, forensics committed); the vehicle-compatible fix disables
+`CONFIG_PSTORE_RAM` on Cuttlefish and keeps forced lockdown intact. The
+2026-09 "crashes in the 10–15 s window every attempt" claim is corrected:
+that signature was build-dependent and did not reproduce from the committed
+config on today's toolchain; the earlier consoles remain valid records for
+the builds they captured.
+Full record, controls, forensics and the deviation classes:
+[results/cuttlefish/](results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md).
 Passed blind review round 1.
 
 ## Quickstarts

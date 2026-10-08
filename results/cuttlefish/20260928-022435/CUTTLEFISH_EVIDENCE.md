@@ -78,6 +78,27 @@ console, not from config files.
 
 ## §4 — The late-boot crash, and the controls that attribute it
 
+> **STATUS UPDATE 2026-10-09 — superseded by later evidence, kept as the
+> record of what was believed on 2026-09-28.** Round 2 of the campaign
+> (see `../20261008-campaign/`, `../20261009-vehicle-fix/`,
+> `../20261009-boot-completed/`) root-caused the "fragment crash":
+> (a) two 6.6-vs-image gaps reproduce on the CLEAN control (missing
+> `CONFIG_DMABUF_HEAPS_SYSTEM=y`; 6.6 SELinux predating the `memfd_class`
+> policycap) — the old "clean boot" controls never reached
+> `sys.boot_completed` either, they crawled GPU-less;
+> (b) the exact #4 config rebuilt on today's toolchain does **not** crash
+> in the 10–15 s window at all (bit-identical config, 900 s clean) — the
+> window crash was build-dependent;
+> (c) a genuine fragment-vehicle interaction was found and fixed
+> (`LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY` rejects the crosvm
+> `ramoops.mem_address` module_param_hw → pstore console bound to phys 0 →
+> #PF at t=17 s; fixed by `# CONFIG_PSTORE_RAM is not set` on this vehicle,
+> forced lockdown kept); and
+> (d) with those three items, **the full fragment set reaches
+> `sys.boot_completed=1` at t=103 s** with the hardening posture verified
+> live (`../20261009-boot-completed/`). The original text below stands as
+> the honest state of 2026-09-28.
+
 The fragment kernel never reaches `sys.boot_completed`: every attempt dies
 in the 10–15 s service-start window, with two signatures:
 
@@ -115,6 +136,14 @@ tree; nothing here makes any claim about arm64, and nothing transfers to
 hardware claims.
 
 ## §5 — Known-honest limits of this campaign
+
+> **STATUS UPDATE 2026-10-09:** the two headline limits below are now
+> resolved — `sys.boot_completed=1` at t=103 s with a 42-file adb posture
+> dump (`../20261009-boot-completed/`), and the fragment-crash attribution
+> corrected (see the §4 status block). The INIT_ON_FREE exclusion and the
+> t=173 s control-crawl notes remain accurate for the vehicles they were
+> recorded on; the INIT_ON_FREE re-confirm on today's toolchain is queued
+> (round-2 ledger, `../20261008-campaign/PROGRESS.md`).
 
 - **No `sys.boot_completed` with fragments**; therefore no adb-level runtime
   probes (dmesg_restrict behavior, %pK, lockdown sysfs, sysrq, hibernation
