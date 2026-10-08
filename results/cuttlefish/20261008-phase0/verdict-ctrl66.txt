@@ -1,0 +1,2 @@
+launch_cvd pid=232088
+TIMEOUT t=604s

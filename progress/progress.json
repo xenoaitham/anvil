@@ -1,7 +1,7 @@
 {
   "project": "Anvil",
   "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-09-29T03:10:00Z",
+  "updated": "2026-10-08T19:54:38Z",
   "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
   "metrics": {
     "pieces_total": 10,
@@ -143,14 +143,14 @@
     },
     {
       "id": "readme",
-      "title": "README, methodology, limitations — the honest front door",
+      "title": "README, methodology, limitations \u2014 the honest front door",
       "status": "passed",
       "owner": "builder-docs",
       "rounds": [
         {
           "round": 1,
           "verdict": "ours",
-          "gap": "stale ledger-note sentence (written before the ledger repair) — fixed",
+          "gap": "stale ledger-note sentence (written before the ledger repair) \u2014 fixed",
           "detail": "Blind pick: winner=A(ours), confidence=high. Critic re-ran matrix_lint to verify 13/156/35% claims and cross-checked the ledger tally. Loser(B=upstream landing page): no audience entry points, no verifiable claims."
         }
       ],
@@ -169,8 +169,8 @@
         {
           "round": 1,
           "verdict": "ours",
-          "gap": "secondary applied: EVIDENCE.md §4 numbering gap closed; smoke.sh JSON now uses the same ok=1 predicate as the shell gates",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic audited the tombstone recursion frames, the mprotect EINVAL arithmetic (3072=128×24, addr&4095==3480) and the machine-parsed gates, then named the loser: GrapheneOS platform_build_release is 16,634 flag textprotos of build configuration with zero runtime verification. Secondary defects in ours fixed in the same commit."
+          "gap": "secondary applied: EVIDENCE.md \u00a74 numbering gap closed; smoke.sh JSON now uses the same ok=1 predicate as the shell gates",
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic audited the tombstone recursion frames, the mprotect EINVAL arithmetic (3072=128\u00d724, addr&4095==3480) and the machine-parsed gates, then named the loser: GrapheneOS platform_build_release is 16,634 flag textprotos of build configuration with zero runtime verification. Secondary defects in ours fixed in the same commit."
         }
       ],
       "commits": [
@@ -185,7 +185,7 @@
         "results/emulator/EVIDENCE.md + timestamped raw capture dirs",
         "first green runs 20260927-234546 (smoke) / 20260927-234618 (posture)",
         "emulator.yml FIRST GREEN CI RUN 36364446629 (21m21s, software-emulated boot); CI-repro captures committed as results/emulator/20260928-012121 (smoke) + 20260928-012332 (posture)",
-        "toolchain findings upstreamed: android/ndk#2255 (alignas), emutls build-floor finding documented in EVIDENCE.md §1",
+        "toolchain findings upstreamed: android/ndk#2255 (alignas), emutls build-floor finding documented in EVIDENCE.md \u00a71",
         "blind review: round 1 won (see rounds)"
       ]
     },
@@ -199,7 +199,7 @@
           "round": 1,
           "verdict": "ours",
           "gap": "secondary applied: proof step now asserts AArch64 host + ELF machine instead of displaying them (commit 17dfeea)",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic verified the results JSON line-by-line (58 unique tests, counts sum, pinned SHA, arch from uname -m) and the workflow's claims against real script interfaces. Loser(B=upstream's own build-and-test.yml): executes natively but captures no evidence, no pin articulation, no permissions/timeout/concurrency — 'competent upstream CI, not a self-verifying merge gate'."
+          "detail": "Blind pick: winner=A(ours), confidence=high. Critic verified the results JSON line-by-line (58 unique tests, counts sum, pinned SHA, arch from uname -m) and the workflow's claims against real script interfaces. Loser(B=upstream's own build-and-test.yml): executes natively but captures no evidence, no pin articulation, no permissions/timeout/concurrency \u2014 'competent upstream CI, not a self-verifying merge gate'."
         }
       ],
       "commits": [
@@ -208,31 +208,41 @@
         "17dfeea"
       ],
       "evidence": [
-        ".github/workflows/arm64.yml — green runs 36363636029 + 36364446671 (ubuntu-24.04-arm, gcc-14.2.0)",
-        "results/hmalloc/tests-20260928-aarch64-gcc-14.json — 58/58 upstream tests pass natively, pinned commit 01df350c",
+        ".github/workflows/arm64.yml \u2014 green runs 36363636029 + 36364446671 (ubuntu-24.04-arm, gcc-14.2.0)",
+        "results/hmalloc/tests-20260928-aarch64-gcc-14.json \u2014 58/58 upstream tests pass natively, pinned commit 01df350c",
         "LD_PRELOAD interposition proof: AArch64 ELF asserted, allocator mapped in child /proc/self/maps"
       ]
     },
     {
       "id": "cuttlefish-kernel",
       "title": "Kernel fragments boot on Cuttlefish: self-built android-common kernel, hardening symbols proven live",
-      "status": "passed",
+      "status": "in_progress",
       "owner": "builder-cuttlefish",
       "rounds": [
         {
           "round": 1,
           "verdict": "ours",
           "gap": "secondary applied: broken scripts/config merge recipe replaced with merge_config.sh in both READMEs (the old recipe was a no-op); base.cfg RANDSTRUCT/MODVERSIONS comment corrected (RANDSTRUCT_FULL selects MODVERSIONS on this branch); duplicate-line note added to the boot-log extraction",
-          "detail": "Blind pick: winner=B(ours), confidence=high. Critic audited quoted boot lines against the committed merged config (lockdown/init-on-alloc line numbers), verified KASLR strings against the 6.6 source, and validated the differential controls (stock 6.12 boots to sys.boot_completed in the same harness; same-source 6.6 with stock defconfig boots clean past t=173s; fragment kernels crash at t≈10-15s). Loser(A=GrapheneOS origin gki_defconfigs): static input, cannot prove a single symbol live on a running system. The campaign's own finding — the fragment set crashes x86_64 6.6 GKI late boot, bisected to fragment content — is recorded in the artifact, not hidden."
+          "detail": "Blind pick: winner=B(ours), confidence=high. Critic audited quoted boot lines against the committed merged config (lockdown/init-on-alloc line numbers), verified KASLR strings against the 6.6 source, and validated the differential controls (stock 6.12 boots to sys.boot_completed in the same harness; same-source 6.6 with stock defconfig boots clean past t=173s; fragment kernels crash at t\u224810-15s). Loser(A=GrapheneOS origin gki_defconfigs): static input, cannot prove a single symbol live on a running system. The campaign's own finding \u2014 the fragment set crashes x86_64 6.6 GKI late boot, bisected to fragment content \u2014 is recorded in the artifact, not hidden."
+        },
+        {
+          "round": 2,
+          "verdict": "pending",
+          "gap": "",
+          "detail": "Round 2 (2026-10-08): disk recovered (23G free), bisect infrastructure rebuilt \u2014 group configs verified to reproduce the committed crashing config exactly (0-diff olddefconfig check); control re-validation boots started. Live ledger: anvil-cf/campaign2.\nPhase 0 (2026-10-08): committed fragment kernel #4 crash REPRODUCED with full console \u2014 primary fault is rcuop/2 (RCU nocb offload kthread) dereferencing a garbage callback pointer in rcu_do_batch at t=9.77s (unmapped direct-map addr), then hardened-usercopy abort, panic; the old #DF signature is downstream of this corruption. New control result: pure-stock 6.6 GKI kernel TIMEOUTs at 600s without reaching boot_completed \u2014 root cause found in console: vendor early-init waits for /dev/dri/card0, nothing loads virtio-gpu on a 6.6 boot path (6.12 stock loads it from first-stage ramdisk; 6.6-built modules would also fail MODULE_SIG_FORCE). GPU built-in added to all bisect variants; full rebuild of control+GPU variant in progress.\n2026-10-08 ~22:20 the campaign tree /home/potato/anvil-cf was deleted by an external disk-cleaner on this machine. Full reconstruction done: kernel re-fetched at pinned commit c905c29016dd; Android CI artifacts re-downloaded byte-identical (build 16373615, same Android 17 pairing); toolchain debs same versions; scripts rewritten identically and now mirrored in-repo (results/cuttlefish/20261008-campaign/scripts). Attempt 002 (control+GPU=y) had proven: GPU live t=0.7s but the image's drm_hwcomposer SIGSEGVs vs the 6.6 kernel and crash-loops system_server (~80 deaths) \u2014 open problem documented; GPU-less boot keeps system_server healthy but crawls. All-fragments+GPU kernel (attempt 003) now building."
         }
       ],
       "commits": [],
       "evidence": [
-        "results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md — full campaign record",
-        "self-built android15-6.6 kernel c905c29016dd + fragments; boots to Android userspace (init, ext4 first-stage mounts, servicemanager/HALs at t≈15s)",
+        "results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md \u2014 full campaign record",
+        "self-built android15-6.6 kernel c905c29016dd + fragments; boots to Android userspace (init, ext4 first-stage mounts, servicemanager/HALs at t\u224815s)",
         "hardening live at boot: lockdown confidentiality, init-on-alloc, stack zeroing, full x86 mitigation set, KASLR (custom/boot-hardening-lines.txt, quoted from the running kernel's console)",
-        "crash bisected to fragment content via controls (stock/ns-control/, stockcfg-control/); full sys.boot_completed NOT reached — documented, not faked",
-        "campaign ended at volume floor (ENOSPC); resume path in CUTTLEFISH_EVIDENCE.md §6"
+        "crash bisected to fragment content via controls (stock/ns-control/, stockcfg-control/); full sys.boot_completed NOT reached \u2014 documented, not faked",
+        "campaign ended at volume floor (ENOSPC); resume path in CUTTLEFISH_EVIDENCE.md \u00a76",
+        "bisect groups verified: .config.stock + FIXED preamble + all.cfg => .config.anvil, 0 diff",
+        "campaign2/logs/boot-console-anvil-ctl.log \u2014 full crash console, oops+stack quoted",
+        "campaign2/logs/verdict-ctrl66.txt + boot-console-ctrl66.log \u2014 6.6 control TIMEOUT, /dev/dri/card0 wait failure quoted",
+        "results/cuttlefish/20261008-campaign/ \u2014 round-2 ledger, gpu deviation cfgs, reconstructed scripts"
       ]
     }
   ]
