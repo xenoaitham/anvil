@@ -115,14 +115,6 @@ ver_of() { "$1" --version 2>/dev/null | head -n1; }
 # ---------------------------------------------------------------------------
 ensure_source() {
     mkdir -p "$CACHE_DIR"
-    if [[ -d "$SRC_DIR/.git" ]]; then
-        local head
-        head="$(git -C "$SRC_DIR" rev-parse HEAD)"
-        if [[ "$head" != "$HMALLOC_SHA" ]]; then
-            log "cache HEAD $head != pin $HMALLOC_SHA; re-cloning"
-            rm -rf "$SRC_DIR"
-        fi
-    fi
     if [[ ! -d "$SRC_DIR/.git" ]]; then
         if [[ -d "$REF_DIR/.git" ]]; then
             local ref_head
@@ -136,10 +128,19 @@ ensure_source() {
             git clone --quiet "$UPSTREAM_URL" "$SRC_DIR"
         fi
     fi
+    # Upstream's default branch moves; the clone must be switched to the PIN
+    # (fetch-by-SHA), not merely verified to accidentally start there.
     local head
     head="$(git -C "$SRC_DIR" rev-parse HEAD)"
+    if [[ "$head" != "$HMALLOC_SHA" ]]; then
+        log "tree HEAD $head != pin $HMALLOC_SHA; checking out the pinned commit"
+        git -C "$SRC_DIR" fetch --quiet origin "$HMALLOC_SHA" \
+            || fail "could not fetch pinned $HMALLOC_SHA from $UPSTREAM_URL (SHA unreachable upstream?)"
+        git -C "$SRC_DIR" checkout --quiet --detach FETCH_HEAD
+    fi
+    head="$(git -C "$SRC_DIR" rev-parse HEAD)"
     [[ "$head" == "$HMALLOC_SHA" ]] \
-        || fail "cloned HEAD $head != pinned $HMALLOC_SHA"
+        || fail "checked-out HEAD $head != pinned $HMALLOC_SHA"
     log "upstream pinned at $HMALLOC_SHA"
 }
 
