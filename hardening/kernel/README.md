@@ -101,8 +101,29 @@ One supported route, taking merge order base -> arch -> soc -> device
    silently dropped — which is exactly what `check.py`'s `unsatisfied-dep`
    warnings predict before you waste a build. Note that Kconfig `select`
    overrides fragment lines: on this branch `RANDSTRUCT_FULL` selects
-   `MODVERSIONS`, so the carried `# CONFIG_MODVERSIONS is not set` line
-   resolves back to `=y` (`check.py --explain MODVERSIONS` shows why).
+   `MODVERSIONS`, so `MODVERSIONS` resolves to `=y` in every merge of this
+   set regardless of any fragment line (`check.py --explain MODVERSIONS`
+   shows why); GOS's defconfig carries a `# CONFIG_MODVERSIONS is not set`
+   line that this branch renders a dead letter, and we omit it rather than
+   carry a misleading negative (decided 2026-10-09 after blind-critic
+   round 2; olddefconfig with and without the line verified byte-identical,
+   7575 resolved lines, `results/cuttlefish/20261009-round2-followup/`).
+
+**Merge order is load-bearing.** The origin `gki_defconfig` must come
+FIRST on the `merge_config.sh`/concatenation command line, the Anvil
+fragments AFTER it (base → arch → soc → device; last write wins). Kbuild
+will emit `warning: override: reassigning to symbol ...` lines for the
+symbols both sides set — that is the correct outcome, not a problem to
+fix. Reversing the order (fragments first, origin last) silently
+resurrects every origin line the fragments negate — demonstrated on
+android15-6.6 @ c905c29016dd (same tree, `olddefconfig`): the reversed
+merge resolves `CONFIG_HIBERNATION=y`, `CONFIG_TIPC=m` and
+`CONFIG_BINFMT_MISC=y` again, with no warning that anything was lost.
+After any merge, assert the negatives before building:
+
+```sh
+grep -E '^CONFIG_(HIBERNATION|TIPC|BINFMT_MISC)=' .config && echo 'ORDER BUG: fragments did not land last'
+```
 
 Validation before building:
 
@@ -146,7 +167,10 @@ strongest arm64 item in their setup.
   (default `y` @ `f97a55ff191d`) and is neutralized by their userspace
   syscall policy; unprivileged BPF is likewise a userspace/SELinux decision
   (`# CONFIG_BPF_UNPRIV_DEFAULT_OFF is not set` is carried verbatim). Anvil
-  ports the kernel state; the ROM must bring the userspace policy.
+  ports the kernel state; the ROM must bring the userspace policy. (The
+  round-2 critic suggested flipping BPF_UNPRIV to the mainline default;
+  decided 2026-10-09 to keep GOS parity — see the base.cfg BPF block for
+  the full rationale and the supported one-line override.)
 - **`CONFIG_CMDLINE` hijacking** (see above) and Android's
   `GKI_TASK_STRUCT_VENDOR_SIZE_MAX`/vendor-hook ABI machinery, which only
   make sense inside the GKI KMI contract.

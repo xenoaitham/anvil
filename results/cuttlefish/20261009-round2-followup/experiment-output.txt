@@ -1,0 +1,8 @@
+--- A vs B (dead-letter drop) ---
+IDENTICAL (7575 lines)
+/tmp/cfgA:CONFIG_MODVERSIONS=y
+/tmp/cfgB:CONFIG_MODVERSIONS=y
+--- reversed merge (fragments BEFORE origin gki_defconfig) ---
+HIBERNATION: CONFIG_HIBERNATION=y
+TIPC: CONFIG_TIPC=m
+BINFMT_MISC: CONFIG_BINFMT_MISC=y

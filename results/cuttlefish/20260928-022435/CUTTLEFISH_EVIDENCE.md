@@ -48,6 +48,21 @@ raw files in this directory and its siblings; nothing is from memory.
    creation needs; /dev/kvm access comes from the node's ACL). The stock
    kernel boots fully under this harness (§4), which is the control that
    validates it.
+4. **2026-10 boot-vehicle fixes (attempt-class: NOT fragment content).**
+   Round 2 added, all on the FIXED preamble/vehicle side: `DRM_VIRTIO_GPU`
+   built-in (6.6 gets no driver otherwise — `gpu-y`), `DMABUF_HEAPS_SYSTEM=y`
+   (allocator HAL requires `/dev/dma_heap/system`; upstream draft
+   `patches/kernel-gki/`), `PSTORE_RAM` off under forced lockdown
+   (`ramoops-n`; see `../20261009-anvil-crash/`), and `sys.use_memfd=1`
+   for the 6.6 `memfd_class` gap — originally set by an adb race
+   (attempts 005–009), then made deterministic (attempt 011, t=96 s, zero
+   ashmem deaths, no adb involved): the prop is baked into the generic
+   ramdisk `build.prop` of an AVB-re-signed `init_boot` copy
+   (`--init_boot_image`), because the init_boot ramdisk extracts after the
+   vendor pieces in the guest initrd and wins the cpio last-write race
+   (the initramfs-overlay-only variant, attempt 010, loses that race and
+   fails — kept as the negative control). Full forensics:
+   `../20261009-memfd-bake/FINDINGS.md`.
 
 ## §3 — Boot progress of the Anvil-fragment kernel (captured, quoted)
 
@@ -98,6 +113,30 @@ console, not from config files.
 > `sys.boot_completed=1` at t=103 s** with the hardening posture verified
 > live (`../20261009-boot-completed/`). The original text below stands as
 > the honest state of 2026-09-28.
+>
+> **INIT_ON_FREE x86_64 policy — decided 2026-10-09.** Attempt 008
+> (`../20261009-initonfree-confirm/`) then attempt 009 (final set) showed
+> the 2026-09 swap-corruption signature does **not** reproduce on today's
+> toolchain even with `INIT_ON_FREE_DEFAULT_ON=y` (BOOT_COMPLETED t=103 s
+> both runs, zero swap-corruption lines). Not reproduced is not
+> root-caused: the only causal account on file is the build-era
+> hypothesis (per-build RANDSTRUCT/layout seed inputs), which is
+> unverified and identifies no mechanism; the original build environment
+> that produced the signature is not reconstructable, so an instrumented
+> repro is not available — there is nothing to instrument until something
+> reproduces. The 2026-09 signature was kernel memory corruption
+> ("Bad swap file entry" flood → page fault in `zap_huge_pmd` → init
+> killed) — precisely the failure class the free-path zeroing setting can
+> perturb, via page content/timing on the free path. **Policy: x86_64
+> boot vehicles in this campaign keep `INIT_ON_FREE_DEFAULT_ON=n`** (the
+> FIXED preamble), and the exclusion lifts only when either (a) the
+> signature is reproduced under instrumentation and root-caused — showing
+> INIT_ON_FREE innocent or the cause fixed — or (b) a bounded soak passes
+> on the toolchain of record (≥ 3 consecutive full boots plus sustained
+> post-boot runtime with the setting on). The line itself stays in the
+> fragment set: it is GrapheneOS-authored (7749342e2592), it is the
+> arm64 target's default, and this exclusion is a vehicle/build-provenance
+> gate, not a fragment change.
 
 The fragment kernel never reaches `sys.boot_completed`: every attempt dies
 in the 10–15 s service-start window, with two signatures:
@@ -142,8 +181,10 @@ hardware claims.
 > dump (`../20261009-boot-completed/`), and the fragment-crash attribution
 > corrected (see the §4 status block). The INIT_ON_FREE exclusion and the
 > t=173 s control-crawl notes remain accurate for the vehicles they were
-> recorded on; the INIT_ON_FREE re-confirm on today's toolchain is queued
-> (round-2 ledger, `../20261008-campaign/PROGRESS.md`).
+> recorded on; the re-confirm ran (attempts 008/009, BOOT_COMPLETED, zero
+> swap-corruption lines) and the x86_64 retention policy is decided —
+> keep the exclusion on x86_64 vehicles until the 2026-09 signature is
+> root-caused or a bounded soak passes; see the §4 policy block.
 
 - **No `sys.boot_completed` with fragments**; therefore no adb-level runtime
   probes (dmesg_restrict behavior, %pK, lockdown sysfs, sysrq, hibernation

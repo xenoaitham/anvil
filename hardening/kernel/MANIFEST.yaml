@@ -248,10 +248,6 @@ MODULE_SIG_SHA256:
   value: y
   provenance: "GOS kernel_common-6.6 commit 91aa73a28405 (both gki_defconfigs)"
   portability_class: universal
-MODVERSIONS:
-  value: n
-  provenance: "GOS kernel_common-6.6 commit 816d1996b2c8 (line carried verbatim from their gki_defconfig; note: on this branch RANDSTRUCT_FULL selects MODVERSIONS, so a merged build resolves it back to y — the fragment line documents their defconfig state, not the merged outcome)"
-  portability_class: universal
 NET:
   value: y
   provenance: "GOS kernel_common-6.6 arch/{arm64,x86}/configs/gki_defconfig @ f97a55ff191d; required by SECURITY_SELINUX depends"
