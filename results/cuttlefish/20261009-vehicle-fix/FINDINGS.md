@@ -9,6 +9,15 @@ the boot vehicle, both reproduced on the CLEAN control (zero fragments):
 - Origin `arch/x86/configs/gki_defconfig` (android15-6.6 @ c905c29016dd) has
   `CONFIG_DMABUF_HEAPS=y` but NOT `CONFIG_DMABUF_HEAPS_SYSTEM=y`; the 6.12
   image kernel has the heap set.
+  **[CORRECTION 2026-10-09: the parenthetical above is wrong — the 6.12
+  image kernel also has it OFF (`stock/stock-kernel.config` line 5668,
+  `# CONFIG_DMABUF_HEAPS_SYSTEM is not set`), and its allocator HAL still
+  starts, so the 6.12 pairing boots via a path that does not require the
+  node; mechanism not established from our captures (no /dev probe was
+  run on the 6.12 guest). This does not weaken the 6.6 attribution:
+  attempts 004/005 differ in exactly this one resolved config line. The
+  upstream draft now claims only the 6.6 requirement —
+  `patches/kernel-gki/ISSUE.md`.]**
 - Without `/dev/dma_heap/system` the image's
   `android.hardware.graphics.allocator-service.minigbm` exits 1 at startup →
   the recurring console spam "Could not find

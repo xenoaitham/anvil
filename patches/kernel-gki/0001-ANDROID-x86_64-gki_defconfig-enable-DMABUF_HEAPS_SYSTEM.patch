@@ -1,0 +1,47 @@
+From: Anvil campaign draft <draft@anvil.invalid>
+Subject: [PATCH] ANDROID: x86_64: gki_defconfig: enable DMABUF_HEAPS_SYSTEM
+Date: Fri, 9 Oct 2026 00:00:00 +0000
+
+The AOSP cuttlefish graphics stack cannot boot an android15-6.6 GKI
+kernel without /dev/dma_heap/system. Origin gki_defconfig enables the
+dma-buf heap framework and two helper libraries (DMABUF_HEAPS=y,
+DMABUF_SYSFS_STATS=y, DMABUF_HEAPS_DEFERRED_FREE=y,
+DMABUF_HEAPS_PAGE_POOL=y) but not the system heap itself, so the device
+node never appears and the cuttlefish gralloc allocator APEX
+(android.hardware.graphics.allocator-service.minigbm, com.google.cf.gralloc)
+exits at startup. The composer (device/generic/goldfish hwc3
+GuestFrameComposer::onDisplayCreate) then dereferences the failed
+DrmSwapchain::create() null unconditionally and SIGSEGV-loops;
+system_server never finishes and sys.boot_completed is never reached.
+
+Demonstrated on aosp_cf_x86_64_only_phone CP2A.260605.016 (build 16373615)
+against android15-6.6 @ c905c29016dd2dbf8df45e7c0287455f67ef165b: two
+otherwise bit-identical GKI builds differing in exactly this one resolved
+config line (verified by diffing the full resolved .configs): without the
+line, TIMEOUT t=1204s with the allocator/composer failure chain above;
+with it, sys.boot_completed=1 at t=786s. Android userspace broadly
+expects the system heap for CPU-accessible gralloc/codec buffers, and the
+Kconfig help text itself reads "If in doubt, say Y."
+
+Enable it for x86_64 GKI. (arch/arm64/configs/gki_defconfig carries the
+same omission; not changed here because the boot demonstration above is
+x86_64-only - flagged for follow-up.)
+
+Bug: <tracker id - see ISSUE.md before submitting>
+Signed-off-by: <submitter>
+---
+diff --git a/arch/x86/configs/gki_defconfig b/arch/x86/configs/gki_defconfig
+index 53bdf06f9..77d8c05b8 100644
+--- a/arch/x86/configs/gki_defconfig
++++ b/arch/x86/configs/gki_defconfig
+@@ -540,6 +540,7 @@ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_LIB_KUNIT_TEST=m
+ CONFIG_UDMABUF=y
+ CONFIG_DMABUF_HEAPS=y
++CONFIG_DMABUF_HEAPS_SYSTEM=y
+ CONFIG_DMABUF_SYSFS_STATS=y
+ CONFIG_DMABUF_HEAPS_DEFERRED_FREE=y
+ CONFIG_DMABUF_HEAPS_PAGE_POOL=y
+
+-- 
+2.34.1
