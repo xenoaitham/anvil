@@ -28,6 +28,16 @@ harness the 2026-09 campaign validated. Live page: repo `progress/index.html`.
 | 001 | anvil #4 (committed bzImage-anvil-last) | `.config.anvil` (INIT_ON_FREE=n) | **CRASH t=9.77s** — reproduced. Primary: `rcuop/2` in `rcu_do_batch` → `rcu_cblist_dequeue` dereferences unmapped direct-map pointer `ffff904b00000ff4`; then hardened-usercopy abort; panic (`20261008-phase0/boot-console-anvil-ctl.log`) |
 | 002 | control + GPU=y (rebuilt #6) | `.config.stock` + FIXED(GPU=y) | **GPU live at t=0.7s**, services storm faster — BUT `vendor.hwcomposer-3` SIGSEGVs from t=9.4s, `system_server` crash-loops (~80 deaths by t=300s) → no boot_completed (console lost with the tree deletion; verdict + key lines in git history/progress page) |
 | 003 | anvil-ref: exact #4 config rebuilt post-reconstruction | `.config.anvil-ref` — **bit-identical** to committed `.config.anvil` (empty `diff`), GPU=m, INIT_ON_FREE=n | **NO kernel crash in 900 s** (kernel alive at t=845s; zero Oops/#DF/rcuop lines). First stage passed (`Release specific kernel module dir found`, no sig rejections). Userspace failure instead: `system_server` died once at t≈93 s (`ashmem_create_region: Permission denied`, no matching avc — non-SELinux EACCES), zygote restart-loop, no boot_completed. No modules ended up loaded (`/proc/modules` empty — repacker splits the initramfs module dir into dlkm partitions), so still no `/dev/dri/card0` (`20261009-anvilref/boot-console-anvil-ref.log.gz`) |
+| 004 | stockgpu control (no fragments) | `.config.stock` + FIXED(GPU=y) | composer SIGSEGV loop (tombstone: `DrmSwapchain::create()==nullptr` deref) — **reproduces without fragments**: vehicle gap, `logcat` "Failed to allocate drm ahb" (`20261009-vehicle-fix/`) |
+| 005 | stockgpu-heap | + `CONFIG_DMABUF_HEAPS_SYSTEM=y` | **`sys.boot_completed=1` t=786 s** (with `sys.use_memfd=1` set mid-loop) — vehicle fully solved on the CLEAN control (`20261009-vehicle-fix/`) |
+| 006 | anvil-veh | full fragments + vehicle fixes | **CRASH t=17 s** — `LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY` rejects crosvm's `ramoops.mem_address` (module_param_hw) → pstore console bound to phys 0 → `memcpy_toio` #PF (`20261009-anvil-crash/`) |
+| 007 | anvil-veh2 | + `ramoops-n` (PSTORE_RAM off, lockdown kept) | **`sys.boot_completed=1` t=103 s** + 42-file live posture dump (`20261009-boot-completed/`) — **campaign goal** |
+| 008 | anvil-initfree | + INIT_ON_FREE=y (initonfree) | **BOOT_COMPLETED t=103 s**, zero swap-corruption lines — §4 signature was build-era-specific (`20261009-initonfree-confirm/`) |
+| 009 | anvil-final | + `ioring-n` (IO_URING+BLK_DEV_UBLK off, blind-critic gap) | **BOOT_COMPLETED t=92 s** — fastest; final hardened set (`20261009-final/`) |
+
+Blind review round 2 (fresh-context critic, labels stripped, both pairings
+resolved through real kconfig): **WINNER = the Anvil fragment set**; gap
+(IO_URING) acted on and verified by attempt 009. `20261009-review-round2/REVIEW.md`.
 
 ## Findings so far (updated 2026-10-09)
 
