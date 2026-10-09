@@ -41,6 +41,39 @@ Blind review round 2 (fresh-context critic, labels stripped, both pairings
 resolved through real kconfig): **WINNER = the Anvil fragment set**; gap
 (IO_URING) acted on and verified by attempt 009. `20261009-review-round2/REVIEW.md`.
 
+## Session 2026-10-09 (follow-up): objectives 1/2/3/4/6 closed
+
+- Obj 1: INIT_ON_FREE x86_64 retention policy written into
+  `20260928-022435/CUTTLEFISH_EVIDENCE.md` §4 (exclusion stays until
+  root-caused under repro, or a bounded soak passes; line remains in the
+  fragment set for arm64).
+- Obj 2: upstream draft committed at `patches/kernel-gki/` (patch applies
+  clean to c905c29016dd; ISSUE.md paste-ready; filing needs Gerrit
+  credentials). FINDINGS 6.12-heap claim corrected (dated note).
+- Obj 3: BPF_UNPRIV keep=n decided (documented); dead-letter MODVERSIONS
+  line dropped (byte-identical 7575-line olddefconfig proof,
+  `20261009-round2-followup/`); merge-order requirement documented in
+  `hardening/kernel/README.md` (reversed-merge resurrection demonstrated).
+- Obj 4: attempts 010/011 — `sys.use_memfd` now baked (attempt 010
+  initramfs-only FAILS as negative control; attempt 011 patched+AVB-signed
+  init_boot: BOOT_COMPLETED t=96 s, prop from boot defaults, 0 ashmem
+  deaths, no adb). `20261009-memfd-bake/FINDINGS.md`.
+- Obj 6: `20261009-release/RELEASE.md` — canonical bzImage sha256 table;
+  archive decision: repo is the primary record, `anvil-cf` stays in place.
+
+### Obj 5 (arm64 parity) — blocked, readiness state
+
+System volume at 99% (8.3 GiB free as of this note) — below this
+campaign's own 8 GB pre-build df_guard and far under the ~60 GiB resume
+floor CUTTLEFISH_EVIDENCE §6 calls for. An arm64 build plus an arm64
+cuttlefish image set cannot fit; starting it would end the campaign the
+way 2026-09 did (ENOSPC at the volume floor). Prerequisites for the next
+session: (a) ≥ 60 GiB free on the build volume, (b) arm64 CF pairing
+downloaded (aosp_cf_arm64-only image set, build 16373615 or newer),
+(c) then: arm64 gki_defconfig + FIXED preamble (virtio/GPU/heap/memfd
+vehicle class, INIT_ON_FREE=y ON — it is the arm64 target's default) and
+the boot/posture matrix as in attempts 007–009.
+
 ## Findings so far (updated 2026-10-09)
 
 0. **The vehicle wall is missing `/dev/dri/card0`, and it hits every 6.6 boot
