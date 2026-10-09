@@ -1,0 +1,5 @@
+launch_cvd pid=183518
+TIMEOUT t=904s
+launch_cvd pid=249119
+adb device online: 0.0.0.0:6520 (t=76s)
+BOOT_COMPLETED t=96s serial=0.0.0.0:6520

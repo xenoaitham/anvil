@@ -1,0 +1,32 @@
+####################################
+# from generate-common-build-props
+# These properties identify this partition image.
+####################################
+ro.product.bootimage.brand=generic
+ro.product.bootimage.device=vsoc_x86_64_only
+ro.product.bootimage.manufacturer=Google
+ro.product.bootimage.model=Cuttlefish x86_64 phone 64-bit only
+ro.product.bootimage.name=aosp_cf_x86_64_only_phone
+ro.bootimage.build.date=Thu Sep 17 15:55:36 UTC 2026
+ro.bootimage.build.date.utc=1789660536
+ro.bootimage.build.fingerprint=generic/aosp_cf_x86_64_only_phone/vsoc_x86_64_only:17/CP2A.260605.016/16373615:userdebug/test-keys
+ro.bootimage.build.id=CP2A.260605.016
+ro.bootimage.build.uuid=yXiZJxwbP2KHkAC0PFhrTHbybdRL6BEFcNnVSXoAgeY
+ro.bootimage.build.tags=test-keys
+ro.bootimage.build.type=userdebug
+ro.bootimage.build.version.incremental=16373615
+ro.bootimage.build.version.release=17
+ro.bootimage.build.version.release_or_codename=17
+ro.bootimage.build.version.sdk=37
+ro.bootimage.build.version.sdk_full=37.0
+# end of file
+
+# Anvil vehicle fix 2/2, deterministic bake (2026-10-09). The Android 17
+# image's libcutils __use_memfd() needs sys.use_memfd=1 when the kernel
+# lacks the memfd_class policycap (6.7+; 6.6 SELinux predates it) — else the
+# ashmem compat devnode is denied by policy and system_server dies
+# ("Failed to create ashmem: Permission denied"). First-stage init copies
+# this ramdisk file ("Copied ramdisk prop") and second-stage init loads it
+# as a boot default BEFORE any service starts, replacing the adb setprop
+# race that previously won or lost by boot timing.
+sys.use_memfd=1

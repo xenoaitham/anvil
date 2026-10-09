@@ -1,0 +1,8 @@
+# live probe, boot anvil-final-memfd2 (attempt 010), 2026-10-09T19:39:47Z
+sys.use_memfd=1
+sys.boot_completed=1
+ro.build.version.release=17
+crash-buffer ashmem deaths: 
+kernel: Linux version 6.6.142-gc905c29016dd (potato@pop-os) (Ubuntu clang version 18.1.3 (1ubuntu1), Ubuntu LLD 18.1.3) #8 SMP PREEMPT Fri Oct  9 02:54:56 EEST 2026
+lockdown: none integrity [confidentiality]
+selinux enforce: 1

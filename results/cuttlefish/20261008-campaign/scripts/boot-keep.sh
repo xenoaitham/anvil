@@ -5,6 +5,10 @@
 # probes (run-probes.sh) can execute on the live kernel. Tear down with
 # cf_teardown (from cf-env.sh) afterwards.
 # 2026-10-09: created for the sys.boot_completed posture dump.
+# 2026-10-09 (2nd): sys.use_memfd adb setprop made opt-in (MEMFD_VIA_ADB=1)
+# — the initramfs/init_boot bake carries the prop now; an unconditional
+# setprop here would mask a broken bake. INIT_BOOT_IMG (optional) passes a
+# patched init_boot image (patch-initramfs-prop.sh).
 # (Mirrored from /home/potato/anvil-cf/evidence/boot-keep.sh; the working
 # copy is authoritative. See bisect-boot.sh for the full VEHICLE FIX notes.)
 set -u
@@ -23,7 +27,14 @@ df_guard / 3000 "system volume"
 cd "$HK"
 rm -rf cuttlefish_runtime.1 cuttlefish_runtime
 BOOT_EPOCH=$(date +%s); export BOOT_EPOCH
+# INIT_BOOT_IMG (optional): path to a patched init_boot image (e.g.
+# init_boot-anvil.img with sys.use_memfd baked into the generic ramdisk).
+# The generic ramdisk extracts AFTER the vendor pieces in the guest initrd,
+# so it is the carrier that wins the build.prop race.
+INIT_BOOT_ARGS=()
+[ -n "${INIT_BOOT_IMG:-}" ] && INIT_BOOT_ARGS=(--init_boot_image="$INIT_BOOT_IMG")
 bin/launch_cvd \
+    "${INIT_BOOT_ARGS[@]}" \
     --system_image_dir=$CF/cf/image \
     --kernel_path="$BZ" \
     --initramfs_path="$CF/kernel/initramfs-lz4.img" \
@@ -61,11 +72,15 @@ while [ $(( $(date +%s) - START )) -lt "$TMO" ]; do
         SER=$(adb devices 2>/dev/null | awk '$2=="device"{print $1; exit}')
         if [ -n "$SER" ]; then
             echo "adb device online: $SER (t=$(( $(date +%s) - START ))s)" | tee -a "$VERDICT"
-            # VEHICLE FIX 2/2: sys.use_memfd=1 (see bisect-boot.sh comment)
-            adb -s "$SER" root >/dev/null 2>&1 || true
-            sleep 2
-            adb connect "127.0.0.1:$ADB_PORT" >/dev/null 2>&1
-            adb -s "$SER" shell setprop sys.use_memfd 1 >/dev/null 2>&1 || true
+            # sys.use_memfd now baked in the initramfs ramdisk build.prop
+            # (2026-10-09); the adb setprop here would mask a broken bake,
+            # so it only runs with MEMFD_VIA_ADB=1 (old initramfs images).
+            if [ "${MEMFD_VIA_ADB:-0}" = "1" ]; then
+                adb -s "$SER" root >/dev/null 2>&1 || true
+                sleep 2
+                adb connect "127.0.0.1:$ADB_PORT" >/dev/null 2>&1
+                adb -s "$SER" shell setprop sys.use_memfd 1 >/dev/null 2>&1 || true
+            fi
         fi
     fi
     BC=$(adb -s "$SER" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')

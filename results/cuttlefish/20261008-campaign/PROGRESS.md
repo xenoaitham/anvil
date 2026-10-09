@@ -34,6 +34,8 @@ harness the 2026-09 campaign validated. Live page: repo `progress/index.html`.
 | 007 | anvil-veh2 | + `ramoops-n` (PSTORE_RAM off, lockdown kept) | **`sys.boot_completed=1` t=103 s** + 42-file live posture dump (`20261009-boot-completed/`) — **campaign goal** |
 | 008 | anvil-initfree | + INIT_ON_FREE=y (initonfree) | **BOOT_COMPLETED t=103 s**, zero swap-corruption lines — §4 signature was build-era-specific (`20261009-initonfree-confirm/`) |
 | 009 | anvil-final | + `ioring-n` (IO_URING+BLK_DEV_UBLK off, blind-critic gap) | **BOOT_COMPLETED t=92 s** — fastest; final hardened set (`20261009-final/`) |
+| 010 | anvil-final-memfd (same kernel bytes, memfd overlay in initramfs only) | anvil-final + ramdisk-overlay | **TIMEOUT t=902 s** — overlay loses the cpio last-write race to the init_boot generic ramdisk (extracts after the vendor pieces); system_server ashmem loop, 66 deaths; root-caused to ramdisk-piece ordering (`20261009-memfd-bake/FINDINGS.md`) |
+| 011 | anvil-final-memfd2 | + patched init_boot (`init_boot-anvil.img`: union build.prop in the generic ramdisk, AVB re-signed with the CF test key) | **BOOT_COMPLETED t=96 s, `sys.use_memfd=1` from boot defaults, 0 ashmem deaths, NO adb setprop issued** — vehicle fix 2/2 is deterministic (`20261009-memfd-bake/`) |
 
 Blind review round 2 (fresh-context critic, labels stripped, both pairings
 resolved through real kconfig): **WINNER = the Anvil fragment set**; gap

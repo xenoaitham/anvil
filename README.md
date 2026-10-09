@@ -101,9 +101,14 @@ required root-causing two 6.6-vs-image gaps that are **not fragment
 issues** — both reproduce on the clean stock-defconfig control: the origin
 x86_64 `gki_defconfig` omits `CONFIG_DMABUF_HEAPS_SYSTEM=y` (the image's
 minigbm allocator HAL then dies and the composer SIGSEGVs on an unchecked
-null), and 6.6 SELinux predates the `memfd_class` policycap (the image's
-libcutils then needs the `sys.use_memfd=1` override or system_server dies
-on ashmem). One genuine fragment-vehicle interaction also had to be
+null; upstream draft: [patches/kernel-gki/](patches/kernel-gki/)), and 6.6
+SELinux predates the `memfd_class` policycap (the image's libcutils then
+needs the `sys.use_memfd=1` override or system_server dies on ashmem —
+since 2026-10-09 baked deterministically into the boot artifacts rather
+than set by an adb race: attempt 011 booted t=96 s with the prop from
+boot defaults and zero ashmem deaths, no adb involved;
+[record](results/cuttlefish/20261009-memfd-bake/FINDINGS.md)). One genuine
+fragment-vehicle interaction also had to be
 neutralized: `LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY` correctly rejects the
 crosvm `ramoops.mem_address` hardware module_param at boot parse, whereupon
 ramoops binds a pstore console to physical address 0 and panics the kernel

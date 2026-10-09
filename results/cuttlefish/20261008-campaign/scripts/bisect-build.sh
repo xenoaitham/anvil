@@ -47,8 +47,11 @@ CONFIG_DRM_VIRTIO_GPU_KMS=y
 # /dev/dma_heap/system; without it the allocator service exits 1, the
 # composer's unchecked DrmSwapchain::create()==nullptr then SIGSEGVs
 # (tombstone: ComposerClient::init -> onDisplayCreate -> getNextImage),
-# and boot never completes. Origin x86_64 gki_defconfig omits this line;
-# the 6.12 image kernel has it (attempt-004 finding, 2026-10-09).
+# and boot never completes. Origin x86_64 gki_defconfig omits this line
+# (attempts 004 vs 005 differ in exactly this one resolved config line).
+# CORRECTED 2026-10-09: the 6.12 image kernel has it OFF as well
+# (stock-kernel.config) and boots via another path; only the 6.6 pairing
+# requires it (patches/kernel-gki/ISSUE.md).
 CONFIG_DMABUF_HEAPS_SYSTEM=y
 # INIT_ON_FREE excluded on this boot vehicle (swap-corruption oops, §4 #3)
 # CONFIG_INIT_ON_FREE_DEFAULT_ON is not set
