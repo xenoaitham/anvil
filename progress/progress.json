@@ -1,258 +1,263 @@
 {
-  "project": "Anvil",
-  "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
-  "updated": "2026-10-09T00:01:45Z",
-  "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
-  "metrics": {
-    "pieces_total": 10,
-    "pieces_passed": 10,
-    "critic_wins_ours": 10,
-    "total_review_rounds": 12
+ "project": "Anvil",
+ "tagline": "Portable GrapheneOS-derived hardening for every Android device that can physically take it",
+ "updated": "2026-10-09T00:01:45Z",
+ "honesty_policy": "No claim ships without an in-repo artifact: a build log, a test run, a benchmark output, or a cited public source (URL + access date). Hardware limits are documented, never papered over. Nothing is claimed to 'boot' without a boot.",
+ "metrics": {
+  "pieces_total": 10,
+  "pieces_passed": 10,
+  "critic_wins_ours": 10,
+  "total_review_rounds": 12
+ },
+ "pieces": [
+  {
+   "id": "skeleton",
+   "title": "Repository skeleton, license, live progress page",
+   "status": "passed",
+   "owner": "orchestrator",
+   "rounds": [],
+   "commits": [
+    "f00f864",
+    "18976a3",
+    "4c7b400",
+    "fbc2162"
+   ],
+   "evidence": [
+    "progress/index.html (served 200 at http://127.0.0.1:8777)"
+   ]
   },
-  "pieces": [
+  {
+   "id": "baseline",
+   "title": "GrapheneOS reference baseline (real repos, real numbers)",
+   "status": "passed",
+   "owner": "builder-baseline",
+   "rounds": [
     {
-      "id": "skeleton",
-      "title": "Repository skeleton, license, live progress page",
-      "status": "passed",
-      "owner": "orchestrator",
-      "rounds": [],
-      "commits": [
-        "f00f864",
-        "18976a3",
-        "4c7b400",
-        "fbc2162"
-      ],
-      "evidence": [
-        "progress/index.html (served 200 at http://127.0.0.1:8777)"
-      ]
-    },
-    {
-      "id": "baseline",
-      "title": "GrapheneOS reference baseline (real repos, real numbers)",
-      "status": "passed",
-      "owner": "builder-baseline",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "n/a \u2014 spot-checks passed (config values line-exact, defconfig symbols line-exact, SHAs resolve)",
-          "detail": "Blind pick: winner=B(ours), confidence=high. Loser(A=upstream docs): no kernel/allocator inventory, no SHA/symbol traceability."
-        }
-      ],
-      "commits": [],
-      "evidence": []
-    },
-    {
-      "id": "kernel-config",
-      "title": "Layered kernel hardening config fragments + dependency-checked validator",
-      "status": "passed",
-      "owner": "builder-kernel",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "n/a \u2014 mechanical audit: 49/58 arm64 =y lines literal defconfig; 9 exceptions verified default-pins; validator resolves 16,647 symbols, 0 hardcoded",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Loser(B=raw defconfig+diffs): no porting methodology/tooling."
-        }
-      ],
-      "commits": [],
-      "evidence": [
-        "hardening/kernel/ (99 symbols across 4 layers)",
-        "hardening/kernel/MANIFEST.yaml (97 rows)",
-        "tools/kernelconfig/check.py (19/19 tests)",
-        "25 hardening commit SHAs cited"
-      ]
-    },
-    {
-      "id": "matrix",
-      "title": "Per-device security matrix, evidence-cited, schema-linted",
-      "status": "passed",
-      "owner": "builder-matrix",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "known-weakness: some rule-based-inference citations; follow-up pass queued",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic verified LOS-FP5 official (true) + Fairphone null (conservative). Loser(B=upstream docs): no per-device assessment beyond its 21-Pixel list, no machine-readable surface."
-        }
-      ],
-      "commits": [],
-      "evidence": []
-    },
-    {
-      "id": "hmalloc",
-      "title": "hardened_malloc integration: build glue, test runs, real benchmarks",
-      "status": "passed",
-      "owner": "builder-hmalloc",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "critic caught 63-vs-62 test-binary error \u2014 fixed; bench ratios/CVs re-derived and confirmed",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic re-derived bench numbers from committed raw JSON. Loser(B=upstream docs+Makefile): no verification/perf data, no pipeline."
-        }
-      ],
-      "commits": [],
-      "evidence": []
-    },
-    {
-      "id": "platform-patches",
-      "title": "Upstream-quality AOSP platform hardening patches (apply-checked)",
-      "status": "passed",
-      "owner": "builder-patches",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "follow-up done: opt-out scope nuance documented in docs/patches.md",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic rebuilt pinned AOSP trees: 8/8 blob SHAs + 3/3 applies re-verified. Loser(B=upstream commit content): 2018-era commit inapplicable to modern trees, no compose/guidance."
-        }
-      ],
-      "commits": [],
-      "evidence": [
-        "patches/platform/ (3 patches)",
-        "patches/platform/verify/ (3/3 PASS logs)",
-        "patches/platform/manifest.yaml (8 pinned blobs)",
-        "docs/patches.md"
-      ]
-    },
-    {
-      "id": "ci",
-      "title": "CI: real builds, tests, lint, Pages progress deployment",
-      "status": "passed",
-      "owner": "builder-ci",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "critic running",
-          "gap": "blind critic dispatched"
-        },
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "live-fire finding: kernel gate red from branch-head drift \u2014 fixed via KERNEL_TREE_PIN SHA pin; verified 0 errors online+offline",
-          "detail": "Blind pick: winner=B(ours), confidence=high. Critic traced matrix gate end-to-end and checked the live GitHub run. Loser(A=build docs+release configs): no executable merge gate."
-        }
-      ],
-      "commits": [],
-      "evidence": [
-        ".github/workflows/ci.yml (5 jobs)",
-        ".github/workflows/README.md",
-        "live run 36346119912"
-      ]
-    },
-    {
-      "id": "readme",
-      "title": "README, methodology, limitations \u2014 the honest front door",
-      "status": "passed",
-      "owner": "builder-docs",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "stale ledger-note sentence (written before the ledger repair) \u2014 fixed",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic re-ran matrix_lint to verify 13/156/35% claims and cross-checked the ledger tally. Loser(B=upstream landing page): no audience entry points, no verifiable claims."
-        }
-      ],
-      "commits": [],
-      "evidence": [
-        "README.md",
-        "docs/methodology.md"
-      ]
-    },
-    {
-      "id": "emulator-milestone",
-      "title": "Emulator milestone: hardened_malloc stack runs on a booted Android system",
-      "status": "passed",
-      "owner": "builder-emulator",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "secondary applied: EVIDENCE.md \u00a74 numbering gap closed; smoke.sh JSON now uses the same ok=1 predicate as the shell gates",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic audited the tombstone recursion frames, the mprotect EINVAL arithmetic (3072=128\u00d724, addr&4095==3480) and the machine-parsed gates, then named the loser: GrapheneOS platform_build_release is 16,634 flag textprotos of build configuration with zero runtime verification. Secondary defects in ours fixed in the same commit."
-        }
-      ],
-      "commits": [
-        "198bbbc",
-        "644f108",
-        "240b116",
-        "bddd2cc",
-        "f3953c5",
-        "947a3c9"
-      ],
-      "evidence": [
-        "results/emulator/EVIDENCE.md + timestamped raw capture dirs",
-        "first green runs 20260927-234546 (smoke) / 20260927-234618 (posture)",
-        "emulator.yml FIRST GREEN CI RUN 36364446629 (21m21s, software-emulated boot); CI-repro captures committed as results/emulator/20260928-012121 (smoke) + 20260928-012332 (posture)",
-        "toolchain findings upstreamed: android/ndk#2255 (alignas), emutls build-floor finding documented in EVIDENCE.md \u00a71",
-        "blind review: round 1 won (see rounds)"
-      ]
-    },
-    {
-      "id": "arm64-native",
-      "title": "aarch64 execution: hardened_malloc runs natively on GitHub's free arm64 runners",
-      "status": "passed",
-      "owner": "builder-arm64",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "secondary applied: proof step now asserts AArch64 host + ELF machine instead of displaying them (commit 17dfeea)",
-          "detail": "Blind pick: winner=A(ours), confidence=high. Critic verified the results JSON line-by-line (58 unique tests, counts sum, pinned SHA, arch from uname -m) and the workflow's claims against real script interfaces. Loser(B=upstream's own build-and-test.yml): executes natively but captures no evidence, no pin articulation, no permissions/timeout/concurrency \u2014 'competent upstream CI, not a self-verifying merge gate'."
-        }
-      ],
-      "commits": [
-        "8cc61a5",
-        "36bb3cb",
-        "17dfeea"
-      ],
-      "evidence": [
-        ".github/workflows/arm64.yml \u2014 green runs 36363636029 + 36364446671 (ubuntu-24.04-arm, gcc-14.2.0)",
-        "results/hmalloc/tests-20260928-aarch64-gcc-14.json \u2014 58/58 upstream tests pass natively, pinned commit 01df350c",
-        "LD_PRELOAD interposition proof: AArch64 ELF asserted, allocator mapped in child /proc/self/maps"
-      ]
-    },
-    {
-      "id": "cuttlefish-kernel",
-      "title": "Kernel fragments boot on Cuttlefish: self-built android-common kernel, hardening symbols proven live",
-      "status": "completed",
-      "owner": "builder-cuttlefish",
-      "rounds": [
-        {
-          "round": 1,
-          "verdict": "ours",
-          "gap": "secondary applied: broken scripts/config merge recipe replaced with merge_config.sh in both READMEs (the old recipe was a no-op); base.cfg RANDSTRUCT/MODVERSIONS comment corrected (RANDSTRUCT_FULL selects MODVERSIONS on this branch); duplicate-line note added to the boot-log extraction",
-          "detail": "Blind pick: winner=B(ours), confidence=high. Critic audited quoted boot lines against the committed merged config (lockdown/init-on-alloc line numbers), verified KASLR strings against the 6.6 source, and validated the differential controls (stock 6.12 boots to sys.boot_completed in the same harness; same-source 6.6 with stock defconfig boots clean past t=173s; fragment kernels crash at t\u224810-15s). Loser(A=GrapheneOS origin gki_defconfigs): static input, cannot prove a single symbol live on a running system. The campaign's own finding \u2014 the fragment set crashes x86_64 6.6 GKI late boot, bisected to fragment content \u2014 is recorded in the artifact, not hidden."
-        },
-        {
-          "round": 2,
-          "verdict": "pending",
-          "gap": "",
-          "detail": "Round 2 (2026-10-08): disk recovered (23G free), bisect infrastructure rebuilt \u2014 group configs verified to reproduce the committed crashing config exactly (0-diff olddefconfig check); control re-validation boots started. Live ledger: anvil-cf/campaign2.\nPhase 0 (2026-10-08): committed fragment kernel #4 crash REPRODUCED with full console \u2014 primary fault is rcuop/2 (RCU nocb offload kthread) dereferencing a garbage callback pointer in rcu_do_batch at t=9.77s (unmapped direct-map addr), then hardened-usercopy abort, panic; the old #DF signature is downstream of this corruption. New control result: pure-stock 6.6 GKI kernel TIMEOUTs at 600s without reaching boot_completed \u2014 root cause found in console: vendor early-init waits for /dev/dri/card0, nothing loads virtio-gpu on a 6.6 boot path (6.12 stock loads it from first-stage ramdisk; 6.6-built modules would also fail MODULE_SIG_FORCE). GPU built-in added to all bisect variants; full rebuild of control+GPU variant in progress.\n2026-10-08 ~22:20 the campaign tree /home/potato/anvil-cf was deleted by an external disk-cleaner on this machine. Full reconstruction done: kernel re-fetched at pinned commit c905c29016dd; Android CI artifacts re-downloaded byte-identical (build 16373615, same Android 17 pairing); toolchain debs same versions; scripts rewritten identically and now mirrored in-repo (results/cuttlefish/20261008-campaign/scripts). Attempt 002 (control+GPU=y) had proven: GPU live t=0.7s but the image's drm_hwcomposer SIGSEGVs vs the 6.6 kernel and crash-loops system_server (~80 deaths) \u2014 open problem documented; GPU-less boot keeps system_server healthy but crawls. All-fragments+GPU kernel (attempt 003) now building.\nattempts 000-004 (round 2): GPU-mandatory confirmed on 6.6 (ctrl66 600s timeout, no card0); exact #4 config rebuilt (bit-identical anvil-ref) shows NO kernel crash in 900s \u2014 old rcuop/2 signature is build-dependent; new fragment-linked signature: system_server ashmem EACCES at t~93s (no avc); repacker splits initramfs modules (empty /proc/modules); attempt 004 stockgpu control building to discriminate hwcomposer SIGSEGV\n2026-10-09: sys.boot_completed=1 at t=103s on the FULL Anvil fragment set (anvil-veh2). Root causes across attempts 000-007: (1) vehicle \u2014 origin gki_defconfig lacks CONFIG_DMABUF_HEAPS_SYSTEM=y (allocator HAL dead, composer nullptr SIGSEGV) and 6.6 SELinux predates memfd_class policycap (sys.use_memfd=1 override needed), both proven on the clean control which then boots t=786s; (2) fragment-vehicle interaction \u2014 LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY rejects crosvm's ramoops.mem_address module_param_hw, ramoops binds pstore console to phys 0, #PF t=17s; fixed with PSTORE_RAM off (ramoops-n), lockdown kept. Live posture dump: lockdown [confidentiality], KFENCE 500, sig_enforce Y, mmap_rnd 32, sysrq 0, devmem/binfmt/tipc/hibernate/hotplug absent, 234 randomized kmalloc caches. Old 10-15s crash claim corrected (build-dependent, did not reproduce). Follow-ups: INIT_ON_FREE re-confirm, blind critic round.\nFINAL 2026-10-09: anvil-final (all fragments + 3 vehicle deviation classes + ioring-n from blind-critic round 2) reaches sys.boot_completed=1 at t=92s \u2014 fastest run. Runs matrix: control t=786s (005), veh2 t=103s (007, posture dump), INIT_ON_FREE=y t=103s (008, signature not reproduced), final t=92s (009, io_uring off). Blind critic round 2: WINNER=Anvil fragment set (empirical kconfig resolution, byte-identical effective config), gap closed+verified. Repo claims updated everywhere."
-        }
-      ],
-      "commits": [],
-      "evidence": [
-        "results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md \u2014 full campaign record",
-        "self-built android15-6.6 kernel c905c29016dd + fragments; boots to Android userspace (init, ext4 first-stage mounts, servicemanager/HALs at t\u224815s)",
-        "hardening live at boot: lockdown confidentiality, init-on-alloc, stack zeroing, full x86 mitigation set, KASLR (custom/boot-hardening-lines.txt, quoted from the running kernel's console)",
-        "crash bisected to fragment content via controls (stock/ns-control/, stockcfg-control/); full sys.boot_completed NOT reached \u2014 documented, not faked",
-        "campaign ended at volume floor (ENOSPC); resume path in CUTTLEFISH_EVIDENCE.md \u00a76",
-        "bisect groups verified: .config.stock + FIXED preamble + all.cfg => .config.anvil, 0 diff",
-        "campaign2/logs/boot-console-anvil-ctl.log \u2014 full crash console, oops+stack quoted",
-        "campaign2/logs/verdict-ctrl66.txt + boot-console-ctrl66.log \u2014 6.6 control TIMEOUT, /dev/dri/card0 wait failure quoted",
-        "results/cuttlefish/20261008-campaign/ \u2014 round-2 ledger, gpu deviation cfgs, reconstructed scripts",
-        "results/cuttlefish/20261009-anvilref/boot-console-anvil-ref.log.gz",
-        "results/cuttlefish/20261009-anvilref/console-keylines.txt",
-        "results/cuttlefish/20261009-boot-completed/FINDINGS.md",
-        "results/cuttlefish/20261009-vehicle-fix/FINDINGS.md",
-        "results/cuttlefish/20261009-boot-completed/posture/",
-        "results/cuttlefish/20261009-boot-completed/boot-console-anvil-veh2.log.gz",
-        "results/cuttlefish/20261009-final/FINDINGS.md",
-        "results/cuttlefish/20261009-review-round2/REVIEW.md",
-        "results/cuttlefish/20261009-final/boot-console-anvil-final.log.gz"
-      ]
+     "round": 1,
+     "verdict": "ours",
+     "gap": "n/a — spot-checks passed (config values line-exact, defconfig symbols line-exact, SHAs resolve)",
+     "detail": "Blind pick: winner=B(ours), confidence=high. Loser(A=upstream docs): no kernel/allocator inventory, no SHA/symbol traceability."
     }
-  ]
+   ],
+   "commits": [],
+   "evidence": []
+  },
+  {
+   "id": "kernel-config",
+   "title": "Layered kernel hardening config fragments + dependency-checked validator",
+   "status": "passed",
+   "owner": "builder-kernel",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "n/a — mechanical audit: 49/58 arm64 =y lines literal defconfig; 9 exceptions verified default-pins; validator resolves 16,647 symbols, 0 hardcoded",
+     "detail": "Blind pick: winner=A(ours), confidence=high. Loser(B=raw defconfig+diffs): no porting methodology/tooling."
+    }
+   ],
+   "commits": [],
+   "evidence": [
+    "hardening/kernel/ (99 symbols across 4 layers)",
+    "hardening/kernel/MANIFEST.yaml (97 rows)",
+    "tools/kernelconfig/check.py (19/19 tests)",
+    "25 hardening commit SHAs cited"
+   ]
+  },
+  {
+   "id": "matrix",
+   "title": "Per-device security matrix, evidence-cited, schema-linted",
+   "status": "passed",
+   "owner": "builder-matrix",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "known-weakness: some rule-based-inference citations; follow-up pass queued",
+     "detail": "Blind pick: winner=A(ours), confidence=high. Critic verified LOS-FP5 official (true) + Fairphone null (conservative). Loser(B=upstream docs): no per-device assessment beyond its 21-Pixel list, no machine-readable surface."
+    }
+   ],
+   "commits": [],
+   "evidence": []
+  },
+  {
+   "id": "hmalloc",
+   "title": "hardened_malloc integration: build glue, test runs, real benchmarks",
+   "status": "passed",
+   "owner": "builder-hmalloc",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "critic caught 63-vs-62 test-binary error — fixed; bench ratios/CVs re-derived and confirmed",
+     "detail": "Blind pick: winner=A(ours), confidence=high. Critic re-derived bench numbers from committed raw JSON. Loser(B=upstream docs+Makefile): no verification/perf data, no pipeline."
+    }
+   ],
+   "commits": [],
+   "evidence": []
+  },
+  {
+   "id": "platform-patches",
+   "title": "Upstream-quality AOSP platform hardening patches (apply-checked)",
+   "status": "passed",
+   "owner": "builder-patches",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "follow-up done: opt-out scope nuance documented in docs/patches.md",
+     "detail": "Blind pick: winner=A(ours), confidence=high. Critic rebuilt pinned AOSP trees: 8/8 blob SHAs + 3/3 applies re-verified. Loser(B=upstream commit content): 2018-era commit inapplicable to modern trees, no compose/guidance."
+    }
+   ],
+   "commits": [],
+   "evidence": [
+    "patches/platform/ (3 patches)",
+    "patches/platform/verify/ (3/3 PASS logs)",
+    "patches/platform/manifest.yaml (8 pinned blobs)",
+    "docs/patches.md"
+   ]
+  },
+  {
+   "id": "ci",
+   "title": "CI: real builds, tests, lint, Pages progress deployment",
+   "status": "passed",
+   "owner": "builder-ci",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "critic running",
+     "gap": "blind critic dispatched"
+    },
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "live-fire finding: kernel gate red from branch-head drift — fixed via KERNEL_TREE_PIN SHA pin; verified 0 errors online+offline",
+     "detail": "Blind pick: winner=B(ours), confidence=high. Critic traced matrix gate end-to-end and checked the live GitHub run. Loser(A=build docs+release configs): no executable merge gate."
+    }
+   ],
+   "commits": [],
+   "evidence": [
+    ".github/workflows/ci.yml (5 jobs)",
+    ".github/workflows/README.md",
+    "live run 36346119912"
+   ]
+  },
+  {
+   "id": "readme",
+   "title": "README, methodology, limitations — the honest front door",
+   "status": "passed",
+   "owner": "builder-docs",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "stale ledger-note sentence (written before the ledger repair) — fixed",
+     "detail": "Blind pick: winner=A(ours), confidence=high. Critic re-ran matrix_lint to verify 13/156/35% claims and cross-checked the ledger tally. Loser(B=upstream landing page): no audience entry points, no verifiable claims."
+    }
+   ],
+   "commits": [],
+   "evidence": [
+    "README.md",
+    "docs/methodology.md"
+   ]
+  },
+  {
+   "id": "emulator-milestone",
+   "title": "Emulator milestone: hardened_malloc stack runs on a booted Android system",
+   "status": "passed",
+   "owner": "builder-emulator",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "secondary applied: EVIDENCE.md §4 numbering gap closed; smoke.sh JSON now uses the same ok=1 predicate as the shell gates",
+     "detail": "Blind pick: winner=A(ours), confidence=high. Critic audited the tombstone recursion frames, the mprotect EINVAL arithmetic (3072=128×24, addr&4095==3480) and the machine-parsed gates, then named the loser: GrapheneOS platform_build_release is 16,634 flag textprotos of build configuration with zero runtime verification. Secondary defects in ours fixed in the same commit."
+    }
+   ],
+   "commits": [
+    "198bbbc",
+    "644f108",
+    "240b116",
+    "bddd2cc",
+    "f3953c5",
+    "947a3c9"
+   ],
+   "evidence": [
+    "results/emulator/EVIDENCE.md + timestamped raw capture dirs",
+    "first green runs 20260927-234546 (smoke) / 20260927-234618 (posture)",
+    "emulator.yml FIRST GREEN CI RUN 36364446629 (21m21s, software-emulated boot); CI-repro captures committed as results/emulator/20260928-012121 (smoke) + 20260928-012332 (posture)",
+    "toolchain findings upstreamed: android/ndk#2255 (alignas), emutls build-floor finding documented in EVIDENCE.md §1",
+    "blind review: round 1 won (see rounds)"
+   ]
+  },
+  {
+   "id": "arm64-native",
+   "title": "aarch64 execution: hardened_malloc runs natively on GitHub's free arm64 runners",
+   "status": "passed",
+   "owner": "builder-arm64",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "secondary applied: proof step now asserts AArch64 host + ELF machine instead of displaying them (commit 17dfeea)",
+     "detail": "Blind pick: winner=A(ours), confidence=high. Critic verified the results JSON line-by-line (58 unique tests, counts sum, pinned SHA, arch from uname -m) and the workflow's claims against real script interfaces. Loser(B=upstream's own build-and-test.yml): executes natively but captures no evidence, no pin articulation, no permissions/timeout/concurrency — 'competent upstream CI, not a self-verifying merge gate'."
+    }
+   ],
+   "commits": [
+    "8cc61a5",
+    "36bb3cb",
+    "17dfeea"
+   ],
+   "evidence": [
+    ".github/workflows/arm64.yml — green runs 36363636029 + 36364446671 (ubuntu-24.04-arm, gcc-14.2.0)",
+    "results/hmalloc/tests-20260928-aarch64-gcc-14.json — 58/58 upstream tests pass natively, pinned commit 01df350c",
+    "LD_PRELOAD interposition proof: AArch64 ELF asserted, allocator mapped in child /proc/self/maps"
+   ]
+  },
+  {
+   "id": "cuttlefish-kernel",
+   "title": "Kernel fragments boot on Cuttlefish: self-built android-common kernel, hardening symbols proven live",
+   "status": "completed",
+   "owner": "builder-cuttlefish",
+   "rounds": [
+    {
+     "round": 1,
+     "verdict": "ours",
+     "gap": "secondary applied: broken scripts/config merge recipe replaced with merge_config.sh in both READMEs (the old recipe was a no-op); base.cfg RANDSTRUCT/MODVERSIONS comment corrected (RANDSTRUCT_FULL selects MODVERSIONS on this branch); duplicate-line note added to the boot-log extraction",
+     "detail": "Blind pick: winner=B(ours), confidence=high. Critic audited quoted boot lines against the committed merged config (lockdown/init-on-alloc line numbers), verified KASLR strings against the 6.6 source, and validated the differential controls (stock 6.12 boots to sys.boot_completed in the same harness; same-source 6.6 with stock defconfig boots clean past t=173s; fragment kernels crash at t≈10-15s). Loser(A=GrapheneOS origin gki_defconfigs): static input, cannot prove a single symbol live on a running system. The campaign's own finding — the fragment set crashes x86_64 6.6 GKI late boot, bisected to fragment content — is recorded in the artifact, not hidden."
+    },
+    {
+     "round": 2,
+     "verdict": "ours",
+     "gap": "secondary notes acted on 2026-10-09: BPF_UNPRIV_DEFAULT_OFF flip considered and REJECTED (GOS parity is the fragment contract; override documented in base.cfg); dead-letter # CONFIG_MODVERSIONS line DROPPED from base.cfg (olddefconfig with/without the line: byte-identical 7575-line config, repro committed); merge-order requirement (fragments AFTER origin, else HIBERNATION/TIPC/BINFMT_MISC resurrect — demonstrated) documented in hardening/kernel/README.md with a post-merge assertion grep. Follow-up policy decision: INIT_ON_FREE stays excluded from x86_64 vehicles (retention rationale in CUTTLEFISH_EVIDENCE §4). Upstream draft filed-in-repo: patches/kernel-gki/ (DMABUF_HEAPS_SYSTEM=y one-liner, git apply --check clean). Vehicle fix 2/2 made deterministic (sys.use_memfd baked into an AVB-re-signed init_boot copy; attempt 010 initramfs-only variant FAILS as negative control, attempt 011 BOOT_COMPLETED t=96s, prop from boot defaults, 0 ashmem deaths, no adb).",
+     "detail": "Round 2 (2026-10-08): disk recovered (23G free), bisect infrastructure rebuilt — group configs verified to reproduce the committed crashing config exactly (0-diff olddefconfig check); control re-validation boots started. Live ledger: anvil-cf/campaign2.\nPhase 0 (2026-10-08): committed fragment kernel #4 crash REPRODUCED with full console — primary fault is rcuop/2 (RCU nocb offload kthread) dereferencing a garbage callback pointer in rcu_do_batch at t=9.77s (unmapped direct-map addr), then hardened-usercopy abort, panic; the old #DF signature is downstream of this corruption. New control result: pure-stock 6.6 GKI kernel TIMEOUTs at 600s without reaching boot_completed — root cause found in console: vendor early-init waits for /dev/dri/card0, nothing loads virtio-gpu on a 6.6 boot path (6.12 stock loads it from first-stage ramdisk; 6.6-built modules would also fail MODULE_SIG_FORCE). GPU built-in added to all bisect variants; full rebuild of control+GPU variant in progress.\n2026-10-08 ~22:20 the campaign tree /home/potato/anvil-cf was deleted by an external disk-cleaner on this machine. Full reconstruction done: kernel re-fetched at pinned commit c905c29016dd; Android CI artifacts re-downloaded byte-identical (build 16373615, same Android 17 pairing); toolchain debs same versions; scripts rewritten identically and now mirrored in-repo (results/cuttlefish/20261008-campaign/scripts). Attempt 002 (control+GPU=y) had proven: GPU live t=0.7s but the image's drm_hwcomposer SIGSEGVs vs the 6.6 kernel and crash-loops system_server (~80 deaths) — open problem documented; GPU-less boot keeps system_server healthy but crawls. All-fragments+GPU kernel (attempt 003) now building.\nattempts 000-004 (round 2): GPU-mandatory confirmed on 6.6 (ctrl66 600s timeout, no card0); exact #4 config rebuilt (bit-identical anvil-ref) shows NO kernel crash in 900s — old rcuop/2 signature is build-dependent; new fragment-linked signature: system_server ashmem EACCES at t~93s (no avc); repacker splits initramfs modules (empty /proc/modules); attempt 004 stockgpu control building to discriminate hwcomposer SIGSEGV\n2026-10-09: sys.boot_completed=1 at t=103s on the FULL Anvil fragment set (anvil-veh2). Root causes across attempts 000-007: (1) vehicle — origin gki_defconfig lacks CONFIG_DMABUF_HEAPS_SYSTEM=y (allocator HAL dead, composer nullptr SIGSEGV) and 6.6 SELinux predates memfd_class policycap (sys.use_memfd=1 override needed), both proven on the clean control which then boots t=786s; (2) fragment-vehicle interaction — LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY rejects crosvm's ramoops.mem_address module_param_hw, ramoops binds pstore console to phys 0, #PF t=17s; fixed with PSTORE_RAM off (ramoops-n), lockdown kept. Live posture dump: lockdown [confidentiality], KFENCE 500, sig_enforce Y, mmap_rnd 32, sysrq 0, devmem/binfmt/tipc/hibernate/hotplug absent, 234 randomized kmalloc caches. Old 10-15s crash claim corrected (build-dependent, did not reproduce). Follow-ups: INIT_ON_FREE re-confirm, blind critic round.\nFINAL 2026-10-09: anvil-final (all fragments + 3 vehicle deviation classes + ioring-n from blind-critic round 2) reaches sys.boot_completed=1 at t=92s — fastest run. Runs matrix: control t=786s (005), veh2 t=103s (007, posture dump), INIT_ON_FREE=y t=103s (008, signature not reproduced), final t=92s (009, io_uring off). Blind critic round 2: WINNER=Anvil fragment set (empirical kconfig resolution, byte-identical effective config), gap closed+verified. Repo claims updated everywhere."
+    }
+   ],
+   "commits": [],
+   "evidence": [
+    "results/cuttlefish/20260928-022435/CUTTLEFISH_EVIDENCE.md — full campaign record",
+    "self-built android15-6.6 kernel c905c29016dd + fragments; boots to Android userspace (init, ext4 first-stage mounts, servicemanager/HALs at t≈15s)",
+    "hardening live at boot: lockdown confidentiality, init-on-alloc, stack zeroing, full x86 mitigation set, KASLR (custom/boot-hardening-lines.txt, quoted from the running kernel's console)",
+    "crash bisected to fragment content via controls (stock/ns-control/, stockcfg-control/); full sys.boot_completed NOT reached — documented, not faked",
+    "campaign ended at volume floor (ENOSPC); resume path in CUTTLEFISH_EVIDENCE.md §6",
+    "bisect groups verified: .config.stock + FIXED preamble + all.cfg => .config.anvil, 0 diff",
+    "campaign2/logs/boot-console-anvil-ctl.log — full crash console, oops+stack quoted",
+    "campaign2/logs/verdict-ctrl66.txt + boot-console-ctrl66.log — 6.6 control TIMEOUT, /dev/dri/card0 wait failure quoted",
+    "results/cuttlefish/20261008-campaign/ — round-2 ledger, gpu deviation cfgs, reconstructed scripts",
+    "results/cuttlefish/20261009-anvilref/boot-console-anvil-ref.log.gz",
+    "results/cuttlefish/20261009-anvilref/console-keylines.txt",
+    "results/cuttlefish/20261009-boot-completed/FINDINGS.md",
+    "results/cuttlefish/20261009-vehicle-fix/FINDINGS.md",
+    "results/cuttlefish/20261009-boot-completed/posture/",
+    "results/cuttlefish/20261009-boot-completed/boot-console-anvil-veh2.log.gz",
+    "results/cuttlefish/20261009-final/FINDINGS.md",
+    "results/cuttlefish/20261009-review-round2/REVIEW.md",
+    "results/cuttlefish/20261009-final/boot-console-anvil-final.log.gz",
+    "results/cuttlefish/20261009-memfd-bake/FINDINGS.md — deterministic sys.use_memfd (attempts 010/011)",
+    "results/cuttlefish/20261009-memfd-bake/probe-postboot.txt + getprop-full.txt — prop=1 from boot defaults, boot_completed=1, 0 ashmem deaths, lockdown [confidentiality]",
+    "results/cuttlefish/20261009-round2-followup/DECISIONS.md — BPF/MODVERSIONS/ordering decisions + repro script + experiment output",
+    "patches/kernel-gki/ — AOSP gki_defconfig upstream draft (patch + ISSUE.md, applies clean to c905c29016dd)",
+    "results/cuttlefish/20261009-release/RELEASE.md — canonical bzImage sha256 table + archive decision"
+   ]
+  }
+ ]
 }
